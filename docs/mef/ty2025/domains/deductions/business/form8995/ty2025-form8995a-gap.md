@@ -1,5 +1,47 @@
 # TY2025 Form 8995-A coverage gap
 
+## October 12 HOH and QSS public SSTB source checkpoint
+
+The public Schedule C accounting-SSTB dispatcher now accepts head-of-household
+and qualifying-surviving-spouse filing statuses. The calculator and native/PDF
+builders already supported both; the public status filter prevented their
+reviewed source records from reaching those builders. Existing payroll,
+classification, owner, household and filed-half-SE checks continue to apply.
+
+Four complete returns cover both statuses with employee payroll and with a
+reviewed owner-only workforce. Each retains profit28,431, wage income210,000,
+SE tax761, deductible half-SE381, QBI28,050 and AGI238,050. HOH uses standard
+deduction23,625 and pre-QBI income214,425; QSS uses31,500 and206,550. Both use
+the nonjoint197,300 QBI threshold and50,000 phase range under the
+[2025 Form8995-A instructions](https://www.irs.gov/instructions/i8995a).
+The resulting applicable percentages are65.75% and81.5%.
+
+| Case | QBI deduction | Taxable income | Regular tax | Total tax | Refund |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| HOH payroll | 3,552 | 210,873 | 42,803 | 43,890 | 6,110 |
+| HOH owner-only | 2,426 | 211,999 | 43,164 | 44,251 | 5,749 |
+| QSS payroll | 4,480 | 202,070 | 34,283 | 35,370 | 14,630 |
+| QSS owner-only | 3,726 | 202,824 | 34,449 | 35,536 | 14,464 |
+
+Independent Decimal arithmetic reconciles source payroll, rounded applicable
+amounts, parent phase reductions, zero AMT, Additional Medicare326 and final tax
+against emitted XML; ordinary tax uses the
+[2025 tax worksheet](https://www.irs.gov/pub/irs-pdf/i1040tt.pdf).
+All four focused tests,20 related typed regressions and four full2025v5.4 XSD validations pass. Twelve altered
+records per case reject native and fresh-PDF export (96 attempts);16 public
+owner/payroll/review/household changes reject at calculation or preparation.
+
+All58 packet pages received qualified visual review through29 unique rendered
+images in eight contact sheets and29 exact within-batch duplicates. Both status
+headers correctly print Avery Child. Existing68 reversed component names,
+76 blank required zeros and86 Schedule C skipped-line choices remain deferred.
+The original pre-change cases also repeat deferred161: graph errors could still
+produce incomplete exports without QBI. That general defect was not repaired.
+Broader SSTB categories, joint spouse ownership, source authenticity and IRS
+acceptance remain open. Evidence is retained under
+`.state/research/form8995a-sstb-statuses-2026-10-12/`, including original failures,
+complete packets, mutation logs, independent arithmetic and observed page hashes.
+
 ## October 12 joint aggregation investment owners checkpoint
 
 Joint direct-business and intact S-corporation aggregations now retain investment

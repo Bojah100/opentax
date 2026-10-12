@@ -795,6 +795,8 @@ function advancedFormOutput(
       review.owner_ssn !== owner ||
       (input.filing_status !== FilingStatus.Single &&
         input.filing_status !== FilingStatus.MFJ &&
+        input.filing_status !== FilingStatus.HOH &&
+        input.filing_status !== FilingStatus.QSS &&
         input.filing_status !== FilingStatus.MFS) ||
       (input.filing_status === FilingStatus.MFS && !review.mfs_filing_review) ||
       !business.business_name ||
