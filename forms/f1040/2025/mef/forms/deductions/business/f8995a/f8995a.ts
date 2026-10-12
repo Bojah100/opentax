@@ -93,8 +93,26 @@ export function buildStagedAggregatedIRS8995A(
       element("W2WageQlfyPropLimitationAmt", parent.line11),
       element("QBIDedBeforePatronReductionAmt", parent.line13),
       element("QBIComponentAmt", parent.line15),
+      ...(parent.phaseInRequired
+        ? [
+          element("QBI20PctLessGrtrAllcblShareAmt", parent.line19),
+          element("TotalPhaseInReductionAmt", parent.line25),
+          element("QBIAfterPhaseInReductionAmt", parent.line26),
+        ]
+        : []),
     ]),
     element("TotalQBIComponentAmt", parent.line16),
+    ...(parent.phaseInRequired
+      ? [
+        element("FilingStatusThresholdCd", parent.patronThreshold),
+        element(
+          "TXIBfrQBIDedLessThresholdAmt",
+          parent.line33 - parent.patronThreshold!,
+        ),
+        element("FilingStatusPhaseInRangeCd", parent.patronPhaseInRange),
+        element("PhaseInPct", parent.phaseIn!.toFixed(5)),
+      ]
+      : []),
     element("QlfyREITDivPTPIncomeLossAmt", 0),
     element("PYQlfyREITDivPTPLossCfwdAmt", 0),
     element("TotQlfyREITDivPTPIncomeAmt", 0),

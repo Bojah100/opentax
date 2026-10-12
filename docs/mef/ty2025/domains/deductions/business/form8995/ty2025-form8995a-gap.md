@@ -1,5 +1,66 @@
 # TY2025 Form 8995-A coverage gap
 
+## October 12 direct-owner aggregation phase-in checkpoint
+
+Direct-owner aggregations now support the Single and MFJ phase-in bands as well
+as the previously verified full-limit band. The shared calculation applies the
+group wage/property limitation gradually; native Part III fields and printed
+lines17–26 use those same filed amounts. When the limitation does not bind,
+Part III remains omitted. Source/member ownership, reviewed half-SE allocation,
+annual disclosure and final-return reconciliation remain required.
+
+The [2025 Form8995-A Part III instructions](https://www.irs.gov/instructions/i8995a)
+apply this reduction inside the income band only when line10 is below line3.
+Tests cover the lower threshold rejection, one dollar above it, one dollar
+below the upper endpoint, the upper endpoint itself and one dollar above it
+for every case. A separate six-case property-source replay confirms that
+nonbinding limits omit native phase fields and PDF Part III values.
+The historical full-limit checkpoint below remains evidence for its original
+scope; phase-in is no longer excluded from the direct-owner route.
+
+| Filing/owner cases | Businesses | Before-QBI income | Phase-in | Reduction | QBI deduction | Total tax | Balance/refund |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
+| Joint primary and spouse | 3 | 445,000 | 50.4% | 12,528 | 34,829 | 93,711 | 33,354 owed |
+| Joint primary and spouse | 4 | 445,000 | 50.4% | 15,246 | 40,004 | 93,103 | 33,101 owed |
+| Single | 3 | 223,446 | 52.292% | 3,249 | 8,590 | 47,743 | 12,257 refund |
+| Single | 4 | 233,312 | 72.024% | 5,446 | 8,366 | 51,323 | 8,677 refund |
+
+Independent decimal calculations verify business profits, gross-income shares
+of filed half-SE, group wage/property limits, phase-in, taxable income,
+regular tax, zero AMT, Medicare, payments and balances/refunds. Regular tax uses
+the [2025 Publication1040 computation worksheet, page14](https://www.irs.gov/pub/irs-pdf/i1040tt.pdf):
+32% less45,874 for these joint cases and32% less22,937 for the single cases.
+Joint wages are239,714/200,250; single wages180,000. Synthetic payroll retains
+regular and additional Medicare withholding, including filed additional
+withholding357/2 for the joint cases. No old payroll fixture is repaired.
+
+Six typed complete-packet tests pass (46s), plus one six-case nonbinding test.
+All six XML returns pass the local2025v5.4 full-return XSD. Thirty-six altered
+pending records reject both native preparation and fresh PDF construction:
+phase income changed in both retained parent/companion records, final QBI,
+actual business income/property, half-SE and annual acquisition events.
+Direct source/election/high-income regression passes15/0 (1m7s); retained
+path-only adapted RPE regression passes4/0 (20s). Original RPE path failures
+remain deferred65/66; the repository fixture paths are unchanged.
+
+All129 packet pages were represented by71 unique PNG hashes and observed on
+18 contact sheets. Part III shows50.4%,52.292%,72.024%; lines12/26, native
+reductions and final deductions reconcile. Three fourth-business continuations
+and all six annual statements are present. Annual statement pages are included
+in the129 total, and the six nonbinding native-only replays add no full-PDF
+count. Packets reopen without fields/widgets. Existing qualifications68/76
+remain: joint native headers retain the primary name only, single-four printed
+Schedules1/2 have blank names, and some required zero fields remain blank.
+This is qualified review, not clean parity or an accepted filing.
+
+Evidence is retained under
+`.state/research/form8995a-aggregation-phasein-2026-10-12/`: public source/pending
+replays, six packets with XSD logs, focused/nonbinding/regression logs,
+`independent-proof.json`, `review.py`, `review-mapping.json` and
+`visual-review.json`. Source authenticity, broader owner/election combinations,
+RPE phase-in, business-rule and IRS acceptance remain open. No deferred item was
+implemented and the broad main-board task remains open.
+
 ## October 12 joint direct-owner aggregation and annual disclosure
 
 A joint filer can now export one qualifying positive Schedule C aggregation

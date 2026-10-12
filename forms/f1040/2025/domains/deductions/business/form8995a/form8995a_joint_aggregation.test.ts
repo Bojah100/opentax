@@ -31,7 +31,7 @@ for (const c of jointAggregationCases) {
     assertThrows(() =>
       calculateTwoBusinessAggregationLines({
         ...fields,
-        taxable_income: 494600,
+        taxable_income: 394600,
       })
     );
     assertEquals(

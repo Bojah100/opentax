@@ -440,9 +440,7 @@ export function validateTwoBusinessAggregationSource(input: Form8995AInput) {
   const cfg = CONFIG_BY_YEAR[2025];
   const joint = input.filing_status === FilingStatus.MFJ;
   const owner = source?.members[0]?.source_schedule_c.proprietor_recipient;
-  const fullLimitThreshold = joint
-    ? cfg.qbiThresholdMfj + cfg.qbiPhaseInRange
-    : cfg.qbiThresholdSingle + cfg.qbiPhaseInRange / 2;
+  const threshold = joint ? cfg.qbiThresholdMfj : cfg.qbiThresholdSingle;
   if (
     !source || !group || groups?.length !== 1 ||
     group.group_name !== source.group_name ||
@@ -450,7 +448,7 @@ export function validateTwoBusinessAggregationSource(input: Form8995AInput) {
     (input.filing_status !== FilingStatus.Single && !joint) ||
     (owner !== TS.T && !(joint && owner === TS.S)) ||
     !Number.isInteger(input.taxable_income) ||
-    input.taxable_income <= fullLimitThreshold ||
+    input.taxable_income <= threshold ||
     input.net_capital_gain !== 0 ||
     input.qbi_no_prior_loss_or_suspended_loss_confirmed !== true ||
     input.business_filing_details || input.sstb_filing_details ||
@@ -740,7 +738,11 @@ export function calculateTwoBusinessAggregationLines(input: Form8995AInput) {
   // the Schedule 1 totals in the native/PDF join.
   const totals = validateTwoBusinessAggregationSource(input);
   const parent = calculateOneBusiness8995ALines(input);
-  if (!Object.values(parent).every(Number.isInteger) || parent.line39 <= 0) {
+  if (
+    !Object.entries(parent).filter(([key, value]) =>
+      /^line\d+$/.test(key) && value !== undefined
+    ).every(([, value]) => Number.isInteger(value)) || parent.line39 <= 0
+  ) {
     throw new Error(
       "Form 8995-A Schedule B needs a positive whole-dollar grouped deduction",
     );
@@ -1696,7 +1698,7 @@ export function calculateOneBusiness8995ALines(input: Form8995AInput) {
     input.patron_business_source || input.single_schedule_c_source ||
       input.single_schedule_f_source ||
       input.farm_wotc_filing_source ||
-      input.mixed_fishing_qbi_source,
+      input.mixed_fishing_qbi_source || input.aggregation_filing_details,
   ) &&
     input.taxable_income > patronThreshold &&
     input.taxable_income <= patronThreshold + patronPhaseInRange &&
@@ -1743,7 +1745,7 @@ export function calculateOneBusiness8995ALines(input: Form8995AInput) {
     ...((input.patron_business_source || input.single_schedule_c_source ||
         input.single_schedule_f_source ||
         input.farm_wotc_filing_source ||
-        input.mixed_fishing_qbi_source)
+        input.mixed_fishing_qbi_source || input.aggregation_filing_details)
       ? {
         patronThreshold,
         patronPhaseInRange,

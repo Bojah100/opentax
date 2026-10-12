@@ -153,6 +153,19 @@ export function projectStagedAggregatedParentPdf(
     business_name: source.group_name,
     aggregated: true,
     ...parent,
+    ...(parent.phaseInRequired
+      ? {
+        line17: parent.line3,
+        line18: parent.line10,
+        line20: parent.line33,
+        line21: parent.patronThreshold,
+        line22: parent.line33 - parent.patronThreshold!,
+        line23: parent.patronPhaseInRange,
+        line24: qbiPercentageForPdf(parent.phaseIn!),
+      }
+      : Object.fromEntries([17, 18, 19, 20, 21, 22, 23, 24, 25, 26].map(
+        (line) => [`line${line}`, undefined],
+      ))),
     line27: parent.line16,
     line40: 0,
   };
