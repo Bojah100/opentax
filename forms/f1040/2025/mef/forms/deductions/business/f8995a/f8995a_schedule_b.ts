@@ -65,6 +65,7 @@ function assertAggregationInvestments(
     { ...input, taxpayer_ssn: context.filer.primarySSN },
     pending,
     true,
+    input.filing_status === "mfj" ? context.filer.spouse?.ssn : undefined,
   );
   const wages = pending.w2 === undefined
     ? 0

@@ -1,5 +1,48 @@
 # TY2025 Form 8995-A coverage gap
 
+## October 12 joint aggregation investment owners checkpoint
+
+Joint direct-business and intact S-corporation aggregations now retain investment
+copies belonging to either actual spouse, including spouse-only portfolios and
+mixed ownership. The shared investment guard accepts a second owner only when
+the aggregation is a joint return; its default remains primary-only. Missing,
+changed, duplicate and unrelated owners reject, and the separate-filing spouse's
+portfolio still rejects for MFS.
+
+Four complete returns retain two interest copies totaling 1,700, ordinary
+dividends 3,000, qualified dividends 1,500, capital distributions 1,800 and two
+identified broker transactions. Long-term gain is 5,800; short-term gain of 1,000
+or loss of 1,000 gives total gain 6,800 or 4,800. Form 8995-A line 34 therefore
+uses 7,300 or 6,300, respectively, under the
+[line 34 instructions](https://www.irs.gov/instructions/i8995a).
+Both issuer statements remain byte-for-byte intact.
+
+| Case | QBI deduction | Taxable income | Regular tax | Total tax | Owed |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| direct-primary-spouse-portfolio | 36,525 | 419,975 | 87,277 | 97,092 | 37,090 |
+| direct-spouse-mixed-portfolio | 37,130 | 417,370 | 86,613 | 96,352 | 36,350 |
+| rpe-primary-spouse-portfolio | 68,747 | 359,253 | 71,348 | 71,709 | 61,709 |
+| rpe-spouse-mixed-portfolio | 66,250 | 463,750 | 101,285 | 101,722 | 91,102 |
+
+Independent decimal calculations reconcile source profit, half-SE allocations,
+phase reductions, income limits, preferential tax, zero AMT, Medicare, NIIT and
+payments against XML. NIIT is 437 or 361. Reversing all investment inventories
+preserves tax and successful preparation. Five focused and 26 related typed
+tests pass. Four full 2025v5.4 returns pass XSD; 98 altered native/fresh-PDF
+export attempts and 20 public-source/preparation attempts reject.
+
+The 87-page packets received qualified visual review: 34 new unique page images
+were observed in nine contact sheets, 51 matched previously observed images and
+two duplicated current images. Final regeneration changed no page image. Native
+Schedule D totals/indicators still repeat deferred15; component names and blank
+zeros repeat68/76. These findings remain deferred, not repaired. Positive net
+capital gains here do not resolve deferred159/160 net-loss behavior. Schema
+validation, source authenticity, business-rule acceptance and IRS acceptance
+remain separate claims; broader elections and investment categories remain open.
+Evidence is retained in
+`.state/research/form8995a-aggregation-joint-investments-2026-10-12/`, including
+source packets, test logs, independent proof and visual-review mappings.
+
 ## October 12 aggregation with investment-income checkpoint
 
 Direct-owner and intact S-corporation aggregations now accept retained interest,

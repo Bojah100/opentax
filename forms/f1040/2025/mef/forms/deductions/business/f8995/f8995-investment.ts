@@ -32,6 +32,7 @@ export function assertMultiBusinessInvestmentSources(
   >,
   pending: Record<string, Record<string, unknown>>,
   enteredTotal = false,
+  jointSpouseSsn?: string,
 ) {
   const interest = pending.f1099int === undefined
     ? []
@@ -51,7 +52,17 @@ export function assertMultiBusinessInvestmentSources(
       "Multi-business QBI investment copies differ from their retained graph sources",
     );
   }
-  const owner = input.taxpayer_ssn?.replace(/\D/g, "");
+  const owners = [
+    input.taxpayer_ssn,
+    ...(jointSpouseSsn === undefined ? [] : [jointSpouseSsn]),
+  ]
+    .map((ssn) => ssn?.replace(/\D/g, ""));
+  if (
+    owners.some((ssn) => !ssn || !/^\d{9}$/.test(ssn)) ||
+    new Set(owners).size !== owners.length
+  ) {
+    throw Error("QBI investment review needs distinct actual return owners");
+  }
   const references = [...interest, ...dividends].map((item) =>
     item.source_document_reference
   );
@@ -61,7 +72,7 @@ export function assertMultiBusinessInvestmentSources(
     references.some((reference) => !reference) ||
     interest.some((item) =>
       !item.payer_name.trim() || !/^\d{2}-?\d{7}$/.test(item.payer_tin ?? "") ||
-      !item.account_number || item.recipient_tin !== owner ||
+      !item.account_number || !owners.includes(item.recipient_tin) ||
       ![
         "box2",
         "box3",
@@ -85,7 +96,7 @@ export function assertMultiBusinessInvestmentSources(
     ) ||
     dividends.some((item) =>
       !item.payerName?.trim() || !item.payerTin || !item.account_number ||
-      item.recipient_tin !== owner || item.isNominee ||
+      !owners.includes(item.recipient_tin) || item.isNominee ||
       item.nominee_distribution || item.box11 ||
       (item.box1b ?? 0) > item.box1a ||
       ![
@@ -174,7 +185,7 @@ export function assertMultiBusinessInvestmentSources(
       new Set(brokerRows.map((row) => row.transaction_id)).size !==
         brokerRows.length ||
       brokerRows.some((row) =>
-        row.recipient_ssn !== owner || !row.payer_tin ||
+        !owners.includes(row.recipient_ssn) || !row.payer_tin ||
         !row.source_document_reference || !row.transaction_id ||
         row.box3_transaction_type ||
         row.adjustment_codes || row.adjustment_amount ||
