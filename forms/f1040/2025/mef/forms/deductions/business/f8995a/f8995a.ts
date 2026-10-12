@@ -139,7 +139,8 @@ export function validateOneBusiness(fields: Form8995AInput) {
   }
   if (
     (fields.filing_status !== NodeFilingStatus.Single &&
-      !((fields.patron_business_source || fields.single_schedule_c_source) &&
+      !fields.patron_business_source &&
+      !(fields.single_schedule_c_source &&
         fields.filing_status === NodeFilingStatus.MFJ)) ||
     !fields.patron_business_source && !fields.single_schedule_c_source &&
       !fields.single_schedule_f_source &&
@@ -592,6 +593,7 @@ function reconcileReturn(
       !(fields.schedule_c_qbi_businesses?.some((business) =>
         business.qbi < 0
       )) &&
+      !fields.patron_business_source &&
       !(fields.filing_status === NodeFilingStatus.MFJ &&
         (fields.independent_patron_sources || fields.patron_business_source ||
           fields.single_schedule_c_source ||
@@ -626,6 +628,9 @@ function reconcileReturn(
   }
   if (fields.sstb_filing_details) {
     assertMfsSstbOwner(fields, context.filer.primarySSN);
+  }
+  if (fields.patron_business_source) {
+    patronProprietorSsn(fields, context.filer);
   }
   if (
     (fields.patron_filing_details?.source_1099patr

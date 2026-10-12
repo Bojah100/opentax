@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { itemSchema as patrSchema } from "../../../income/business/f1099patr/schema.ts";
+import { mfsSstbFilingReviewSchema } from "../../../income/business/schedule_c/mfs-sstb-review.ts";
 
 const date = z.string().regex(/^\d{4}-\d{2}-\d{2}$/).refine((value) => {
   const parsed = new Date(`${value}T00:00:00Z`);
@@ -18,6 +19,7 @@ export const inputSchema = z.object({
       .strict(),
   ]),
   source_1099patr: patrSchema,
+  mfs_filing_review: mfsSstbFilingReviewSchema.optional(),
   spouse_w2_sources: z.array(z.record(z.string(), z.unknown())).min(1)
     .optional(),
   primary_w2_sources: z.array(z.record(z.string(), z.unknown())).min(1)
@@ -55,6 +57,25 @@ export const inputSchema = z.object({
   }).strict().optional(),
 }).strict();
 export type PatronReview = z.infer<typeof inputSchema>;
+
+export function assertPatronFilingStatus(
+  review: Pick<PatronReview, "source_1099patr" | "mfs_filing_review">,
+  status: string | undefined,
+): void {
+  if (!["single", "mfj", "mfs", "hoh", "qss"].includes(status ?? "")) {
+    throw new Error("Patron public source needs a supported filing status");
+  }
+  const mfs = review.mfs_filing_review;
+  if (
+    status === "mfs"
+      ? !mfs || mfs.spouse_ssn === review.source_1099patr.recipient_tin
+      : mfs !== undefined
+  ) {
+    throw new Error(
+      "Patron public source MFS needs a separate-income and spouse-deduction review for the actual owner; other statuses must omit it",
+    );
+  }
+}
 
 // Independent businesses retain truthful per-business books reviews, without
 // asserting that the joint return contains only one business.

@@ -58,6 +58,17 @@ export function assertForm8995APatronReturn(
     );
   }
   const joint = input.filing_status === "mfj";
+  if (input.filing_status === "mfs") {
+    const mfs = review.mfs_filing_review;
+    if (!mfs || pending.general?.address_state !== mfs.mailing_address_state ||
+      String(pending.general?.spouse_ssn ?? "").replaceAll("-", "") !== mfs.spouse_ssn ||
+      String(pending.f1040?.spouse_ssn ?? "").replaceAll("-", "") !== mfs.spouse_ssn ||
+      pending.general?.mfs_spouse_itemizing !== false ||
+      pending.f1040?.mfs_spouse_itemizing !== false ||
+      pending.f1040?.filing_status !== input.filing_status) {
+      throw new Error("MFS patron needs the retained noncommunity property, actual spouse and deduction review to match the return");
+    }
+  }
   const primary = String(pending.general?.taxpayer_ssn ?? "").replaceAll(
     "-",
     "",
@@ -159,7 +170,11 @@ export function assertForm8995APatronReturn(
     );
   }
   const lines = calculateOneBusiness8995ALines(input);
-  const medicareThreshold = joint ? 250000 : 200000;
+  const medicareThreshold = joint
+    ? 250000
+    : input.filing_status === "mfs"
+    ? 125000
+    : 200000;
   const medicareTax =
     Math.round(Math.max(0, medicareWages - medicareThreshold) * .009) +
     Math.round(
@@ -242,6 +257,16 @@ export function patronProprietorSsn(
   input: Form8995AInput,
   filer: FilerIdentity | undefined,
 ): string | undefined {
+  if (input.patron_business_source && input.filing_status === "mfs") {
+    const review = sourceSchema.parse(input.patron_business_source).review;
+    const mfs = review.mfs_filing_review;
+    if (!mfs || filer?.filingStatus !== MefFilingStatus.MarriedFilingSeparately ||
+      filer.primarySSN.replaceAll("-", "") !== review.source_1099patr.recipient_tin ||
+      filer.spouse?.ssn.replaceAll("-", "") !== mfs.spouse_ssn ||
+      filer.address.state !== mfs.mailing_address_state) {
+      throw new Error("MFS patron owner, spouse and mailing state must match the final filer and separate-income review");
+    }
+  }
   const recipient = input.patron_business_source
     ? (sourceSchema.parse(input.patron_business_source).business_source as {
       proprietor_recipient?: string;

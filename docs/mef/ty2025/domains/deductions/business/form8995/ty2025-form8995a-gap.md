@@ -1,5 +1,56 @@
 # TY2025 Form 8995-A coverage gap
 
+## October 12 cooperative patron HOH, QSS and MFS checkpoint
+
+Reviewed one-business cooperative patron sources now support HOH, QSS and MFS
+through public calculation, complete native XML and PDF preparation. Previously
+these sources stopped at Single/MFJ status guards. The extension retains the
+existing seven farm, Schedule C health, income-cap, phase-in and unbound wage-limit
+cases for each added status: 21 complete returns.
+
+MFS requires the existing full-year noncommunity-property and spouse-deduction
+review, bound to the actual owner, spouse SSN and mailing state in both the pending
+return and final filer. Other statuses reject an MFS review. Source payroll,
+cooperative recipient, box 6 notice, allocation worksheet, one-business ownership,
+parent/companion amounts and final-tax checks remain required. MFS reconciliation
+uses its 125,000 Additional Medicare threshold; the underlying calculator already
+supports this threshold. No deferred rounding or diagnostic-policy repair is made.
+
+Independent Decimal arithmetic from synthetic books, payroll and cooperative
+records matches all 21 QBI deductions, taxable incomes, ordinary taxes, total taxes
+and balances. The proof applies the [Form 8995-A instructions](https://www.irs.gov/instructions/i8995a),
+[Additional Medicare thresholds](https://www.irs.gov/instructions/i8959) and
+[Form 1040 tax computation worksheet](https://www.irs.gov/instructions/i1040gi).
+The QSS phase-farm case falls below the QBI phase-in threshold after its standard
+deduction and correctly skips Part III. Active-business income adds no NIIT;
+independent AMT computations remain below regular tax in these cases.
+
+All 21 complete XML returns pass the cached IRS 2025v5.4 XSD, with unique document
+IDs and closed references. Root schema SHA-256:
+`e52dbd0fbd862929c9bc6a46db811fa2c7ae55e915651fc2679c21cb05184c6c`.
+The 22 new typed tests and 28 existing patron tests pass. Negative evidence includes
+42 public error diagnostics, 231 native rejections and 231 fresh-PDF rejections;
+source mutations are mirrored across all retained source copies. Final-filer spouse
+changes also reject. Public error diagnostics are not counted as export rejections.
+
+All 311 packet pages received qualified review: 101 unique new images were
+inspected on 26 contact sheets, 188 pages match previously reviewed PDF renderings,
+and 22 are exact duplicates within this batch. Reopened PDFs contain no fields or
+widgets. Filing-status marks, household names, business identities, source amounts,
+Schedule D reductions, parent deductions and final balances reconcile. Existing
+findings 3 (positive-business loss-only choices on prior images), 68 (header name
+order) and 76 (blank applicable zero totals) remain qualifications, not repairs or
+clean parity approval. Multiple cooperatives, wider business/owner combinations,
+authenticated source bytes and IRS business-rule acceptance remain open.
+
+Evidence: `.state/research/form8995a-patron-status-2026-10-12/` retains original
+blocked probes, 21 source/native/PDF packets, independent arithmetic, XSD logs,
+page hashes and review mapping, visual qualifications, mutation totals and run
+metadata. Ongoing PR totals become 129 complete return cases/2,106 qualified pages
+and 7,428 export rejections; the earlier 468 native-only boundary replays and
+68 saved SSTB returns/916 archive rejections remain separate. The 52 frozen main
+TODOs remain open and no future item is implemented.
+
 ## October 12 service-classification zero-boundary audit
 
 All 39 previously reviewed service fixtures now run against all 12 existing

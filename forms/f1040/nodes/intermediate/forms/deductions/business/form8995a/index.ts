@@ -25,7 +25,10 @@ import {
   ownedScheduleSE,
   ownerSourcesSchema,
 } from "../../../taxes/self-employment/schedule_se/owner-calculation.ts";
-import { sourceSchema as patronBusinessSourceSchema } from "../../../../../inputs/deductions/business/qbi_patron/schema.ts";
+import {
+  assertPatronFilingStatus,
+  sourceSchema as patronBusinessSourceSchema,
+} from "../../../../../inputs/deductions/business/qbi_patron/schema.ts";
 import { patronSourceAmounts } from "../../../../../inputs/deductions/business/qbi_patron/calculation.ts";
 import {
   qbiCapitalSourcesSchema,
@@ -1396,10 +1399,9 @@ export function calculatePatronScheduleDLines(input: Form8995AInput) {
   if (input.patron_business_source) {
     const amounts = patronSourceAmounts(input.patron_business_source);
     const review = input.patron_business_source.review;
+    assertPatronFilingStatus(review, input.filing_status);
     const details = input.business_filing_details;
     if (
-      (input.filing_status !== FilingStatus.Single &&
-        input.filing_status !== FilingStatus.MFJ) ||
       amounts.qbi !== input.qbi || amounts.wages !== input.w2_wages ||
       input.unadjusted_basis !== 0 ||
       details.business_name !== amounts.name || details.ein !== amounts.ein ||
@@ -2018,9 +2020,8 @@ function assertSupportedSchedulePath(input: Form8995AInput): void {
       );
     }
     if (
-      (input.filing_status !== FilingStatus.Single &&
-        !(input.patron_business_source &&
-          input.filing_status === FilingStatus.MFJ)) ||
+      (!input.patron_business_source &&
+        input.filing_status !== FilingStatus.Single) ||
       (!input.patron_business_source && input.taxable_income <= 247_300) ||
       (input.qbi ?? 0) !== details.business_qbi ||
       (input.w2_wages ?? 0) !== details.business_w2_wages ||
@@ -2030,7 +2031,7 @@ function assertSupportedSchedulePath(input: Form8995AInput): void {
       (input.reit_loss_carryforward ?? 0) !== 0
     ) {
       throw new Error(
-        "Form 8995-A Schedule D supports one sourced single-filer business fully above phase-in with zero capital gain and REIT/PTP activity",
+        "Form 8995-A Schedule D needs one sourced owner business with zero capital gain and REIT/PTP activity; unsourced projections require Single fully above phase-in",
       );
     }
     const lines = calculateOneBusiness8995ALines(input);

@@ -495,6 +495,7 @@ export const form8995aPdf: PdfFormDescriptor = {
     // aggregation details against the retained source instead.
     const input = inputSchema.strict().parse(allPending?.form8995a ?? raw);
     assertSstbScheduleCSource(input, allPending, filer?.primarySSN, filer);
+    if (input.patron_business_source) patronProprietorSsn(input, filer);
     if (input.independent_patron_sources) {
       assertOwnedScheduleSE(allPending!, filer);
     }
@@ -523,7 +524,8 @@ export const form8995aPdf: PdfFormDescriptor = {
       ) {
         calculateScheduleCLossLines(input);
       } else if (
-        !input.aggregation_filing_details && !input.rpe_aggregation_source
+        !input.aggregation_filing_details && !input.rpe_aggregation_source &&
+        !input.patron_business_source
       ) {
         assertMfsSstbOwner(input, filer.primarySSN);
       }
