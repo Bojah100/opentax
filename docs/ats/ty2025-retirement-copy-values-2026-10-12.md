@@ -66,3 +66,39 @@ schema mappings/hashes and the typed test log. Reproduce with:
 deno run -A forms/f1040/e2e/ats/ty2025-check-ledger.ts /tmp/ats-ledger.json
 deno test -A forms/f1040/e2e/ats
 ```
+
+## Source-fixture identity completion
+
+The Scenario 3 and 8 fixtures now carry the recipient SSN printed on each
+of their three issued copies, explicit taxpayer ownership, and the three
+unmarked box 2b/IRA indicators. All three retained source images were visually
+rechecked. Scenario 8 keeps the issued recipient ZIP 89117 separately from the
+Form 1040 address; no new rollover destination or QCD election is inferred.
+
+The actual fixture-to-graph-to-1099-R builder replay matches **30/30 issued
+fields**, including both explicit zero amounts on Liberty's copy. Reversed
+copy order produces the same comparisons. Six missing/wrong-recipient
+alterations reject across all three copies. These are component observations,
+kept outside the 343-row full-return ledger and its pass denominator.
+
+Both full-return replays now pass the retirement recipient guard. Scenario 3
+next requires retained direct-sale transactions for its Schedule D aggregate
+proceeds/basis; Scenario 8 next requires an issued Social Security copy reference
+and box 2 recipient. The source packet supplies aggregate facts, so these records
+were not invented. Both preparations remain blocked, all 30 full-return
+retirement observations remain unevaluated, and every existing calculation and
+native-field observation is unchanged. W-2 observations remain 30 matching and
+50 unevaluated. No new full-return XSD or filled-PDF count is added.
+
+The full ATS directory now passes **96 typed tests, zero failures**, including
+four new real-fixture/owner tests; focused lint passes. The initial component
+comparison failed because its test envelope omitted the observer's required
+Return/ReturnData wrapper; correcting only that harness resolved both failures.
+The failure log is retained. No production guard or deferred item was changed.
+
+Evidence: `.state/research/ats-copy-replay-2026-10-12/` retains before/after
+full-return reports, the unchanged ledger, source inputs, three emitted native
+components, their 30-field comparison proof, and both test logs. Reproduce the
+committed checks with `deno test -A forms/f1040/e2e/ats`. The individual-check
+projection stays **about 75% (50–85% judgment range)**; component matches do not
+establish a higher full-return pass rate.

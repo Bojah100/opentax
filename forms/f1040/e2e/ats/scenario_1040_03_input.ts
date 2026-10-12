@@ -1,4 +1,4 @@
-import { FilingStatus } from "../../nodes/types.ts";
+import { FilingStatus, TS } from "../../nodes/types.ts";
 import { DistributionCode } from "../../nodes/inputs/income/retirement/f1099r/index.ts";
 import { SCENARIO_1040_03_FACTS } from "./ty2025_cases.ts";
 
@@ -75,6 +75,12 @@ export function scenario104003Input(): Record<string, unknown> {
       address_zip: facts.taxpayer.address.zip,
     },
     f1099r: [{
+      // Recipient and unmarked boxes visually verified on issued Copy B.
+      recipient_ssn: facts.taxpayer.ssn,
+      ts: TS.T,
+      box2b_not_determined: false,
+      box2b_total_dist: false,
+      box7_ira_simple_indicator: false,
       payer_name: facts.form1099R.payerName,
       payer_ein: facts.form1099R.payerEin,
       payer_address_line1: "1231 Juniper Street",

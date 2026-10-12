@@ -1,5 +1,5 @@
 import { DistributionCode } from "../../nodes/inputs/income/retirement/f1099r/index.ts";
-import { FilingStatus } from "../../nodes/types.ts";
+import { FilingStatus, TS } from "../../nodes/types.ts";
 import { SCENARIO_1040_08_FACTS } from "./ty2025_cases.ts";
 
 /**
@@ -34,6 +34,12 @@ export function scenario104008Input(): Record<string, unknown> {
         .livedApartFromSpouseAllYear,
     },
     f1099r: facts.form1099R.map((form) => ({
+      // Recipient and unmarked boxes visually verified on issued Copy B.
+      recipient_ssn: facts.taxpayer.ssn,
+      ts: TS.T,
+      box2b_not_determined: false,
+      box2b_total_dist: false,
+      box7_ira_simple_indicator: false,
       payer_name: form.payerName,
       payer_ein: form.payerEin,
       payer_address_line1: form.payerAddress.line1,
