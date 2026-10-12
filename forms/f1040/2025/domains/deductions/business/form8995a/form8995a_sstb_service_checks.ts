@@ -89,10 +89,11 @@ const mutations = [
 ] as const;
 function alter(
   business: Row,
-  kind: typeof mutations[number] | "financial-kind",
+  kind: typeof mutations[number] | "financial-kind" | "wrong-role",
 ) {
   const review = business.qbi_sstb_filing_review;
   const service = review.service_classification_review;
+  if (kind === "wrong-role") service.professional_role = "facility_operator";
   if (kind === "financial-kind") {
     service.service_kind = service.service_kind === "financial_advice"
       ? "loan_arrangement"
@@ -197,10 +198,17 @@ export function registerSstbServiceCases<
           stage: string;
           diagnostics?: unknown;
         }[] = [];
-        const caseMutations = input.schedule_c[0].qbi_sstb_filing_review
-            .service_classification_review.field === "financial_services"
-          ? [...mutations, "financial-kind" as const]
-          : [...mutations];
+        const caseMutations: Parameters<typeof alter>[1][] =
+          input.schedule_c[0].qbi_sstb_filing_review
+              .service_classification_review.field === "financial_services"
+            ? [...mutations, "financial-kind" as const]
+            : [
+              ...mutations,
+              ...(input.schedule_c[0].qbi_sstb_filing_review
+                  .service_classification_review.professional_role
+                ? ["wrong-role" as const]
+                : []),
+            ];
         for (const kind of caseMutations) {
           const changed: Row = structuredClone(pending);
           const business = changed.schedule_c.schedule_cs[0];

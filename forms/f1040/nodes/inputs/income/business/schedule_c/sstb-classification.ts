@@ -59,12 +59,41 @@ export const sstbServiceClassificationSchema = z.discriminatedUnion("field", [
     client_investing_asset_management_for_fee_confirmed: z.literal(true),
     no_direct_real_property_management_confirmed: z.literal(true),
   }).strict(),
+  z.object({
+    ...common,
+    field: z.literal("actuarial_science"),
+    actuarial_services_by_actuary_confirmed: z.literal(true),
+    no_non_actuarial_services_confirmed: z.literal(true),
+  }).strict(),
+  z.object({
+    ...common,
+    field: z.literal("performing_arts"),
+    professional_role: z.enum([
+      "actor",
+      "singer",
+      "musician",
+      "entertainer",
+      "director",
+    ]),
+    unique_performing_arts_skills_confirmed: z.literal(true),
+    no_equipment_facility_operation_or_broadcasting_confirmed: z.literal(true),
+  }).strict(),
+  z.object({
+    ...common,
+    field: z.literal("athletics"),
+    professional_role: z.enum(["athlete", "coach", "team_manager"]),
+    unique_athletic_competition_skills_confirmed: z.literal(true),
+    no_equipment_facility_operation_or_broadcasting_confirmed: z.literal(true),
+  }).strict(),
 ]);
 
 const codes: Record<
   z.infer<typeof sstbServiceClassificationSchema>["field"],
   readonly string[]
 > = {
+  actuarial_science: ["541990"],
+  performing_arts: ["711510", "711100"],
+  athletics: ["711210"],
   financial_services: ["523900", "523150", "522300"],
   securities_brokerage: ["523150"],
   investment_management: ["523900"],

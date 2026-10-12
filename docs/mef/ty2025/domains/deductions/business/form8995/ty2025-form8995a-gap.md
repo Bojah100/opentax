@@ -1,5 +1,65 @@
 # TY2025 Form 8995-A coverage gap
 
+## October 12 actuarial, performing-arts and athletic source checkpoint
+
+The retained one-business Schedule A path now accepts reviewed actuarial science,
+performing arts and athletics. Classification records bind professional services,
+roles where applicable, engagement references and distinct invoice receipts to
+all Schedule C revenue. Actuarial records confirm services by an actuary and no
+other service receipts; arts and athletic records confirm the required skills
+and exclude equipment/facility operation and broadcasting. Performer and athletic
+roles are distinct; a facility operator cannot pass as either.
+
+This follows the [IRS SSTB definitions](https://www.irs.gov/instructions/i8995a).
+[TY2025 Schedule C codes](https://www.irs.gov/instructions/i1040sc) corroborate
+actuarial services541990, independent performers711510, performing companies711100
+and spectator sports711210. The activity code does not establish classification
+without the reviewed service records. Mixed excluded activities, other fields,
+multiple businesses and wider source combinations remain outside this checkpoint.
+
+Nine complete packets cover all five statuses, either joint owner, payroll and
+owner-only businesses, partial/capped wage bases and the investment-income cap.
+Cases include actuarial services, an actor, a singer-owned performing company,
+a director, an athlete, a coach and a team manager. Their income sources retain
+independently reconciled investment fixtures; source records are synthetic and
+do not authenticate customer records or professional status.
+
+| Case | QBI deduction | Taxable income | Total tax | Refund or owed |
+| --- | ---: | ---: | ---: | --- |
+| actor-mfs | 1,934 | 226,866 | 51,108 | owed 1,108 |
+| actuary-income-cap | 2,474 | 211,698 | 30,644 | owed 30,644 |
+| actuary-primary-partial | 3,811 | 417,611 | 93,231 | owed 43,231 |
+| actuary-single | 1,934 | 226,866 | 50,433 | owed 433 |
+| athlete-hoh | 1,561 | 219,364 | 46,293 | refund 3,707 |
+| coach-spouse-partial | 2,830 | 418,592 | 93,544 | owed 43,544 |
+| director-primary-capped | 2,872 | 420,178 | 90,796 | owed 40,796 |
+| manager-spouse-capped | 3,890 | 419,160 | 90,470 | owed 40,470 |
+| singer-company-qss | 3,711 | 209,339 | 36,739 | refund 13,261 |
+
+The nine new packet tests and213 related SSTB/Schedule C/submission tests pass
+(222 typed tests, zero failures or ignored tests); focused formatting/lint and
+diff checks pass. The expanded saved-return replay covers59 returns and768
+rejected source/archive alterations; details are in the
+[saved-return proof](../../../../testing/ty2025-sstb-submission-replay.md).
+
+All nine full native returns pass local2025v5.4 XSD. Independent Decimal
+calculations reconcile final tax, owner SE, Additional Medicare, NIIT, income
+limits and preferential rates. The packet harness rejects96 native and96 PDF
+alterations, including six incompatible professional roles. All96 public
+alterations report graph errors:42 preparations reject and54 repeat deferred161.
+The accepted-after-error XML files remain separate from positive packet counts.
+
+All142 PDF pages received qualified observation:25 new images inspected in
+seven contact sheets,115 exact prior matches and two within-batch duplicates.
+Business names, roles, codes, owners, amounts and Schedule A percentages reconcile.
+Reopened outputs contain zero fields/widgets. Existing Schedule C choices3,
+header68 and required-zero76 qualifications repeat without repair.
+
+Evidence: `.state/research/form8995a-sstb-professional-2026-10-12/` retains source
+records, native/PDF packets, schema provenance, independent arithmetic, mutation
+outcomes, rendered images and review mappings. Broader parent completion,
+external source authentication and IRS acceptance remain open.
+
 ## October 12 financial-service source checkpoint
 
 The retained one-business Schedule A path now accepts reviewed financial advice,

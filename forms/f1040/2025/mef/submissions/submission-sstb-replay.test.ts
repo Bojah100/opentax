@@ -27,6 +27,10 @@ import {
   sstbFinancialCases,
   sstbFinancialFixture,
 } from "../../domains/deductions/business/form8995a/form8995a_sstb_financial_fixture.ts";
+import {
+  sstbProfessionalCases,
+  sstbProfessionalFixture,
+} from "../../domains/deductions/business/form8995a/form8995a_sstb_professional_fixture.ts";
 import { sha256Hex } from "../../return-processing/prepared-source.ts";
 import {
   buildMefSubmissionArchive,
@@ -51,7 +55,7 @@ function remap<T>(value: T, primary: string, spouse: string): T {
   });
 }
 
-Deno.test("SSTB saved returns preserve all 50 source packets in mixed submission archives", async () => {
+Deno.test("SSTB saved returns preserve all 59 source packets in mixed submission archives", async () => {
   const permission = await Deno.permissions.query({
     name: "env",
     variable: "SSTB_SUBMISSION_EVIDENCE",
@@ -85,8 +89,12 @@ Deno.test("SSTB saved returns preserve all 50 source packets in mixed submission
       name: `financial-${c.name}`,
       input: sstbFinancialFixture(c),
     })),
+    ...sstbProfessionalCases.map((c) => ({
+      name: `professional-${c.name}`,
+      input: sstbProfessionalFixture(c),
+    })),
   ];
-  assertEquals(cases.length, 50);
+  assertEquals(cases.length, 59);
   const archives: MefSubmissionArchive[] = [];
   const observations = [];
   let sourceRejected = 0, archiveRejected = 0;
@@ -359,8 +367,8 @@ Deno.test("SSTB saved returns preserve all 50 source packets in mixed submission
     }])
   );
   archiveRejected++;
-  assertEquals(sourceRejected, 267);
-  assertEquals(archiveRejected, 371);
+  assertEquals(sourceRejected, 330);
+  assertEquals(archiveRejected, 438);
   if (evidence) {
     await Deno.writeTextFile(
       `${evidence}/checks.json`,
