@@ -11,6 +11,10 @@ import {
   patronWageCases,
   patronWageFixture,
 } from "../../domains/deductions/business/form8995a/form8995a_patron_wages_fixture.ts";
+import {
+  patronInvestmentCases,
+  patronInvestmentFixture,
+} from "../../domains/deductions/business/form8995a/form8995a_patron_investments_fixture.ts";
 import { pdfReviewFixtures } from "../../pdf/review-fixtures.ts";
 import { spouseOwnedPatronFixture } from "../../pdf/reviews/general/composed-returns/review-8995a-patron-joint.fixture.ts";
 import { sha256Hex } from "../../return-processing/prepared-source.ts";
@@ -37,7 +41,7 @@ function remap<T>(value: T, primary: string, spouse: string): T {
   });
 }
 
-Deno.test("Patron saved returns preserve all 46 source packets in mixed submission archives", async () => {
+Deno.test("Patron saved returns preserve all 58 source packets in mixed submission archives", async () => {
   const permission = await Deno.permissions.query({
     name: "env",
     variable: "PATRON_SUBMISSION_EVIDENCE",
@@ -86,7 +90,13 @@ Deno.test("Patron saved returns preserve all 46 source packets in mixed submissi
       input: patronWageFixture(c),
     })),
   );
-  assertEquals(cases.length, 46);
+  cases.push(
+    ...patronInvestmentCases.map((c) => ({
+      name: `investments-${c.name}`,
+      input: patronInvestmentFixture(c),
+    })),
+  );
+  assertEquals(cases.length, 58);
   const archives: MefSubmissionArchive[] = [];
   const observations = [];
   let sourceRejected = 0, archiveRejected = 0;
@@ -184,7 +194,7 @@ Deno.test("Patron saved returns preserve all 46 source packets in mixed submissi
         "deduction",
         "tax",
         "companion",
-        ...(c.name.startsWith("wages-")
+        ...((c.name.startsWith("wages-") || c.name.startsWith("investments-"))
           ? [
             "wage-owner",
             "wage-ss",
@@ -195,6 +205,26 @@ Deno.test("Patron saved returns preserve all 46 source packets in mixed submissi
             "wage-reference",
             "wage-missing",
             ...(input.general.filing_status === "mfj" ? ["wage-swap"] : []),
+          ]
+          : []),
+        ...(c.name.startsWith("investments-")
+          ? [
+            "interest-owner",
+            "dividend-owner",
+            "interest-reference",
+            "dividend-reference",
+            "interest-amount",
+            "dividend-amount",
+            "qualified-review",
+            "capital-distribution",
+            "capital-limit",
+            "investment-payer",
+            "schedule-b",
+            "tax-worksheet",
+            "niit",
+            "niit-interest",
+            "niit-dividends",
+            "niit-gain",
           ]
           : []),
         ...(input.general.filing_status === "mfs"
@@ -281,6 +311,51 @@ Deno.test("Patron saved returns preserve all 46 source packets in mixed submissi
           changedReview.box6_written_notice_review;
         details.allocation_worksheet_reference =
           changedReview.allocation_worksheet_reference;
+      }
+      if (c.name.startsWith("investments-")) {
+        const interest = changed.f1099int.f1099ints[0];
+        const dividend = changed.f1099div.f1099divs[0];
+        if (kind === "interest-owner") interest.recipient_tin = "999001234";
+        if (kind === "dividend-owner") dividend.recipient_tin = "999001234";
+        if (kind === "interest-reference") {
+          interest.source_document_reference = "";
+        }
+        if (kind === "dividend-reference") {
+          dividend.source_document_reference = "";
+        }
+        if (kind === "interest-amount") interest.box1++;
+        if (kind === "dividend-amount") dividend.box1a++;
+        if (kind === "qualified-review") {
+          delete dividend.qualified_dividend_filing_review;
+        }
+        if (kind === "capital-distribution") dividend.box2a++;
+        if (kind === "investment-payer") interest.payer_tin = "bad";
+        for (const key of ["form8995", "form8995a", "form8995a_schedule_d"]) {
+          changed[key].investment_interest_sources = structuredClone(
+            changed.f1099int.f1099ints,
+          );
+          changed[key].investment_dividend_sources = structuredClone(
+            changed.f1099div.f1099divs,
+          );
+          if (kind === "dividend-amount") {
+            changed[key].investment_dividend_totals.ordinary++;
+          }
+          if (kind === "capital-distribution") {
+            changed[key].investment_dividend_totals
+              .capital_gain_distributions++;
+          }
+          if (kind === "capital-limit") changed[key].net_capital_gain++;
+        }
+        if (kind === "schedule-b") changed.schedule_b.interest_rows[0].amount++;
+        if (kind === "tax-worksheet") {
+          changed.income_tax_calculation.qualified_dividends++;
+        }
+        if (kind === "niit") changed.form8960.line17_niit++;
+        if (kind === "niit-interest") changed.form8960.line1_taxable_interest++;
+        if (kind === "niit-dividends") {
+          changed.form8960.line2_ordinary_dividends++;
+        }
+        if (kind === "niit-gain") changed.form8960.line5a_net_gain++;
       }
       if (kind === "deduction") changed.f1040.line13_qbi_deduction++;
       if (kind === "tax") changed.f1040.line24_total_tax++;
@@ -420,8 +495,8 @@ Deno.test("Patron saved returns preserve all 46 source packets in mixed submissi
     }])
   );
   archiveRejected++;
-  assertEquals(sourceRejected, 559);
-  assertEquals(archiveRejected, 333);
+  assertEquals(sourceRejected, 969);
+  assertEquals(archiveRejected, 421);
   if (evidence) {
     await Deno.writeTextFile(
       `${evidence}/checks.json`,

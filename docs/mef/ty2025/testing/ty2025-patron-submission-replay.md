@@ -1,5 +1,32 @@
 # TY2025 cooperative patron saved-return and submission replay
 
+## October 12 investment extension
+
+The current replay covers 58 saved patron returns, adding twelve investment
+cases to the prior 46. Farm and Schedule C health-plan cases cover all five
+filing statuses and either joint proprietor, preserving owned interest, ordinary
+and qualified dividends, capital distributions, proprietor payroll and NIIT.
+
+All 58 complete native ReturnData trees match their previously verified packets
+after synthetic identity remapping. The 58 returns and 58 manifests pass the
+2025v5.4 schemas. Forward and reverse containers preserve inner ZIP bytes,
+submission IDs and electronic postmarks. This packaging evidence adds no new
+complete-return or reviewed-PDF counts.
+
+The replay rejects 969 saved-source and 421 archive alterations (1,390 total).
+The 498 additional checks comprise 118 cooperative/final-tax/MFS changes,
+100 payroll changes, 192 investment changes and 88 archive changes. Investment
+mutations cover ownership, source references, amounts, qualified-dividend review,
+capital limits, payer identity, Schedule B, preferential tax and NIIT; changes are
+mirrored into retained investment copies before reopening. The existing deduction
+mutation remains counted once per case.
+
+Evidence is retained in `.state/research/submission-patron-investments-2026-10-12/`:
+source/native/manifest/ZIP sets, both containers, schema logs, complete prior-packet
+comparisons and test logs. The focused replay and all 51 submission-directory
+tests pass; focused lint, formatting and diff checks pass. Existing source
+authenticity, presentation, A2A and IRS acceptance qualifications remain unchanged.
+
 ## October 12 proprietor-wage extension
 
 The saved-return replay now covers 46 patron returns: the original 34 plus all

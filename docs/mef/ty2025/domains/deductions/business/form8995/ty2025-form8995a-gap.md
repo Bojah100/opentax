@@ -1,5 +1,16 @@
 # TY2025 Form 8995-A coverage gap
 
+## October 12 saved patron investment checkpoint
+
+[Saved-submission evidence](../../../../testing/ty2025-patron-submission-replay.md#october-12-investment-extension)
+now covers all 58 retained patron cases, including the twelve investment returns.
+All 116 return/manifest schema checks pass, every native return matches its prior
+packet after synthetic identity remapping, and both container orders preserve
+exact archives and request metadata. The replay rejects 969 saved-source and
+421 archive changes; all 51 submission tests pass. Investment sources, payroll,
+capital limits, preferential tax and NIIT survive JSON reopening together.
+No additional complete-return/PDF counts or parent-task closure are claimed.
+
 ## October 12 cooperative patron investment checkpoint
 
 One-business cooperative patron returns now reconcile owned ordinary interest,
