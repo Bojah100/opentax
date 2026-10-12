@@ -1,5 +1,61 @@
 # TY2025 Form 8995-A coverage gap
 
+## October 12 endorsement, identity licensing and appearance checkpoint
+
+The one-business SSTB route now accepts reviewed endorsement, personal-identity
+licensing and appearance income for independent artists, writers and performers.
+The source identifies one income category, the individual whose identity earns
+the receipts, engagement records and distinct invoice amounts. That individual's
+SSN must equal the reviewed Schedule C owner; all receipts must reconcile to
+gross revenue, with no other revenue category, returns or allowances.
+
+The [IRS SSTB definitions](https://www.irs.gov/instructions/i8995a) identify these
+three categories. This checkpoint uses the independent-artist/writer/performer
+[Schedule C code711510](https://www.irs.gov/instructions/i1040sc) with an explicit
+activity review; the code alone does not classify ordinary sales or services.
+Mixed categories, other individuals' identity income, wider business codes and
+multiple-business claims remain outside this retained route.
+
+Nine complete returns cover all five statuses, either joint owner, payroll and
+owner-only businesses, partial/capped wage bases and the investment-income cap.
+Independent Decimal calculations reconcile QBI, SE tax, Additional Medicare,
+NIIT, preferential tax, total tax and payment/refund amounts:
+
+| Case | QBI deduction | Taxable income | Total tax | Refund or owed |
+| --- | ---: | ---: | ---: | --- |
+| appearance-hoh | 1,561 | 219,364 | 46,293 | refund 3,707 |
+| appearance-income-cap | 2,474 | 211,698 | 30,644 | owed 30,644 |
+| appearance-spouse-partial | 2,830 | 418,592 | 93,544 | owed 43,544 |
+| endorsement-primary-capped | 2,872 | 420,178 | 90,796 | owed 40,796 |
+| endorsement-qss | 3,711 | 209,339 | 36,739 | refund 13,261 |
+| endorsement-single | 1,934 | 226,866 | 50,433 | owed 433 |
+| licensing-mfs | 1,934 | 226,866 | 51,108 | owed 1,108 |
+| licensing-primary-partial | 3,811 | 417,611 | 93,231 | owed 43,231 |
+| licensing-spouse-capped | 3,890 | 419,160 | 90,470 | owed 40,470 |
+
+All nine native returns pass local2025v5.4 XSD. The packet checks reject108
+native and108 PDF source alterations, including wrong individuals and unsupported
+income kinds. All108 public alterations report errors;45 preparations reject
+and63 repeat existing deferred161 when preparation is called after graph errors.
+This reproduces that issue without changing the error-handling policy.
+
+All142 PDF pages received qualified observation:23 newly inspected images in
+six contact sheets,115 exact previously observed matches and four within-batch
+duplicates. Source activities, names, business codes, owner amounts and Schedule A
+percentages reconcile. Reopened outputs contain zero fields/widgets. Existing
+Schedule C conditional marks3, header68 and required-zero76 findings repeat.
+
+The nine focused tests and214 grouped SSTB/Schedule C/submission tests pass
+(223 typed tests, zero failures or ignored tests); focused lint and diff checks
+pass. Existing saved-return evidence remains59 returns/768 rejections;
+these nine new source kinds are not yet counted in that archive replay.
+
+Evidence: `.state/research/form8995a-sstb-identity-2026-10-12/` retains source
+records, native/PDF packets, schema provenance, independent arithmetic, mutation
+outcomes, rendered images and review mappings. Source records are synthetic;
+engagement references do not authenticate external contracts. Broader parent
+completion and IRS acceptance remain open.
+
 ## October 12 actuarial, performing-arts and athletic source checkpoint
 
 The retained one-business Schedule A path now accepts reviewed actuarial science,

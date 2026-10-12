@@ -89,10 +89,17 @@ const mutations = [
 ] as const;
 function alter(
   business: Row,
-  kind: typeof mutations[number] | "financial-kind" | "wrong-role",
+  kind:
+    | typeof mutations[number]
+    | "financial-kind"
+    | "wrong-role"
+    | "identity-owner"
+    | "identity-kind",
 ) {
   const review = business.qbi_sstb_filing_review;
   const service = review.service_classification_review;
+  if (kind === "identity-owner") service.individual_ssn = "999001234";
+  if (kind === "identity-kind") service.income_kind = "ordinary_product_sales";
   if (kind === "wrong-role") service.professional_role = "facility_operator";
   if (kind === "financial-kind") {
     service.service_kind = service.service_kind === "financial_advice"
@@ -205,6 +212,10 @@ export function registerSstbServiceCases<
             : [
               ...mutations,
               ...(input.schedule_c[0].qbi_sstb_filing_review
+                  .service_classification_review.field === "reputation_or_skill"
+                ? ["identity-owner" as const, "identity-kind" as const]
+                : []),
+              ...(input.schedule_c[0].qbi_sstb_filing_review
                   .service_classification_review.professional_role
                 ? ["wrong-role" as const]
                 : []),
@@ -286,6 +297,9 @@ export function registerSstbServiceCases<
             "duplicate-invoice",
             "other-income",
             "returns-allowances",
+            ...(caseMutations.includes("identity-owner")
+              ? ["identity-owner"]
+              : []),
             ...(caseMutations.includes("financial-kind")
               ? ["financial-kind"]
               : []),

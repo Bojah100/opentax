@@ -18,6 +18,15 @@ const common = {
 export const sstbServiceClassificationSchema = z.discriminatedUnion("field", [
   z.object({
     ...common,
+    field: z.literal("reputation_or_skill"),
+    income_kind: z.enum(["endorsement", "identity_licensing", "appearance"]),
+    individual_ssn: z.string().regex(/^\d{9}$/),
+    independent_artist_writer_or_performer_confirmed: z.literal(true),
+    receipts_for_individual_identity_activity_confirmed: z.literal(true),
+    no_other_revenue_categories_confirmed: z.literal(true),
+  }).strict(),
+  z.object({
+    ...common,
     field: z.literal("law"),
     unique_legal_skills_confirmed: z.literal(true),
     no_printing_delivery_stenography_confirmed: z.literal(true),
@@ -91,6 +100,7 @@ const codes: Record<
   z.infer<typeof sstbServiceClassificationSchema>["field"],
   readonly string[]
 > = {
+  reputation_or_skill: ["711510"],
   actuarial_science: ["541990"],
   performing_arts: ["711510", "711100"],
   athletics: ["711210"],
@@ -129,6 +139,14 @@ export function assertSstbServiceClassification(item: ScheduleCItem): void {
       );
     }
     return;
+  }
+  if (
+    service.field === "reputation_or_skill" &&
+    service.individual_ssn !== review.owner_ssn
+  ) {
+    throw Error(
+      "Reviewed reputation or skill income must identify the Schedule C owner",
+    );
   }
   if (service.field === "financial_services") {
     const codeByService = {
