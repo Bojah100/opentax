@@ -176,7 +176,8 @@ export const itemSchema = z.object({
     all_business_payroll_included_confirmed: z.literal(true),
     no_other_business_or_aggregation_confirmed: z.literal(true),
     no_ptp_or_loss_carryforward_confirmed: z.literal(true),
-    qualified_dividends_zero_confirmed: z.literal(true),
+    // Reconciled to the retained investment portfolio, including positive dividends.
+    qualified_dividends_zero_confirmed: z.boolean(),
     no_qualified_property_confirmed: z.literal(true),
     no_adjustments_beyond_filed_half_se_tax_confirmed: z.literal(true),
     review_reference: z.string().trim().min(1),

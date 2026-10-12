@@ -196,7 +196,7 @@ export const sstbFilingDetailsSchema = z.object({
   one_non_ptp_sstb_confirmed: z.literal(true),
   no_other_business_or_aggregation_confirmed: z.literal(true),
   no_reit_ptp_or_loss_carryforward_confirmed: z.literal(true),
-  qualified_dividends_zero_confirmed: z.literal(true),
+  qualified_dividends_zero_confirmed: z.boolean(),
   qbi_wages_ubia_source_reference: z.string().trim().min(1),
   taxable_income_before_qbi_confirmed: z.literal(true),
   mfs_owner_ssn: z.string().regex(/^\d{9}$/).optional(),
@@ -1218,7 +1218,9 @@ export function calculateOneSstb8995ALines(input: Form8995AInput) {
     input.sstb_qbi !== source.business_qbi ||
     input.sstb_w2_wages !== source.business_w2_wages ||
     input.sstb_unadjusted_basis !== source.business_ubia ||
-    (input.net_capital_gain ?? 0) !== 0 ||
+    (!input.single_sstb_schedule_c_source &&
+      (qbiCapitalTotal(input) !== 0 ||
+        source.qualified_dividends_zero_confirmed !== true)) ||
     (input.line6_sec199a_dividends ?? 0) !== 0 ||
     (input.qbi_loss_carryforward ?? 0) !== 0 ||
     (input.reit_loss_carryforward ?? 0) !== 0 ||
@@ -1227,7 +1229,7 @@ export function calculateOneSstb8995ALines(input: Form8995AInput) {
     input.patron_filing_details
   ) {
     throw new Error(
-      "Form 8995-A Schedule A source must be the only business, with no aggregation, patron, gain, REIT/PTP, or loss path",
+      "Form 8995-A Schedule A source must be the only business, with no aggregation, patron, unsourced gain, REIT/PTP, or loss path",
     );
   }
   const phaseIn = (input.taxable_income - threshold) / phaseInRange;
@@ -1249,7 +1251,9 @@ export function calculateOneSstb8995ALines(input: Form8995AInput) {
   const line26 = line3 - line25;
   const line13 = Math.max(line11, line26);
   const line33 = input.taxable_income;
-  const line36 = filed(line33 * QBI_RATE);
+  const line34 = qbiCapitalTotal(input, true);
+  const line35 = Math.max(0, line33 - line34);
+  const line36 = filed(line35 * QBI_RATE);
   const line39 = Math.min(line13, line36);
   const amounts = [
     line2,
@@ -1266,6 +1270,8 @@ export function calculateOneSstb8995ALines(input: Form8995AInput) {
     line25,
     line26,
     line13,
+    line34,
+    line35,
     line36,
     line39,
   ];
@@ -1299,7 +1305,8 @@ export function calculateOneSstb8995ALines(input: Form8995AInput) {
     line26,
     line32: line13,
     line33,
-    line35: line33,
+    line34,
+    line35,
     line36,
     line37: line39,
     line39,

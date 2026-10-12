@@ -1,3 +1,7 @@
+import {
+  assertMultiBusinessInvestmentSources,
+  assertMultiBusinessInvestmentTax,
+} from "../f8995/f8995-investment.ts";
 import { assertOwnedScheduleSE } from "../../../../../domains/taxes/self-employment/schedule-se/schedule-se-owner-source.ts";
 import type { FilerIdentity } from "../../../../../../mef/header.ts";
 import { FilingStatus } from "../../../../../../nodes/types.ts";
@@ -112,8 +116,10 @@ export function assertSstbScheduleCSource(
       review.review_reference ||
     input.sstb_w2_wages !== source.qbi_w2_wages ||
     input.sstb_unadjusted_basis !== 0 ||
-    (f.line3a_qualified_dividends ?? 0) !== 0 ||
-    (f.line7_capital_gain ?? 0) !== 0
+    review.qualified_dividends_zero_confirmed !==
+      ((f.line3a_qualified_dividends ?? 0) === 0) ||
+    input.sstb_filing_details?.qualified_dividends_zero_confirmed !==
+      review.qualified_dividends_zero_confirmed
   ) {
     throw new Error(
       "SSTB accounting source, payroll, owner and filed SE adjustment must match the retained return",
@@ -140,6 +146,45 @@ export function assertSstbScheduleCSource(
         "MFS SSTB needs reviewed noncommunity domicile/property regime and spouse deduction review in the actual return",
       );
     }
+  }
+  const portfolio = input.qbi_capital_sources !== undefined ||
+    input.investment_interest_sources !== undefined ||
+    input.investment_dividend_sources !== undefined ||
+    pending.f1099int !== undefined || pending.f1099div !== undefined ||
+    pending.f1099b !== undefined;
+  if (portfolio) {
+    const retainedPending = pending as Record<string, Record<string, unknown>>;
+    const totals = assertMultiBusinessInvestmentSources(
+      { ...input, taxpayer_ssn: String(g.taxpayer_ssn) },
+      retainedPending,
+      true,
+      joint ? String(g.spouse_ssn) : undefined,
+    );
+    const wages = w2.reduce((sum, row) => sum + row.box1_wages, 0);
+    const income = wages + profit + totals.interest + totals.ordinary +
+      totals.returnCapital;
+    if (
+      input.net_capital_gain !== totals.filedQbiCapitalLimit ||
+      f.line9_total_income !== income ||
+      f.line11_agi !== income - retained.se_tax_deduction ||
+      (f.line10_adjustments ?? 0) !== retained.se_tax_deduction ||
+      (f.line1a_wages ?? 0) !== wages || (f.line1z_total_wages ?? 0) !== wages
+    ) {
+      throw Error(
+        "SSTB income must reconcile owned wage, business and investment sources",
+      );
+    }
+    assertMultiBusinessInvestmentTax(
+      retainedPending,
+      totals,
+      input.filing_status,
+    );
+  } else if (
+    (input.net_capital_gain ?? 0) !== 0 ||
+    (f.line3a_qualified_dividends ?? 0) !== 0 ||
+    (f.line7_capital_gain ?? 0) !== 0
+  ) {
+    throw Error("SSTB capital limit needs retained investment sources");
   }
   const lines = calculateOneSstb8995ALines(input);
   if (

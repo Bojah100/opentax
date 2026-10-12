@@ -816,7 +816,9 @@ function advancedFormOutput(
       sumField(input.retirement_plan_deduction) !== 0 ||
       input.qbi_no_prior_loss_or_suspended_loss_confirmed !== true ||
       input.qbi_not_patron_of_specified_cooperative_confirmed !== true ||
-      qbiCapitalTotal(input) !== 0 ||
+      !Number.isSafeInteger(qbiCapitalTotal(input, true)) ||
+      review.qualified_dividends_zero_confirmed !==
+        ((input.investment_dividend_totals?.qualified ?? 0) === 0) ||
       sumField(input.line6_sec199a_dividends) !== 0 ||
       (input.qbi_loss_carryforward ?? 0) !== 0 ||
       (input.reit_loss_carryforward ?? 0) !== 0
@@ -845,7 +847,8 @@ function advancedFormOutput(
         one_non_ptp_sstb_confirmed: true,
         no_other_business_or_aggregation_confirmed: true,
         no_reit_ptp_or_loss_carryforward_confirmed: true,
-        qualified_dividends_zero_confirmed: true,
+        qualified_dividends_zero_confirmed:
+          review.qualified_dividends_zero_confirmed,
         qbi_wages_ubia_source_reference: review.review_reference,
         taxable_income_before_qbi_confirmed: true,
       },

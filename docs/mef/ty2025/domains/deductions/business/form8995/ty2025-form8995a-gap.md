@@ -1,5 +1,64 @@
 # TY2025 Form 8995-A coverage gap
 
+## October 12 SSTB investment sources and income cap checkpoint
+
+Reviewed accounting SSTBs now retain owned interest, ordinary/qualified dividends
+and capital distributions through the public graph, parent Form8995-A,
+ScheduleA, full native return and PDF. The qualified-dividend review answer is
+bound to the actual source total. Complete-return replay verifies copy identities,
+recipient ownership, qualified holding evidence, distinct capital contributions,
+wage/business income, filed half-SE and the final preferential-tax worksheet.
+Historical staged claims without the ScheduleC source retain their zero-gain guard.
+
+Nine complete packets cover all five filing statuses, either joint business
+owner, mixed-spouse portfolios, payroll/no-employees and partial/capped Social
+Security wage bases. Eight retain interest1,700, ordinary dividends3,000,
+qualified dividends1,500 and distributions1,800, giving line34 of3,300. The
+income-cap case has no outside wages and dividends200,000, all qualified: its
+line34 is201,800, line35 is12,372, and the2,474 income limit caps the3,438
+business component. This follows the
+[Form8995-A line34 instructions](https://www.irs.gov/instructions/i8995a).
+
+| Case | QBI deduction | Taxable income | Regular tax | Total tax | Refund or owed |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| hoh-owner-only | 1,561 | 219,364 | 44,959 | 46,293 | 3,707 |
+| mfs-payroll | 1,934 | 226,866 | 49,099 | 51,108 | 1,108 |
+| primary-capped-owner-only | 2,872 | 420,178 | 88,022 | 90,796 | 40,796 |
+| primary-partial-payroll | 3,811 | 417,611 | 87,201 | 93,231 | 43,231 |
+| qss-payroll | 3,711 | 209,339 | 35,652 | 36,739 | 13,261 |
+| single-income-cap | 2,474 | 211,698 | 25,490 | 30,644 | 30,644 |
+| single-payroll | 1,934 | 226,866 | 49,099 | 50,433 | 433 |
+| spouse-capped-payroll | 3,890 | 419,160 | 87,696 | 90,470 | 40,470 |
+| spouse-partial-owner-only | 2,830 | 418,592 | 87,514 | 93,544 | 43,544 |
+
+HOH and QSS receive refunds; the other cases owe. Independent Decimal arithmetic
+reconciles profit, owner SE bases, whole-dollar half-SE, applicable percentages,
+wage-phase reductions, income caps, preferential tax, Additional Medicare, NIIT,
+zero AMT and payments against both prepared data and native XML. The cap case
+uses the published Single9,850–9,900 tax-table cell988 under the
+[2025 tax tables](https://www.irs.gov/pub/irs-pdf/i1040tt.pdf); its NIIT is1,137.
+QSS owes no NIIT; the other seven regular portfolios owe247 each.
+
+Nine complete-return tests pass full2025v5.4 XSD;29 related typed regressions
+and the additional source-boundary test pass (39 tests total). Eighteen altered records per case
+reject both native and fresh-PDF export (324 attempts), including mirrored
+investment copies, unrelated owners, duplicate copies, holding review, capital
+contribution identity/amount, changed review answers and stale final-tax inputs.
+Thirty-six public source/preparation alterations reject. One additional test
+prepares interest-only, ordinary-plus-capital and qualified-only inventories,
+then rejects each inverted review answer (three more public rejections).
+Reversing investment copy order preserves tax and successful preparation.
+
+All142 PDF pages received qualified observation:58 newly inspected images in15
+contact sheets,70 exact matches to previously observed images and14 within-batch
+duplicates. Printed limits, amounts, percentages and balances reconcile; reopened
+PDFs have no canonical fields or Widget annotations. Existing positive ScheduleC
+skip choices3, name/header68 and blank-zero76 issues repeat without repair.
+Broader SSTB categories, multiple businesses, authenticated records and IRS
+acceptance remain open. Evidence, commands, original eight input rejections,
+source packets, XSD logs and independent/visual review mappings are retained in
+`.state/research/form8995a-sstb-investments-2026-10-12/`.
+
 ## October 12 joint SSTB owners and mixed wages checkpoint
 
 A reviewed accounting SSTB may now belong to either spouse on a joint return,

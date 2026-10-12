@@ -904,7 +904,7 @@ function buildIRS8995A(rawFields: unknown, context?: MefBuildContext): string {
       element("REITPTPComponentAmt", 0),
       element("QBIDedBfrIncomeLimitationAmt", lines.line32),
       element("TaxableIncomeBeforeQBIDedAmt", lines.line33),
-      element("NetCapitalGainAmt", 0),
+      element("NetCapitalGainAmt", lines.line34),
       element("AdjustedTaxableIncomeAmt", lines.line35),
       element("IncomeLimitationAmt", lines.line36),
       element("QBIDedBeforeDPADSect199AgAmt", lines.line37),
