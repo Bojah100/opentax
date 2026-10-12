@@ -449,10 +449,14 @@ function advancedFormOutput(
 ): NodeOutput {
   if (input.rpe_aggregation_source) {
     const group = reviewedRpeAggregation(input.rpe_aggregation_source);
+    const joint = input.filing_status === FilingStatus.MFJ;
+    const owners = [input.taxpayer_ssn, ...(joint ? [input.spouse_ssn] : [])]
+      .map((ssn) => ssn?.replaceAll("-", ""));
     if (
-      input.filing_status !== FilingStatus.Single ||
-      input.taxpayer_ssn?.replaceAll("-", "") !== group.source.recipient_tin ||
-      taxableIncome <= 247300 ||
+      (input.filing_status !== FilingStatus.Single && !joint) ||
+      owners.some((ssn) => !ssn) || new Set(owners).size !== owners.length ||
+      !owners.includes(group.source.recipient_tin) ||
+      taxableIncome <= (joint ? 394600 : 197300) ||
       sumField(input.qbi) !== group.qbi ||
       sumField(input.w2_wages) !== group.wages ||
       sumField(input.unadjusted_basis) !== group.ubia ||
@@ -471,7 +475,7 @@ function advancedFormOutput(
       input.owned_s_corp_loss_sources
     ) {
       throw Error(
-        "RPE aggregation needs its actual Single owner and positive current statement without other QBI/owner adjustment paths",
+        "RPE aggregation needs its actual Single or joint owner and positive current statement without other QBI/owner adjustment paths",
       );
     }
     return output(form8995a, {
@@ -1686,10 +1690,10 @@ class Form8995Node extends TaxNode<typeof inputSchema> {
     const taxableIncome = taxableIncomeBeforeQbi(input, cfg);
     if (
       input.rpe_aggregation_source && taxableIncome !== undefined &&
-      taxableIncome <= 247300
+      taxableIncome <= qbiThreshold(input.filing_status!, cfg)
     ) {
       throw Error(
-        "RPE aggregation below the completed high-income 8995-A source route requires its own simplified/phase-in filing projection",
+        "RPE aggregation below the 8995-A threshold requires its own simplified filing projection",
       );
     }
     if (

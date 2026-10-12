@@ -8,7 +8,6 @@ import {
 } from "../../../../../pdf/forms/deductions/business/f8995a_aggregation_statement.ts";
 import { z } from "zod";
 import { element, elements } from "../../../../../../mef/xml.ts";
-import { FilingStatus } from "../../../../../../mef/header.ts";
 import {
   calculateTwoBusinessAggregationLines,
   type Form8995AInput,
@@ -35,6 +34,7 @@ function assertRpeScheduleBJoin(
   const calculated = calculateTwoBusinessAggregationLines(input),
     pending = context?.pending,
     filer = context?.filer;
+  aggregationOwner(input, filer);
   const source = input.rpe_aggregation_source!;
   const k1 = sCorpInputSchema.parse(pending?.k1_s_corp);
   if (k1.k1_s_corps.length !== 1) {
@@ -59,7 +59,8 @@ function assertRpeScheduleBJoin(
   const passiveInert = passive === undefined ||
     (record(passive) &&
       Object.entries(passive).every(([key, value]) =>
-        value === undefined || (key === "filing_status" && value === "single")
+        value === undefined ||
+        (key === "filing_status" && value === input.filing_status)
       ));
   const healthInert = health === undefined ||
     (record(health) &&
@@ -81,9 +82,7 @@ function assertRpeScheduleBJoin(
   if (
     !issued || !isDeepStrictEqual(issued.source, source) ||
     !isDeepStrictEqual(parent, input) || !isDeepStrictEqual(companion, input) ||
-    !filer || filer.filingStatus !== FilingStatus.Single ||
-    filer.primarySSN.replaceAll("-", "") !== source.recipient_tin ||
-    general?.filing_status !== "single" ||
+    general?.filing_status !== input.filing_status ||
     general?.qbi_no_prior_loss_or_suspended_loss_confirmed !== true ||
     general.qbi_not_patron_of_specified_cooperative_confirmed !== true ||
     !upstream || !isDeepStrictEqual(upstream.rpe_aggregation_source, source) ||

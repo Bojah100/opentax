@@ -1,5 +1,61 @@
 # TY2025 Form 8995-A coverage gap
 
+## October 12 joint RPE ownership and phase-in checkpoint
+
+One intact S-corporation aggregation can now belong to either actual joint
+filer, with the joint income threshold and phased wage/property limitation.
+Previously the source dispatcher and export join required a Single filer above
+247,300. The recipient TIN must match exactly one current owner; missing spouse
+identity, duplicate owners and an unrelated recipient reject. The actual K-1,
+parent/companion, Schedule E income and finalized deduction still reconcile.
+
+The [2025 Form8995-A instructions](https://www.irs.gov/instructions/i8995a)
+require the complete RPE aggregation and its issued disclosure to remain intact.
+The six new synthetic cases reuse the original three-/four-business issuer
+statement bytes, recipient Alex Taxpayer and all K-1/member facts. Spouse cases
+make Alex the spouse of Sam Example; they do not rewrite a PDF's recipient TIN.
+Outside wages vary with complete employer-specific Social Security and Medicare
+withholding. The two statement attachments remain distinct and referenced.
+
+| Cases (primary and spouse each) | Members | Before-QBI income | Phase reduction | Deduction | Total tax | Payments | Balance |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
+| Joint phased limitation | 4 | 418,500 | 896 (23.9%) | 69,104 | 69,549 | 10,000 | 59,549 |
+| Joint full limitation | 4 | 518,500 | n/a | 66,250 | 98,846 | 10,620 | 88,226 |
+| Joint nonbinding limitation | 3 | 438,500 | n/a | 48,000 | 79,414 | 10,800 | 68,614 |
+
+Independent decimal arithmetic verifies group QBI, wages, property, limitation,
+phase reduction, taxable income, regular tax, zero AMT, payments and balances.
+The [2025 tax worksheet](https://www.irs.gov/pub/irs-pdf/i1040tt.pdf) gives24%
+less14,306 for the first/third rows and32% less45,874 for the second. The latter
+two rows retain620 excess Social Security withholding; the third also retains180
+additional Medicare withholding with zero additional tax. Nonpassive issuer
+income produces no NIIT; it is not self-employment income.
+
+Six typed complete-packet tests pass, and all six XMLs pass the full2025v5.4
+return XSD. Forty-two altered records reject both native and fresh-PDF export
+(84 attempts), covering owner mismatch/ambiguity, income, final deduction,
+K-1 wages, missing members and a changed issued-PDF digest. Eighteen invalid
+public-owner cases reject. Direct-owner regression passes16/0 (including phase-in);
+the retained path-only adapted RPE gate passes4/0. Original fixture-path issues
+remain deferred65/66. Component boundaries include394,600 (guarded),
+394,601,494,599,494,600 and494,601; nonbinding limits omit Part III.
+
+The six full packets contain76 pages, represented by49 distinct rendered hashes
+observed on13 contact sheets. Annual and issued disclosures are included in this
+count, not counted again as separate PDFs. Packets reopen without fields/widgets.
+Phase fields, source names/amounts, continuation rows and annual owner identity
+reconcile. Existing68/76 qualifications repeat: the native joint header and
+printed8995-A/Schedule B retain only the primary name, and some required zeros
+remain blank, including8959 lines6/7. This is qualified visual evidence.
+
+Evidence: `.state/research/form8995a-joint-rpe-2026-10-12/`, including original
+rejection replay, final source/pending packets, XSD/test logs, independent decimal
+proof, rendered-page mapping and visual review. These synthetic issuer records
+do not establish external authenticity or IRS acceptance. Multiple issuers,
+other QBI families, lower-income simplified filings and wider election histories
+remain outside this checkpoint; the broad board task stays open. No deferred
+item was implemented.
+
 ## October 12 direct-owner aggregation phase-in checkpoint
 
 Direct-owner aggregations now support the Single and MFJ phase-in bands as well
@@ -58,7 +114,7 @@ Evidence is retained under
 replays, six packets with XSD logs, focused/nonbinding/regression logs,
 `independent-proof.json`, `review.py`, `review-mapping.json` and
 `visual-review.json`. Source authenticity, broader owner/election combinations,
-RPE phase-in, business-rule and IRS acceptance remain open. No deferred item was
+other RPE combinations, business-rule and IRS acceptance remain open. No deferred item was
 implemented and the broad main-board task remains open.
 
 ## October 12 joint direct-owner aggregation and annual disclosure

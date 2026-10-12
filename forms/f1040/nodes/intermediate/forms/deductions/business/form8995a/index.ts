@@ -639,8 +639,10 @@ export function calculateTwoBusinessAggregationLines(input: Form8995AInput) {
       issued = totals.source;
     const group = input.aggregation_groups?.[0];
     if (
-      input.filing_status !== FilingStatus.Single ||
-      input.taxable_income <= 247300 ||
+      (input.filing_status !== FilingStatus.Single &&
+        input.filing_status !== FilingStatus.MFJ) ||
+      input.taxable_income <=
+        (input.filing_status === FilingStatus.MFJ ? 394600 : 197300) ||
       !Number.isInteger(input.taxable_income) || input.net_capital_gain !== 0 ||
       input.aggregation_groups?.length !== 1 || !group ||
       group.group_name !== issued.group_name ||
@@ -711,7 +713,11 @@ export function calculateTwoBusinessAggregationLines(input: Form8995AInput) {
       })),
     };
     const parent = calculateOneBusiness8995ALines(input);
-    if (!Object.values(parent).every(Number.isInteger) || parent.line39 <= 0) {
+    if (
+      !Object.entries(parent).filter(([key, value]) =>
+        /^line\d+$/.test(key) && value !== undefined
+      ).every(([, value]) => Number.isInteger(value)) || parent.line39 <= 0
+    ) {
       throw Error(
         "RPE aggregation needs its finalized positive whole-dollar grouped deduction",
       );
@@ -1698,7 +1704,8 @@ export function calculateOneBusiness8995ALines(input: Form8995AInput) {
     input.patron_business_source || input.single_schedule_c_source ||
       input.single_schedule_f_source ||
       input.farm_wotc_filing_source ||
-      input.mixed_fishing_qbi_source || input.aggregation_filing_details,
+      input.mixed_fishing_qbi_source || input.aggregation_filing_details ||
+      input.rpe_aggregation_source,
   ) &&
     input.taxable_income > patronThreshold &&
     input.taxable_income <= patronThreshold + patronPhaseInRange &&
@@ -1745,7 +1752,8 @@ export function calculateOneBusiness8995ALines(input: Form8995AInput) {
     ...((input.patron_business_source || input.single_schedule_c_source ||
         input.single_schedule_f_source ||
         input.farm_wotc_filing_source ||
-        input.mixed_fishing_qbi_source || input.aggregation_filing_details)
+        input.mixed_fishing_qbi_source || input.aggregation_filing_details ||
+        input.rpe_aggregation_source)
       ? {
         patronThreshold,
         patronPhaseInRange,

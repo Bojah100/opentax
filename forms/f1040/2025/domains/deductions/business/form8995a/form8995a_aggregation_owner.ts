@@ -5,12 +5,17 @@ import {
 import { FilingStatus, TS } from "../../../../../nodes/types.ts";
 import type { Form8995AInput } from "../../../../../nodes/intermediate/forms/deductions/business/form8995a/index.ts";
 
-/** Bind a validated direct-owner group or existing single-filer RPE to its filer. */
+/** Bind a validated direct-owner group or issued RPE to its filer. */
 export function aggregationOwner(input: Form8995AInput, filer?: FilerIdentity) {
   const joint = input.filing_status === FilingStatus.MFJ;
   const recipient =
     input.aggregation_filing_details?.members[0]?.source_schedule_c
-      .proprietor_recipient ?? TS.T;
+      .proprietor_recipient ??
+      (joint &&
+          input.rpe_aggregation_source?.recipient_tin ===
+            filer?.spouse?.ssn.replaceAll("-", "")
+        ? TS.S
+        : TS.T);
   const expectedSsn = input.aggregation_filing_details?.common_owner_ssn ??
     input.rpe_aggregation_source?.recipient_tin;
   const spouseOwned = recipient === TS.S;
