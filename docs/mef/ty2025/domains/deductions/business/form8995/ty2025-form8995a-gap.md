@@ -1,5 +1,59 @@
 # TY2025 Form 8995-A coverage gap
 
+## October 12 SSTB zero deduction and inclusive endpoint checkpoint
+
+Retained Schedule C SSTBs now prepare a zero deduction at the inclusive upper
+phase endpoint, after whole-dollar rounding, and when qualified dividends and
+capital distributions exhaust the income cap. Legacy staged zero claims still
+reject. Parent wage/property limits become zero when rounded QBI is zero, while
+Schedule A retains its own applicable amounts. This follows the
+[Form8995-A instructions](https://www.irs.gov/instructions/i8995a) for Exception2,
+parent lines4/7 and the income limit.
+
+Twelve complete packets cover all five statuses, either joint proprietor,
+partial/capped owner wage bases, near-upper rounding and single/joint zero income
+caps. All have a zero QBI deduction. The rounded-QBI case retains Schedule A
+applicable wages1 with parent wages0. Cap cases retain business QBI929 and
+capital/qualified-dividend totals221,800 or441,800, exceeding pre-QBI taxable income.
+
+| Case | Taxable income | Regular tax | Independent total tax | Refund or owed |
+| --- | ---: | ---: | ---: | ---: |
+| hoh-upper | 247,300 | 53,899 | 55,470 | owed5,470 |
+| joint-primary-upper | 494,600 | 111,837 | 118,526 | owed68,526 |
+| joint-spouse-near-upper | 494,599 | 111,837 | 118,526 | owed68,526 |
+| joint-spouse-upper | 494,600 | 111,837 | 115,255 | owed65,255 |
+| joint-spouse-zero-income-cap | 412,929 | 47,434 | 54,964 | owed54,964 |
+| mfs-upper-nonhalf | 247,300 | 55,638 | 57,813 | owed7,813 |
+| mfs-upper | 247,300 | 55,638 | 57,814 | owed7,814 |
+| qss-upper | 247,300 | 44,749 | 46,391 | refund3,609 |
+| single-near-upper | 247,299 | 55,638 | 57,138 | owed7,138 |
+| single-rounded-qbi | 247,299 | 55,638 | 56,420 | owed6,420 |
+| single-upper | 247,300 | 55,638 | 57,139 | owed7,139 |
+| single-zero-income-cap | 208,679 | 24,049 | 25,119 | owed25,119 |
+
+Eleven native/PDF final-tax amounts match independent Decimal calculations.
+The original MFS case retains deferred156: Medicare wage tax931.50 rounds down
+to931, giving actual total57,813 and owed7,813, each one dollar below the table.
+Its neighboring nonhalf case preserves the endpoint and reconciles. The test
+explicitly records the original discrepancy rather than claiming a match.
+
+The12 complete packet tests and36 related regressions pass (48 total). All12
+native returns pass full local2025v5.4 XSD. Nineteen alterations per packet reject
+both exports (456 attempts), including removal of the retained zero-claim source.
+Forty-eight public alterations and seven above-upper cases reject (55 checks).
+
+All190 PDF pages received qualified observation:95 new unique images in24
+contact sheets,69 exact prior matches and26 within-batch duplicates. Reopened
+outputs contain zero canonical fields/widgets. Existing positive Schedule C
+choices3, headers68 and blank zeros76 repeat. The existing parent builders also
+populate PartIII when line10 is not less than line3; new deferred163 records
+that conditional-projection issue without repair. These are reviewed test
+artifacts, not approved filing packets. The broad parent task remains open.
+
+Sources, independent proof, XSD logs/digest, commands, original rejected inputs
+and visual mappings are retained under
+`.state/research/form8995a-sstb-zero-2026-10-12/`.
+
 ## October 12 SSTB investment sources and income cap checkpoint
 
 Reviewed accounting SSTBs now retain owned interest, ordinary/qualified dividends

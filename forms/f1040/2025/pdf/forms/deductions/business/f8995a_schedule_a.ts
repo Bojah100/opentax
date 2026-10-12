@@ -91,8 +91,8 @@ export function projectOneSstbScheduleA(
     line9: qbiPercentageForPdf(lines.phaseIn),
     line10: qbiPercentageForPdf(lines.applicable),
     line11: lines.line2,
-    line12: lines.line4,
-    line13: lines.line7,
+    line12: lines.applicableWages,
+    line13: lines.applicableUbia,
   };
 }
 

@@ -111,8 +111,8 @@ function buildScheduleA(rawFields: unknown, context?: MefBuildContext): string {
         element("AllocableShareW2WagesAmt", lines.source.business_w2_wages),
         element("AllocableShareUBIAQlfyPropAmt", lines.source.business_ubia),
         element("ApplicablePctQBIAmt", lines.line2),
-        element("ApplicablePctW2WagesAmt", lines.line4),
-        element("ApplicablePctUBIAQlfyPropAmt", lines.line7),
+        element("ApplicablePctW2WagesAmt", lines.applicableWages),
+        element("ApplicablePctUBIAQlfyPropAmt", lines.applicableUbia),
       ]),
     ]),
   ]);

@@ -1198,7 +1198,9 @@ export function calculateOneSstb8995ALines(input: Form8995AInput) {
       input.filing_status !== FilingStatus.QSS && !joint && !separate) ||
     !Number.isInteger(input.taxable_income) ||
     input.taxable_income <= threshold ||
-    input.taxable_income >= threshold + phaseInRange
+    (input.taxable_income > threshold + phaseInRange ||
+      (input.taxable_income === threshold + phaseInRange &&
+        !input.single_sstb_schedule_c_source))
   ) {
     throw new Error(
       "Form 8995-A Schedule A needs one identified single, head-of-household, surviving-spouse, separate, or joint-filer SSTB within the phase-in range",
@@ -1237,8 +1239,12 @@ export function calculateOneSstb8995ALines(input: Form8995AInput) {
   const filed = (value: number) =>
     input.single_sstb_schedule_c_source ? Math.round(value) : value;
   const line2 = filed(source.business_qbi * applicable);
-  const line4 = filed(source.business_w2_wages * applicable);
-  const line7 = filed(source.business_ubia * applicable);
+  const applicableWages = filed(source.business_w2_wages * applicable);
+  const applicableUbia = filed(source.business_ubia * applicable);
+  // Parent lines 4/7 are zero when rounded QBI is zero; Schedule A keeps
+  // its own applicable amounts before this parent-level restriction.
+  const line4 = line2 === 0 ? 0 : applicableWages;
+  const line7 = line2 === 0 ? 0 : applicableUbia;
   const line3 = filed(line2 * QBI_RATE);
   const line5 = filed(line4 * W2_LIMIT_A_RATE);
   const line6 = filed(line4 * W2_LIMIT_B_WAGE_RATE);
@@ -1275,9 +1281,12 @@ export function calculateOneSstb8995ALines(input: Form8995AInput) {
     line36,
     line39,
   ];
-  if (!amounts.every(Number.isInteger) || line39 <= 0) {
+  if (
+    !amounts.every(Number.isInteger) || line39 < 0 ||
+    (line39 === 0 && !input.single_sstb_schedule_c_source)
+  ) {
     throw new Error(
-      "Form 8995-A Schedule A needs positive whole-dollar reconciled parent amounts",
+      "Form 8995-A Schedule A needs whole-dollar reconciled parent amounts and a retained Schedule C source for a zero deduction",
     );
   }
   return {
@@ -1286,6 +1295,8 @@ export function calculateOneSstb8995ALines(input: Form8995AInput) {
     phaseInRange,
     phaseIn,
     applicable,
+    applicableWages,
+    applicableUbia,
     line2,
     line3,
     line4,
