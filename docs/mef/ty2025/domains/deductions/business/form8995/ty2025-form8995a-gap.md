@@ -1,5 +1,50 @@
 # TY2025 Form 8995-A coverage gap
 
+## October 12 joint SSTB owners and mixed wages checkpoint
+
+A reviewed accounting SSTB may now belong to either spouse on a joint return,
+with issued external wage copies for both spouses. The public source selects
+the actual proprietor; the common native/PDF validation replays the existing
+owned Schedule SE ledger and selects that proprietor's computation. It checks
+the actual return/header identities, business source, per-owner wage base and
+filed SE deduction instead of treating the primary filer and combined wages as
+the sole owner. Nonjoint spouse ownership remains excluded.
+
+Four complete cases retain one28,431-profit business and two wage copies totaling
+420,000, with payroll10,000 or an owner-only workforce review. The proprietor's
+Social Security wages are100,000 or176,100. The first pair owes SE tax4,017 with
+half-SE2,009; the capped pair owes761 with half-SE381. This owner separation
+follows the [Schedule SE joint-return instructions](https://www.irs.gov/instructions/i1040sse).
+Joint Additional Medicare is1,766 in all four cases; NIIT and AMT are zero.
+The applicable SSTB percentages are79.678% or78.05%, using the existing joint
+threshold394,600 and100,000 phase range.
+
+| Case | QBI deduction | Taxable income | Regular tax | Total tax | Owed |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| Primary partial payroll | 4,165 | 410,757 | 85,568 | 91,351 | 41,351 |
+| Spouse partial owner-only | 3,355 | 411,567 | 85,827 | 91,610 | 41,610 |
+| Primary capped owner-only | 3,418 | 413,132 | 86,328 | 88,855 | 38,855 |
+| Spouse capped payroll | 4,275 | 412,275 | 86,054 | 88,581 | 38,581 |
+
+Independent Decimal proof reconciles profit, owner Social Security/Medicare,
+whole-dollar half-SE, applicable QBI/payroll amounts, phase reductions, ordinary
+tax, zero AMT, payments and owed against native XML. All four complete-return
+tests,16 related typed regressions and full2025v5.4 XSD validations pass. Fifteen altered records per case
+reject native and fresh-PDF export (120 attempts), including copied owner/payroll
+changes, retained owner computations and changed header spouse identity. Twenty
+public source/preparation changes reject. Reversing both wage copies preserves
+tax and successful preparation.
+
+All60 packet pages received qualified review through38 unique images across ten
+contact sheets and22 exact within-batch duplicates. Schedule C and SE retain the
+actual proprietor, while primary-only/reversed8995A names, blank required zeros
+and skipped Schedule C choices repeat deferred68/76/86. Original spouse-source
+graph errors that still prepared incomplete returns repeat161; those failures
+remain in the before log. Broader SSTB categories, multiple businesses, investment
+combinations, source authenticity and IRS acceptance remain open. Evidence:
+`.state/research/form8995a-sstb-joint-owners-2026-10-12/`, including source/packets,
+test logs, independent proof and observed-image mappings.
+
 ## October 12 HOH and QSS public SSTB source checkpoint
 
 The public Schedule C accounting-SSTB dispatcher now accepts head-of-household

@@ -789,7 +789,11 @@ function advancedFormOutput(
 
   if (businesses?.some((row) => row.source_schedule_c.qbi_sstb_filing_review)) {
     const review = business?.source_schedule_c.qbi_sstb_filing_review;
-    const owner = input.taxpayer_ssn?.replaceAll("-", "");
+    const spouseOwned = business?.source_schedule_c.proprietor_recipient === "S";
+    const owner = (spouseOwned ? input.spouse_ssn : input.taxpayer_ssn)?.replaceAll(
+      "-",
+      "",
+    );
     if (
       !business || businesses.length !== 1 || !review || !owner ||
       review.owner_ssn !== owner ||
@@ -801,7 +805,9 @@ function advancedFormOutput(
       (input.filing_status === FilingStatus.MFS && !review.mfs_filing_review) ||
       !business.business_name ||
       !business.ein || !business.business_reference ||
-      business.source_schedule_c.proprietor_recipient !== "T" ||
+      (business.source_schedule_c.proprietor_recipient !== "T" &&
+        !(spouseOwned && input.filing_status === FilingStatus.MFJ &&
+          input.joint_se_source)) ||
       business.source_schedule_c.qbi_specified_service !== true ||
       nonSstbQbi !== 0 || sstbQbi !== business.qbi || business.qbi <= 0 ||
       business.wotc_wage_reduction !== undefined ||
