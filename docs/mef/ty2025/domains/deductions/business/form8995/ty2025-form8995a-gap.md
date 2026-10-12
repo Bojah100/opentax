@@ -1,5 +1,65 @@
 # TY2025 Form 8995-A coverage gap
 
+## October 12 joint direct-owner aggregation and annual disclosure
+
+A joint filer can now export one qualifying positive Schedule C aggregation
+owned entirely by either spouse above the full wage/property-limit threshold.
+Previously the direct-owner source guard accepted only Single returns. The new
+route binds the actual owner across retained business records, the joint filer,
+W-2 wages and owned Schedule SE; missing SE identity or source inventory rejects.
+Annual disclosure now identifies the spouse owner when applicable. Existing
+Single and RPE routes retain their separate source requirements.
+
+The [2025 Form8995-A instructions](https://www.irs.gov/instructions/i8995a)
+place the joint phase-in band at394,600–494,600 and require annual aggregation
+disclosure. This extension applies above494,600; component tests reject494,600
+and accept494,601. Mixed owners inside one direct-owner group, phase-in,
+SSTBs, other simultaneous QBI routes, prior losses, WOTC and positive qualified
+dividends/capital gains are outside this extension and retain their guards.
+
+Four persisted synthetic returns cover primary/spouse ownership with three or
+four businesses, reviewed current-year acquisitions and fourth-row continuation.
+Each has400,000 owned wages,120,000 federal withholding and1,800 additional
+Medicare withholding. Independent decimal arithmetic reconciles gross-income
+allocation of the filed half-SE deduction, group QBI, wage/property limitation,
+regular tax, additional Medicare, payments and final balance against native XML.
+
+| Owner cases | Businesses | Half-SE | Group QBI | QBI deduction | AGI | Total tax | Balance |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
+| Primary and spouse | 3 | 3,214 | 236,786 | 22,500 | 636,786 | 152,843 | 31,043 |
+| Primary and spouse | 4 | 3,750 | 276,250 | 25,000 | 676,250 | 167,183 | 45,383 |
+
+Three-business half-SE shares are1,353/1,015/846; four-business shares are
+1,364/1,023/852/511. These explicitly reviewed fixtures do not repair the
+separate ordinary-route allocation finding157. Regular tax is143,070/156,007;
+SE tax6,428/7,499 and additional Medicare3,345/3,677 complete the tax totals.
+
+Verification: four typed packet tests pass; all four complete returns validate
+against local2025v5.4 XSD. Four public mixed-owner cases and four threshold
+boundary cases reject. Altered ownership, annual identity, deductions, payroll,
+SE inventory and filer facts reject44/44 native and44/44 fresh-PDF calls.
+Existing direct aggregation regression passes11/0. The unchanged RPE test file
+has four stale fixture-path failures (existing65/66); a retained local copy with
+only imports/fixture locations adapted passes4/0. This is separate regression
+evidence, not a claim that the original RPE test file passes or was repaired.
+
+The four complete PDFs contain20/20/23/23 pages:86 represented pages and41
+unique rendered images, all observed on11 contact sheets. Annual disclosures
+are already included in those totals. Schedule C/SE owner names and TINs,
+aggregation rows, totals, disclosure and continuation are visible and unclipped.
+Reopened packets contain no remaining form fields/widgets. Existing native
+joint-name68 and blank-zero76 qualifications remain; no clean parity approval
+or deferred repair is claimed. These synthetic cases do not prove authentic
+source documents, accepted election history, business-rule acceptance or IRS
+acknowledgments; the broad main-board task remains open.
+
+Evidence: `.state/research/form8995a-joint-aggregation-2026-10-12/` retains
+before/after public replays, four source/XML/PDF/attachment packets and XSD logs,
+`tests.log`, `regression.log`, `regression-replay.log`,
+`rpe-adapted-regression.log`, `independent-proof.json`, `review.py`,
+`review-mapping.json` and `visual-review.json`. All86 page hashes map to the41
+observed images; no earlier visual review is borrowed.
+
 ## October 12 qualified dividends with joint loss-employer credits
 
 Current-loss WOTC returns now accept positive qualified dividends when each

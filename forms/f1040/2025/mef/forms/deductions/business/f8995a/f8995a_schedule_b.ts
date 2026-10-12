@@ -25,6 +25,8 @@ import type {
 import { inputSchema as sCorpInputSchema } from "../../../../../../nodes/inputs/income/rental-passthrough/k1_s_corp/index.ts";
 import { currentSCorpRpeAggregation } from "../../../../../../nodes/inputs/deductions/business/k1_rpe_aggregation_source.ts";
 import { isDeepStrictEqual } from "node:util";
+import { aggregationOwner } from "../../../../../domains/deductions/business/form8995a/form8995a_aggregation_owner.ts";
+import { assertOwnedScheduleSE } from "../../../../../domains/taxes/self-employment/schedule-se/schedule-se-owner-source.ts";
 
 function assertRpeScheduleBJoin(
   input: Form8995AInput,
@@ -117,7 +119,7 @@ function assertRpeScheduleBJoin(
   return calculated;
 }
 
-// The bounded two-business companion must reconcile the retained parent,
+// The direct-owner companion must reconcile the retained parent,
 // Schedule C sources, Schedule 1 adjustments, and finalized Form 1040.
 export function assertScheduleBAggregationJoin(
   input: Form8995AInput,
@@ -129,6 +131,7 @@ export function assertScheduleBAggregationJoin(
   const calculated = calculateTwoBusinessAggregationLines(input);
   const pending = context?.pending;
   const filer = context?.filer;
+  aggregationOwner(input, filer);
   const source = scheduleCInputSchema.safeParse(pending?.schedule_c);
   const retainedParent = inputSchema.strict().safeParse(pending?.form8995a);
   const retainedCompanion = inputSchema.strict().safeParse(
@@ -142,9 +145,7 @@ export function assertScheduleBAggregationJoin(
     qbi_no_prior_loss_or_suspended_loss_confirmed: z.literal(true),
   }).passthrough().safeParse(pending?.general);
   if (
-    !filer || !pending || filer.filingStatus !== FilingStatus.Single ||
-    filer.primarySSN.replaceAll("-", "") !==
-      calculated.source.common_owner_ssn ||
+    !filer || !pending ||
     !retainedParent.success || !retainedCompanion.success ||
     JSON.stringify(retainedParent.data) !== JSON.stringify(input) ||
     JSON.stringify(retainedCompanion.data) !== JSON.stringify(input) ||
@@ -167,6 +168,17 @@ export function assertScheduleBAggregationJoin(
     throw new Error(
       "Form 8995-A Schedule B needs matching parent, companion, filer, and complete unadjusted owned Schedule C sources",
     );
+  }
+  if (input.filing_status === "mfj") {
+    const ownedSe = assertOwnedScheduleSE(
+      pending as Readonly<Record<string, Record<string, unknown>>>,
+      filer,
+    );
+    if (!ownedSe) {
+      throw new Error(
+        "Joint aggregation requires complete Schedule SE owner sources",
+      );
+    }
   }
   for (const member of calculated.source.members) {
     const retained = source.data.schedule_cs.find((item) =>

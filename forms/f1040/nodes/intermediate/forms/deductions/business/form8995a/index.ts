@@ -78,7 +78,7 @@ const aggregationGroupSchema = z.object({
   combined_for_limitation: z.boolean(),
 });
 
-// Evidence for the bounded two-business Schedule B route. This augments the
+// Evidence for the direct-owner Schedule B route. This augments the
 // BAN election with member-level source and reviewed allocation records.
 const aggregationMemberSchema = z.object({
   business_reference: z.string().trim().min(1),
@@ -438,13 +438,19 @@ export function validateTwoBusinessAggregationSource(input: Form8995AInput) {
   const groups = input.aggregation_groups;
   const group = groups?.[0];
   const cfg = CONFIG_BY_YEAR[2025];
+  const joint = input.filing_status === FilingStatus.MFJ;
+  const owner = source?.members[0]?.source_schedule_c.proprietor_recipient;
+  const fullLimitThreshold = joint
+    ? cfg.qbiThresholdMfj + cfg.qbiPhaseInRange
+    : cfg.qbiThresholdSingle + cfg.qbiPhaseInRange / 2;
   if (
     !source || !group || groups?.length !== 1 ||
     group.group_name !== source.group_name ||
     group.combined_for_limitation !== true ||
-    input.filing_status !== FilingStatus.Single ||
+    (input.filing_status !== FilingStatus.Single && !joint) ||
+    (owner !== TS.T && !(joint && owner === TS.S)) ||
     !Number.isInteger(input.taxable_income) ||
-    input.taxable_income <= cfg.qbiThresholdSingle + cfg.qbiPhaseInRange / 2 ||
+    input.taxable_income <= fullLimitThreshold ||
     input.net_capital_gain !== 0 ||
     input.qbi_no_prior_loss_or_suspended_loss_confirmed !== true ||
     input.business_filing_details || input.sstb_filing_details ||
@@ -512,7 +518,7 @@ export function validateTwoBusinessAggregationSource(input: Form8995AInput) {
       scheduleC.business_reference !== member.business_reference ||
       scheduleC.line_c_business_name !== member.business_name ||
       scheduleC.line_d_ein !== member.ein ||
-      scheduleC.proprietor_recipient !== TS.T ||
+      scheduleC.proprietor_recipient !== owner ||
       scheduleC.line_g_material_participation !== true ||
       scheduleC.line_32_at_risk !== "a" ||
       scheduleC.at_risk_simplified !== undefined ||

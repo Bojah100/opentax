@@ -1,5 +1,6 @@
 import { PDFDict, PDFDocument, PDFName, StandardFonts } from "pdf-lib";
 import type { FilerIdentity } from "../../../../../mef/header.ts";
+import { aggregationOwner } from "../../../../domains/deductions/business/form8995a/form8995a_aggregation_owner.ts";
 import { issuedRpeStatementBytes } from "../../../../../nodes/inputs/deductions/business/k1_rpe_aggregation_source.ts";
 import {
   calculateTwoBusinessAggregationLines,
@@ -40,13 +41,7 @@ export async function appendAggregationAnnualDisclosure(
   includeIssuedCopy = true,
 ): Promise<void> {
   const { source, schedule } = calculateTwoBusinessAggregationLines(input);
-  if (
-    !filer || filer.primarySSN.replaceAll("-", "") !== source.common_owner_ssn
-  ) {
-    throw new Error(
-      "Form 8995-A annual aggregation disclosure needs matching filer ownership",
-    );
-  }
+  const owner = aggregationOwner(input, filer);
   const disclosure = source.annual_disclosure;
   const font = await document.embedFont(StandardFonts.Helvetica);
   const bold = await document.embedFont(StandardFonts.HelveticaBold);
@@ -62,9 +57,7 @@ export async function appendAggregationAnnualDisclosure(
       font: bold,
     });
     page.drawText(
-      `${
-        filer.nameLine1 ?? filer.fullName ?? ""
-      }   TIN ${source.common_owner_ssn}   TY2025   Page ${pageNumber}`,
+      `${owner.name}   TIN ${owner.ssn}   TY2025   Page ${pageNumber}`,
       { x: 40, y: 734, size: 9, font },
     );
     y = 712;
