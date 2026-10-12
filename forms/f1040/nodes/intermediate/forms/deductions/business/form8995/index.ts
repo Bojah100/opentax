@@ -461,7 +461,7 @@ function advancedFormOutput(
       sumField(input.unadjusted_basis) !== group.ubia ||
       sumField(input.qbi_from_schedule_c) !== 0 ||
       sumField(input.qbi_from_schedule_f) !== 0 ||
-      sumField(input.sstb_qbi) !== 0 || qbiCapitalTotal(input) !== 0 ||
+      sumField(input.sstb_qbi) !== 0 ||
       sumField(input.line6_sec199a_dividends) !== 0 ||
       sumField(input.se_tax_deduction) !== 0 ||
       sumField(input.se_health_insurance_deduction) !== 0 ||
@@ -480,7 +480,11 @@ function advancedFormOutput(
     return output(form8995a, {
       filing_status: input.filing_status,
       taxable_income: taxableIncome,
-      net_capital_gain: 0,
+      net_capital_gain: qbiCapitalTotal(input, true),
+      qbi_capital_sources: input.qbi_capital_sources,
+      investment_interest_sources: input.investment_interest_sources,
+      investment_dividend_sources: input.investment_dividend_sources,
+      investment_dividend_totals: input.investment_dividend_totals,
       qbi: group.qbi,
       w2_wages: group.wages,
       unadjusted_basis: group.ubia,

@@ -26,6 +26,80 @@ import { currentSCorpRpeAggregation } from "../../../../../../nodes/inputs/deduc
 import { isDeepStrictEqual } from "node:util";
 import { aggregationOwner } from "../../../../../domains/deductions/business/form8995a/form8995a_aggregation_owner.ts";
 import { assertOwnedScheduleSE } from "../../../../../domains/taxes/self-employment/schedule-se/schedule-se-owner-source.ts";
+import {
+  assertMultiBusinessInvestmentSources,
+  assertMultiBusinessInvestmentTax,
+} from "../f8995/f8995-investment.ts";
+import { inputSchema as w2InputSchema } from "../../../../../../nodes/inputs/income/wages/w2/index.ts";
+
+/** Keep portfolio sources outside the business group, but in its income limit. */
+function assertAggregationInvestments(
+  input: Form8995AInput,
+  context: MefBuildContext | undefined,
+) {
+  const pending = context?.pending as
+    | Record<string, Record<string, unknown>>
+    | undefined;
+  if (!pending || !context?.filer) {
+    throw Error("Aggregation investment review needs its complete return");
+  }
+  if (
+    input.qbi_capital_sources === undefined &&
+    input.investment_interest_sources === undefined &&
+    input.investment_dividend_sources === undefined &&
+    pending.f1099int === undefined && pending.f1099div === undefined &&
+    pending.f1099b === undefined
+  ) {
+    if (
+      input.net_capital_gain !== 0 ||
+      (pending.f1040?.line3a_qualified_dividends ?? 0) !== 0 ||
+      Number(pending.f1040?.line7_capital_gain ?? 0) > 0
+    ) {
+      throw Error(
+        "Aggregation capital limit needs retained investment sources",
+      );
+    }
+    return;
+  }
+  const totals = assertMultiBusinessInvestmentSources(
+    { ...input, taxpayer_ssn: context.filer.primarySSN },
+    pending,
+    true,
+  );
+  const wages = pending.w2 === undefined
+    ? 0
+    : w2InputSchema.parse(pending.w2).w2s.reduce(
+      (sum, w) => sum + w.box1_wages,
+      0,
+    );
+  const businessIncome = input.rpe_aggregation_source
+    ? input.rpe_aggregation_source.members.reduce((sum, m) => sum + m.qbi, 0)
+    : input.aggregation_filing_details!.members.reduce(
+      (sum, m) => sum + computeNetProfit(m.source_schedule_c),
+      0,
+    );
+  const adjustments = [
+    "line15_se_deduction",
+    "line16_sep_simple",
+    "line17_se_health_insurance",
+  ]
+    .reduce((sum, key) => sum + Number(pending.schedule1?.[key] ?? 0), 0);
+  const income = wages + businessIncome + totals.interest + totals.ordinary +
+    totals.returnCapital;
+  const f = pending.f1040;
+  if (
+    input.net_capital_gain !== totals.filedQbiCapitalLimit ||
+    !f || f.line9_total_income !== income ||
+    f.line11_agi !== income - adjustments ||
+    (f.line10_adjustments ?? 0) !== adjustments ||
+    (f.line1a_wages ?? 0) !== wages || (f.line1z_total_wages ?? 0) !== wages
+  ) {
+    throw Error(
+      "Aggregation income limit must reconcile owned wages, business and investment records",
+    );
+  }
+  assertMultiBusinessInvestmentTax(pending, totals, input.filing_status);
+}
 
 function assertRpeScheduleBJoin(
   input: Form8995AInput,
@@ -95,8 +169,8 @@ function assertRpeScheduleBJoin(
     f.line13_qbi_deduction !== calculated.parent.line39 ||
     f.line15_taxable_income + calculated.parent.line39 !==
       input.taxable_income ||
-    (f.line3a_qualified_dividends ?? 0) !== 0 ||
-    (f.line7_capital_gain ?? 0) !== 0 ||
+    (input.qbi_capital_sources === undefined &&
+      (f.line7_capital_gain ?? 0) !== 0) ||
     !passiveInert || !healthInert || [
       "schedule_c",
       "schedule_f",
@@ -124,6 +198,7 @@ export function assertScheduleBAggregationJoin(
   input: Form8995AInput,
   context: MefBuildContext | undefined,
 ): ReturnType<typeof calculateTwoBusinessAggregationLines> {
+  assertAggregationInvestments(input, context);
   if (input.filing_status === "mfs") {
     const review = input.aggregation_mfs_review;
     const general = context?.pending?.general as
@@ -255,9 +330,7 @@ export function assertScheduleBAggregationJoin(
     !form1040.success ||
     form1040.data.line13_qbi_deduction !== calculated.parent.line39 ||
     form1040.data.line15_taxable_income + calculated.parent.line39 !==
-      input.taxable_income ||
-    (form1040.data.line3a_qualified_dividends ?? 0) !== 0 ||
-    (form1040.data.line7_capital_gain ?? 0) > 0
+      input.taxable_income
   ) {
     throw new Error(
       "Form 8995-A Schedule B income limit, dividends, and grouped deduction differ from Form 1040",

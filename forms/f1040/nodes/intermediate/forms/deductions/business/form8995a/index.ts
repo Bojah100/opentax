@@ -454,7 +454,7 @@ export function validateTwoBusinessAggregationSource(input: Form8995AInput) {
     (owner !== TS.T && !(joint && owner === TS.S)) ||
     !Number.isInteger(input.taxable_income) ||
     input.taxable_income <= threshold ||
-    input.net_capital_gain !== 0 ||
+    !Number.isSafeInteger(input.net_capital_gain) ||
     input.qbi_no_prior_loss_or_suspended_loss_confirmed !== true ||
     input.business_filing_details || input.sstb_filing_details ||
     input.schedule_c_qbi_businesses || input.patron_filing_details ||
@@ -659,7 +659,8 @@ export function calculateTwoBusinessAggregationLines(input: Form8995AInput) {
     if (
       input.taxable_income <=
         (input.filing_status === FilingStatus.MFJ ? 394600 : 197300) ||
-      !Number.isInteger(input.taxable_income) || input.net_capital_gain !== 0 ||
+      !Number.isInteger(input.taxable_income) ||
+      !Number.isSafeInteger(input.net_capital_gain) ||
       input.aggregation_groups?.length !== 1 || !group ||
       group.group_name !== issued.group_name ||
       group.combined_for_limitation !== true ||

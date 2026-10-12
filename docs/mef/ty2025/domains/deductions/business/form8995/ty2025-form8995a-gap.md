@@ -1,5 +1,71 @@
 # TY2025 Form 8995-A coverage gap
 
+## October 12 aggregation with investment-income checkpoint
+
+Direct-owner and intact S-corporation aggregations now accept retained interest,
+ordinary/qualified dividends and capital-gain distributions. The RPE dispatcher
+preserves investment source contributions instead of rejecting them and forcing
+a zero capital limit. The common native/PDF join replays identified investment
+copies, recipient ownership, qualified-dividend holding review, payer rows,
+capital contributions, wage/business income, adjustments and final preferential
+tax. Group business income remains separate from portfolio income.
+
+The [Form8995-A line34 instructions](https://www.irs.gov/instructions/i8995a)
+include qualified dividends and net capital gain in the income limitation.
+Each new case retains two interest sources totaling1,700 and two dividend sources
+with ordinary3,000, qualified1,500 and capital distributions1,800. Thus line34
+is3,300. The three RPE cases preserve the original issuer statements byte-for-byte.
+Five direct cases and three RPE cases span all five filing statuses, including
+spouse-owned businesses, phase-in, full limitation and a binding income cap.
+Investment copies in this checkpoint belong to the primary filer; other owner
+inventories and wider investment categories remain outside this proof.
+
+| Case | QBI deduction | Taxable income | Regular tax | Total tax | Refund / owed |
+| --- | ---: | ---: | ---: | ---: | --- |
+| hoh-direct-four | 8,574 | 223,363 | 46,239 | 48,763 | 11,237 refund |
+| joint-primary-rpe-phase | 68,860 | 356,140 | 70,871 | 71,118 | 61,118 owed |
+| joint-spouse-direct-four | 38,038 | 413,462 | 85,873 | 95,498 | 35,496 owed |
+| joint-spouse-rpe-full | 66,250 | 458,750 | 100,365 | 100,612 | 89,992 owed |
+| mfs-direct-three | 7,782 | 222,164 | 47,594 | 50,442 | 9,558 refund |
+| qss-direct-three | 9,739 | 204,457 | 34,578 | 36,504 | 23,496 refund |
+| single-direct-three | 7,782 | 222,164 | 47,594 | 49,767 | 10,233 refund |
+| single-rpe-income-cap | 45,490 | 185,260 | 37,012 | 37,259 | 37,259 owed |
+
+Independent decimal arithmetic checks source profits, allocated half-SE, group
+wage/property limits, phase reductions, the income cap, regular tax, zero AMT,
+Medicare, NIIT and payments against native XML. The Single RPE case caps the
+48,000 business component at45,490:20% of230,750 minus3,300. QSS income245,696
+is below the250,000 NIIT threshold; all seven other cases have247 NIIT on6,500
+investment income. The [NIIT instructions](https://www.irs.gov/instructions/i8960)
+and [2025 tax worksheet](https://www.irs.gov/pub/irs-pdf/i1040tt.pdf) support those
+status-specific computations. Qualified dividends/gains receive15% in these cases.
+
+All eight complete packet tests and eight full2025v5.4 return XSD validations
+pass. Fifteen altered records per case reject both native and fresh-PDF export
+(240 attempts), covering owners, copies, holding evidence, contribution identity
+and amount, capital limit, wages, AGI, gross income, payer rows, deduction and tax.
+Twenty-four invalid public-source/preparation cases reject; reversing investment
+inventories preserves final tax and native preparation for all eight cases.
+Related direct/joint/nonjoint aggregation and investment/WOTC regression passes
+45/0 (5m40s); the final retained path-only adapted RPE gate passes4/0 (20s).
+Original fixture-path issues remain deferred65/66. Final packet rerendering
+introduced no new image hashes.
+
+The155 packet pages include annual and issued disclosures. All52 new distinct
+images were observed on13 contact sheets;94 pages exactly match prior observed
+images and nine are within-batch duplicates. Reopened packets have no remaining
+fields/widgets. Printed phases, line34/35/36/39, owners, member/continuation rows,
+annual disclosures, investment totals and final amounts reconcile. Existing
+68/76 presentation qualifications repeat: primary-only or reversed component
+names, MFS spouse-name duplication and some blank required zeros. No new
+presentation finding or deferred repair is recorded.
+
+Evidence: `.state/research/form8995a-aggregation-investments-2026-10-12/` retains
+before/after replays, sources/pending/XML/PDFs, test/XSD logs, independent decimal
+proof, rendered-page mapping and visual review. Synthetic source records do not
+prove external authenticity or IRS acceptance. Other source combinations,
+elections and deferred findings remain open; the broad main task stays open.
+
 ## October 12 nonjoint aggregation filing-status checkpoint
 
 Direct-owner and intact S-corporation aggregations now support HOH, QSS and
