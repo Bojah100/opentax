@@ -31,6 +31,10 @@ import {
   sstbProfessionalCases,
   sstbProfessionalFixture,
 } from "../../domains/deductions/business/form8995a/form8995a_sstb_professional_fixture.ts";
+import {
+  sstbIdentityCases,
+  sstbIdentityFixture,
+} from "../../domains/deductions/business/form8995a/form8995a_sstb_identity_fixture.ts";
 import { sha256Hex } from "../../return-processing/prepared-source.ts";
 import {
   buildMefSubmissionArchive,
@@ -55,7 +59,7 @@ function remap<T>(value: T, primary: string, spouse: string): T {
   });
 }
 
-Deno.test("SSTB saved returns preserve all 59 source packets in mixed submission archives", async () => {
+Deno.test("SSTB saved returns preserve all 68 source packets in mixed submission archives", async () => {
   const permission = await Deno.permissions.query({
     name: "env",
     variable: "SSTB_SUBMISSION_EVIDENCE",
@@ -93,8 +97,12 @@ Deno.test("SSTB saved returns preserve all 59 source packets in mixed submission
       name: `professional-${c.name}`,
       input: sstbProfessionalFixture(c),
     })),
+    ...sstbIdentityCases.map((c) => ({
+      name: `identity-${c.name}`,
+      input: sstbIdentityFixture(c),
+    })),
   ];
-  assertEquals(cases.length, 59);
+  assertEquals(cases.length, 68);
   const archives: MefSubmissionArchive[] = [];
   const observations = [];
   let sourceRejected = 0, archiveRejected = 0;
@@ -197,11 +205,30 @@ Deno.test("SSTB saved returns preserve all 59 source packets in mixed submission
     const classification =
       input.schedule_c[0].qbi_sstb_filing_review.service_classification_review;
     if (classification) {
+      const stored: Row = prepared.bundle.pending;
+      assertEquals(
+        stored.schedule_c.schedule_cs[0].qbi_sstb_filing_review
+          .service_classification_review,
+        classification,
+      );
+      for (const key of ["form8995a", "form8995a_schedule_a"]) {
+        assertEquals(
+          stored[key].single_sstb_schedule_c_source.business.source_schedule_c
+            .qbi_sstb_filing_review.service_classification_review,
+          classification,
+        );
+      }
+      if (classification.field === "reputation_or_skill") {
+        assertEquals(classification.individual_ssn, owner);
+      }
       for (
         const kind of [
           "missing-review",
           "receipt-total",
           "excluded-service",
+          ...(classification.field === "reputation_or_skill"
+            ? ["identity-owner", "identity-kind"]
+            : []),
           ...(classification.field === "financial_services"
             ? ["financial-kind"]
             : []),
@@ -212,6 +239,13 @@ Deno.test("SSTB saved returns preserve all 59 source packets in mixed submission
         const review = business.qbi_sstb_filing_review;
         if (kind === "missing-review") {
           delete review.service_classification_review;
+        }
+        if (kind === "identity-owner") {
+          review.service_classification_review.individual_ssn = "999001234";
+        }
+        if (kind === "identity-kind") {
+          review.service_classification_review.income_kind =
+            "ordinary_product_sales";
         }
         if (kind === "financial-kind") {
           const service = review.service_classification_review;
@@ -367,8 +401,8 @@ Deno.test("SSTB saved returns preserve all 59 source packets in mixed submission
     }])
   );
   archiveRejected++;
-  assertEquals(sourceRejected, 330);
-  assertEquals(archiveRejected, 438);
+  assertEquals(sourceRejected, 411);
+  assertEquals(archiveRejected, 505);
   if (evidence) {
     await Deno.writeTextFile(
       `${evidence}/checks.json`,

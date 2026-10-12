@@ -47,8 +47,9 @@ Schedule C conditional marks3, header68 and required-zero76 findings repeat.
 
 The nine focused tests and214 grouped SSTB/Schedule C/submission tests pass
 (223 typed tests, zero failures or ignored tests); focused lint and diff checks
-pass. Existing saved-return evidence remains59 returns/768 rejections;
-these nine new source kinds are not yet counted in that archive replay.
+pass. The expanded [saved-return proof](../../../../testing/ty2025-sstb-submission-replay.md)
+now includes all68 retained SSTB returns,136 XSD checks and916 source/archive
+rejections, verified by a separate50-test submission gate.
 
 Evidence: `.state/research/form8995a-sstb-identity-2026-10-12/` retains source
 records, native/PDF packets, schema provenance, independent arithmetic, mutation
