@@ -1,5 +1,65 @@
 # TY2025 Form 8995-A coverage gap
 
+## October 12 financial-service source checkpoint
+
+The retained one-business Schedule A path now accepts reviewed financial advice,
+investment banking, loan arrangements, securities brokerage and investment
+management. Separate classification records bind client-service assertions,
+exclusion review, engagement references and distinct fee invoices to all Schedule C
+receipts. Financial-advice, investment-banking and loan-arrangement reviews must
+match codes 523900, 523150 and 522300 respectively; securities brokerage uses
+523150 and investment management uses 523900. Codes corroborate the reviewed
+service rather than establishing its classification alone.
+
+The [IRS SSTB definitions](https://www.irs.gov/instructions/i8995a) distinguish
+these services from direct lending/deposit-taking, real-estate or insurance
+brokerage, and direct real-property management. The new source contract records
+those exclusions. [TY2025 Schedule C codes](https://www.irs.gov/instructions/i1040sc)
+identify the applicable principal activity. Mixed excluded services, trading,
+dealing and other unsupported combinations remain outside this checkpoint.
+
+Nine source-backed packets cover all five filing statuses, either joint owner,
+partial/capped wage bases, payroll/owner-only businesses and the investment-income
+cap. Their financial inputs reuse independently reconciled investment cases;
+new business names, activities, codes and fee records pass the same public,
+native and PDF source checks. Synthetic engagements and invoice references do
+not authenticate external customer records.
+
+| Case | QBI deduction | Taxable income | Total tax | Refund or owed |
+| --- | ---: | ---: | ---: | --- |
+| advice-primary-capped | 2,872 | 420,178 | 90,796 | owed 40,796 |
+| advice-single | 1,934 | 226,866 | 50,433 | owed 433 |
+| banking-mfs | 1,934 | 226,866 | 51,108 | owed 1,108 |
+| broker-primary-partial | 3,811 | 417,611 | 93,231 | owed 43,231 |
+| broker-spouse-capped | 3,890 | 419,160 | 90,470 | owed 40,470 |
+| loan-hoh | 1,561 | 219,364 | 46,293 | refund 3,707 |
+| management-income-cap | 2,474 | 211,698 | 30,644 | owed 30,644 |
+| management-qss | 3,711 | 209,339 | 36,739 | refund 13,261 |
+| management-spouse-partial | 2,830 | 418,592 | 93,544 | owed 43,544 |
+
+The nine new packet tests and204 existing SSTB, Schedule C and submission tests
+pass (213 typed tests, zero failures or ignored tests). Focused formatting/lint
+and diff checks pass.
+
+All nine full native returns pass local2025v5.4 XSD, and independent Decimal
+calculations match final tax, SE, Additional Medicare, NIIT, income limits and
+preferential rates. The shared packet harness rejects94 native and94 PDF
+alterations, including four financial-service-kind/code conflicts. All94 public
+alterations report graph errors:36 preparations reject and58 repeat deferred161.
+Those58 accepted-after-error XML files are retained separately and are not
+positive filing packets or rejection successes.
+
+All142 PDF pages received qualified observation:24 new unique images inspected
+in six contact sheets,115 exact prior matches and three within-batch duplicates.
+Names, codes, activities, owner amounts and Schedule A percentages reconcile;
+all reopened outputs have zero fields/widgets. Existing Schedule C choices3,
+identity/header68 and required-zero76 qualifications repeat without repair.
+
+Evidence: `.state/research/form8995a-sstb-financial-2026-10-12/` retains source
+records, native/PDF packets, XSD provenance, independent arithmetic, mutation
+outcomes, rendered images and review mappings. Broad parent completion, external
+source authenticity and IRS acceptance remain open.
+
 ## October 12 legal, medical and consulting source checkpoint
 
 The existing one-business Schedule A path now accepts reviewed legal, medical
