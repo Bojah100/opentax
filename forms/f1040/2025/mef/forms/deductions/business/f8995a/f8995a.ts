@@ -1,3 +1,7 @@
+import { assertLossWotcSources } from "../../../../../domains/deductions/business/form8995a/form8995a_loss_wotc_source.ts";
+import { scheduleSELines } from "../../../../../../nodes/intermediate/forms/taxes/self-employment/schedule_se/calculation.ts";
+import { assertOwnedScheduleSE } from "../../../../../domains/taxes/self-employment/schedule-se/schedule-se-owner-source.ts";
+import type { FilerIdentity } from "../../../../../../mef/header.ts";
 import { mefBusinessNameLine1 } from "../../../../../../mef/business-name.ts";
 import { calculateIndependentPatronBusinesses } from "../../../../../../nodes/intermediate/forms/deductions/business/form8995a/index.ts";
 import { patronProprietorSsn } from "../../../../../domains/deductions/business/form8995a/form8995a_patron_reconciliation.ts";
@@ -22,6 +26,7 @@ import { CONFIG_BY_YEAR } from "../../../../../../nodes/config/index.ts";
 import {
   assertMfsSstbOwner,
   assertPatron1099PATRSource,
+  calculateLossBusinessPhase,
   calculateOneBusiness8995ALines,
   calculateOneSstb8995ALines,
   calculateOwnedWotcBusinesses,
@@ -33,7 +38,10 @@ import {
   computeNetProfit,
   inputSchema as scheduleCInputSchema,
 } from "../../../../../../nodes/inputs/income/business/schedule_c/model.ts";
-import type { MefBuildContext, MefFormDescriptor } from "../../../../form-descriptor.ts";
+import type {
+  MefBuildContext,
+  MefFormDescriptor,
+} from "../../../../form-descriptor.ts";
 import { assertScheduleBAggregationJoin } from "./f8995a_schedule_b.ts";
 import { assertZeroReductionScheduleAReturn } from "./f8995a_schedule_a.ts";
 import { qualifiedReitDividends } from "../f8995/f8995-route.ts";
@@ -234,6 +242,103 @@ export function assertOneBusinessReitSource(
   }
 }
 
+function assertMfsLossSources(
+  fields: Form8995AInput,
+  pending: Readonly<Record<string, unknown>> | undefined,
+  filer?: FilerIdentity,
+): void {
+  if (fields.filing_status !== NodeFilingStatus.MFS) return;
+  const retained = pending as
+    | Record<string, Record<string, unknown>>
+    | undefined;
+  const general = retained?.general;
+  const final = retained?.f1040;
+  const ssn = String(general?.taxpayer_ssn ?? "").replaceAll("-", "");
+  if (
+    !general || !final || !/^\d{9}$/.test(ssn) ||
+    general.filing_status !== NodeFilingStatus.MFS ||
+    final.filing_status !== NodeFilingStatus.MFS ||
+    String(final.taxpayer_ssn ?? "").replaceAll("-", "") !== ssn ||
+    general.mfs_spouse_itemizing !== false ||
+    final.mfs_spouse_itemizing !== false
+  ) {
+    throw new Error(
+      "MFS QBI losses require finalized separate return and spouse deduction facts",
+    );
+  }
+  for (const business of fields.schedule_c_qbi_businesses ?? []) {
+    const review = business.source_schedule_c.qbi_mfs_loss_review;
+    if (
+      !review || review.owner_ssn !== ssn ||
+      general.address_state !== review.mailing_address_state ||
+      String(general.spouse_ssn ?? "").replaceAll("-", "") !==
+        review.spouse_ssn ||
+      String(final.spouse_ssn ?? "").replaceAll("-", "") !==
+        review.spouse_ssn ||
+      (filer && (filer.address.state !== review.mailing_address_state ||
+        filer.spouse?.ssn.replaceAll("-", "") !== review.spouse_ssn))
+    ) {
+      throw new Error(
+        "MFS QBI loss review differs from actual owner, spouse or mailing address",
+      );
+    }
+  }
+  if (
+    pending?.w2 !== undefined &&
+    w2InputSchema.parse(pending.w2).w2s.some((w) =>
+      w.employee_ssn?.replaceAll("-", "") !== ssn
+    )
+  ) {
+    throw new Error(
+      "MFS QBI loss wages must belong to the reviewed separate-income owner",
+    );
+  }
+}
+
+export function assertScheduleCLossFiler(
+  fields: Form8995AInput,
+  pending: Readonly<Record<string, unknown>> | undefined,
+  filer: FilerIdentity | undefined,
+): void {
+  if (
+    fields.filing_status === NodeFilingStatus.Single ||
+    fields.farm_wotc_filing_source
+  ) return;
+  const expected = fields.filing_status === NodeFilingStatus.MFJ
+    ? HeaderFilingStatus.MarriedFilingJointly
+    : fields.filing_status === NodeFilingStatus.MFS
+    ? HeaderFilingStatus.MarriedFilingSeparately
+    : fields.filing_status === NodeFilingStatus.HOH
+    ? HeaderFilingStatus.HeadOfHousehold
+    : fields.filing_status === NodeFilingStatus.QSS
+    ? HeaderFilingStatus.QualifyingSurvivingSpouse
+    : undefined;
+  const retained = pending as
+    | Record<string, Record<string, unknown>>
+    | undefined;
+  const general = retained?.general;
+  const ssn = String(general?.taxpayer_ssn ?? "").replaceAll("-", "");
+  if (
+    !filer || !expected || filer.filingStatus !== expected ||
+    general?.filing_status !== fields.filing_status || !/^\d{9}$/.test(ssn) ||
+    ssn !== filer.primarySSN.replaceAll("-", "") ||
+    retained?.f1040?.filing_status !== fields.filing_status ||
+    String(retained?.f1040?.taxpayer_ssn ?? "").replaceAll("-", "") !== ssn
+  ) {
+    throw new Error(
+      "Form 8995-A loss proprietor or filing status differs from the final filer",
+    );
+  }
+  assertMfsLossSources(fields, pending, filer);
+  if (fields.filing_status === NodeFilingStatus.MFJ) {
+    if (!assertOwnedScheduleSE(retained!, filer)) {
+      throw new Error(
+        "Form 8995-A joint losses need retained proprietor computations",
+      );
+    }
+  }
+}
+
 export function assertScheduleCLossSources(
   fields: Form8995AInput,
   pending: Readonly<Record<string, unknown>> | undefined,
@@ -246,6 +351,18 @@ export function assertScheduleCLossSources(
     return;
   }
   const lines = calculateScheduleCLossLines(fields);
+  assertLossWotcSources(fields, pending);
+  assertMfsLossSources(fields, pending);
+  if (fields.filing_status === NodeFilingStatus.MFJ) {
+    if (
+      !assertOwnedScheduleSE(pending as Record<string, Record<string, unknown>>)
+    ) {
+      throw new Error(
+        "Form 8995-A joint losses need retained proprietor computations",
+      );
+    }
+  }
+  const seDeduction = fields.loss_se_tax_source?.deduction ?? 0;
   if (
     fields.qbi_capital_sources !== undefined ||
     pending?.f1099div !== undefined || pending?.f1099int !== undefined ||
@@ -282,8 +399,10 @@ export function assertScheduleCLossSources(
       !Number.isFinite(retained.f1040.line11_agi) ||
       Math.abs(Number(retained.f1040.line9_total_income) - expectedIncome) >=
         1e-8 ||
-      Math.abs(Number(retained.f1040.line11_agi) - expectedIncome) >= 1e-8 ||
-      (retained.f1040.line10_adjustments ?? 0) !== 0 ||
+      Math.abs(
+          Number(retained.f1040.line11_agi) - (expectedIncome - seDeduction),
+        ) >= 1e-8 ||
+      (retained.f1040.line10_adjustments ?? 0) !== seDeduction ||
       (retained.f1040.line1a_wages ?? 0) !== wages ||
       (retained.f1040.line1z_total_wages ?? 0) !== wages
     ) {
@@ -291,7 +410,11 @@ export function assertScheduleCLossSources(
         "Form 8995-A investment taxable income differs from retained wage, business and investment sources",
       );
     }
-    assertMultiBusinessInvestmentTax(retained, investment);
+    assertMultiBusinessInvestmentTax(
+      retained,
+      investment,
+      fields.filing_status,
+    );
   }
 
   const source = scheduleCInputSchema.safeParse(pending?.schedule_c);
@@ -315,11 +438,71 @@ export function assertScheduleCLossSources(
       !sourceItem ||
       JSON.stringify(sourceItem) !==
         JSON.stringify(business.source_schedule_c) ||
-      computeNetProfit(sourceItem) !== business.qbi ||
+      computeNetProfit(sourceItem, business.wotc_wage_reduction ?? 0) !==
+        business.qbi ||
       (sourceItem.line_26_wages ?? 0) < business.w2_wages
     ) {
       throw new Error(
         "Form 8995-A Schedule C QBI, payroll, and business source differ from the retained Schedule C return",
+      );
+    }
+  }
+  if (fields.loss_se_tax_source) {
+    const retained = pending as Record<string, Record<string, unknown>>;
+    const wages = pending?.w2 === undefined
+      ? []
+      : w2InputSchema.parse(pending.w2).w2s;
+    if (fields.filing_status === NodeFilingStatus.MFJ) {
+      const owned = assertOwnedScheduleSE(retained);
+      if (
+        !owned ||
+        JSON.stringify(fields.loss_se_tax_source.joint_se_source) !==
+          JSON.stringify(owned.source)
+      ) {
+        throw Error(
+          "QBI loss SE owner inventory differs from the retained return",
+        );
+      }
+    } else {
+      const owner = String(retained.general?.taxpayer_ssn ?? "").replaceAll(
+        "-",
+        "",
+      );
+      if (
+        !/^\d{9}$/.test(owner) ||
+        wages.some((w) => w.employee_ssn?.replaceAll("-", "") !== owner)
+      ) {
+        throw Error("QBI loss SE wages must belong to the actual proprietor");
+      }
+      const se = scheduleSELines({
+        net_profit_schedule_c: lines.businesses.reduce(
+          (sum, b) => sum + b.qbi,
+          0,
+        ),
+        w2_ss_wages: wages.reduce(
+          (sum, w) => sum + (w.box3_ss_wages ?? 0) + (w.box7_ss_tips ?? 0),
+          0,
+        ),
+      }, CONFIG_BY_YEAR[2025].ssWageBase);
+      if (
+        !se || se.line13 !== seDeduction ||
+        retained.schedule2?.line4_se_tax !== se.line12 ||
+        retained.schedule_se?.net_profit_schedule_c !== se.line3
+      ) {
+        throw Error(
+          "QBI loss deduction must replay the owner's Schedule SE and Schedule 2",
+        );
+      }
+    }
+    // Other self-employment sources need their own combined attribution route.
+    if (
+      (retained.schedule_se?.net_profit_schedule_f ?? 0) !== 0 ||
+      (retained.schedule_se?.unreported_tips_4137 ?? 0) !== 0 ||
+      (retained.schedule_se?.wages_8919 ?? 0) !== 0 ||
+      retained.schedule_se?.farm_optional_method_elected === true
+    ) {
+      throw Error(
+        "QBI loss SE allocation needs the complete Schedule C-only proprietor inventory",
       );
     }
   }
@@ -347,7 +530,7 @@ export function assertScheduleCLossSources(
           form1040.data.line13_qbi_deduction +
           (form1040.data.line13b_additional_deductions ?? 0) !==
       fields.taxable_income ||
-    (schedule1.data.line15_se_deduction ?? 0) !== 0 ||
+    (schedule1.data.line15_se_deduction ?? 0) !== seDeduction ||
     (schedule1.data.line16_sep_simple ?? 0) !== 0 ||
     (schedule1.data.line17_se_health_insurance ?? 0) !== 0
   ) {
@@ -388,6 +571,9 @@ function reconcileReturn(
       fields.filing_status === NodeFilingStatus.HOH ||
       fields.filing_status === NodeFilingStatus.QSS) &&
       !fields.sstb_filing_details &&
+      !(fields.schedule_c_qbi_businesses?.some((business) =>
+        business.qbi < 0
+      )) &&
       !(fields.filing_status === NodeFilingStatus.MFJ &&
         (fields.independent_patron_sources || fields.patron_business_source ||
           fields.single_schedule_c_source ||
@@ -420,7 +606,9 @@ function reconcileReturn(
       "Farm WOTC primary owner differs from actual return header",
     );
   }
-  assertMfsSstbOwner(fields, context.filer.primarySSN);
+  if (fields.sstb_filing_details) {
+    assertMfsSstbOwner(fields, context.filer.primarySSN);
+  }
   if (
     (fields.patron_filing_details?.source_1099patr
         .box6_section199ag_deduction ?? 0) > 0 &&
@@ -539,9 +727,14 @@ function ownedWotcGroup(
   ]);
 }
 
-function buildIRS8995A(rawFields: Input, context?: MefBuildContext): string {
+// Registry values are parsed here before use; keeping the raw boundary unknown
+// avoids expanding every QBI source variant in the registry callable union.
+function buildIRS8995A(rawFields: unknown, context?: MefBuildContext): string {
   if (Array.isArray(rawFields) && rawFields.length === 0) return "";
-  if (Object.keys(rawFields).length === 0) {
+  if (
+    rawFields && typeof rawFields === "object" &&
+    Object.keys(rawFields).length === 0
+  ) {
     throw new Error("Form 8995-A MeF cannot file an empty pending record");
   }
   const fields = inputSchema.strict().parse(rawFields);
@@ -568,43 +761,68 @@ function buildIRS8995A(rawFields: Input, context?: MefBuildContext): string {
   }
   if (fields.schedule_c_qbi_businesses?.some((business) => business.qbi < 0)) {
     const lines = calculateScheduleCLossLines(fields);
+    assertScheduleCLossFiler(fields, context?.pending, context?.filer);
     reconcileReturn(context, lines.parent.line39, fields);
     const parent = lines.parent;
+    const phases = lines.businessLines.map(({ parent }) =>
+      calculateLossBusinessPhase(
+        fields.taxable_income,
+        parent.line3,
+        parent.line10,
+        fields.filing_status,
+      )
+    );
+    const phaseIn = phases.find((phase) => phase !== undefined);
     return elements("IRS8995A", [
-      ...lines.businesses.map((business) => {
-        const adjusted = business.qbi > 0;
+      ...lines.businessLines.map(({ business, parent }, index) => {
+        const phase = phases[index];
         return elements("QBIDeductionInformationGrp", [
           elements("TradeOrBusinessName", [
             element("BusinessNameLine1Txt", business.business_name!),
           ]),
           element("EIN", business.ein!),
-          element("QualifiedBusinessIncomeAmt", adjusted ? parent.line2 : 0),
-          element("QlfyBusinessIncome20PctAmt", adjusted ? parent.line3 : 0),
-          element("AllocableShareW2WagesAmt", adjusted ? parent.line4 : 0),
-          element("AllocableShareW2Wages50PctAmt", adjusted ? parent.line5 : 0),
-          element("AllocableShareW2Wages25PctAmt", adjusted ? parent.line6 : 0),
-          element("AllocableShareUBIAQlfyPropAmt", adjusted ? parent.line7 : 0),
+          element("QualifiedBusinessIncomeAmt", parent.line2),
+          element("QlfyBusinessIncome20PctAmt", parent.line3),
+          element("AllocableShareW2WagesAmt", parent.line4),
+          element("AllocableShareW2Wages50PctAmt", parent.line5),
+          element("AllocableShareW2Wages25PctAmt", parent.line6),
+          element("AllocableShareUBIAQlfyPropAmt", parent.line7),
           element(
             "AllcblShrUBIAQlfyProp025PctAmt",
-            adjusted ? parent.line8 : 0,
+            parent.line8,
           ),
           element(
             "TotalAllcblW2WgsQlfyPropPctAmt",
-            adjusted ? parent.line9 : 0,
+            parent.line9,
           ),
           element(
             "GrtrAllcblShrW2WageQlfyPropAmt",
-            adjusted ? parent.line10 : 0,
+            parent.line10,
           ),
-          element("W2WageQlfyPropLimitationAmt", adjusted ? parent.line11 : 0),
+          element("W2WageQlfyPropLimitationAmt", parent.line11),
           element(
             "QBIDedBeforePatronReductionAmt",
-            adjusted ? parent.line13 : 0,
+            parent.line13,
           ),
-          element("QBIComponentAmt", adjusted ? parent.line15 : 0),
+          element("QBIComponentAmt", parent.line15),
+          ...(phase !== undefined
+            ? [
+              element("QBI20PctLessGrtrAllcblShareAmt", phase.line19),
+              element("TotalPhaseInReductionAmt", phase.line25),
+              element("QBIAfterPhaseInReductionAmt", phase.line26),
+            ]
+            : []),
         ]);
       }),
       element("TotalQBIComponentAmt", parent.line16),
+      ...(phaseIn
+        ? [
+          element("FilingStatusThresholdCd", phaseIn.threshold),
+          element("TXIBfrQBIDedLessThresholdAmt", phaseIn.excess),
+          element("FilingStatusPhaseInRangeCd", phaseIn.range),
+          element("PhaseInPct", phaseIn.ratio.toFixed(5)),
+        ]
+        : []),
       element("QlfyREITDivPTPIncomeLossAmt", 0),
       element("PYQlfyREITDivPTPLossCfwdAmt", 0),
       element("TotQlfyREITDivPTPIncomeAmt", 0),
@@ -739,11 +957,15 @@ function buildIRS8995A(rawFields: Input, context?: MefBuildContext): string {
   ]);
 }
 
-export const form8995a: MefFormDescriptor<"form8995a", Input> = {
+export const form8995a = {
+  sourcePendingKeys: undefined,
+  buildAdditionalDocuments: undefined,
+  buildBinaryAttachments: undefined,
+
   pendingKey: "form8995a",
   FIELD_MAP,
   pdfUrl: "https://www.irs.gov/pub/irs-pdf/f8995a.pdf",
-  build(fields, context) {
+  build(fields: unknown, context?: MefBuildContext) {
     return buildIRS8995A(fields, context);
   },
-};
+} satisfies MefFormDescriptor<"form8995a", Input>;

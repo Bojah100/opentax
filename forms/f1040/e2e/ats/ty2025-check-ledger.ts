@@ -4,7 +4,13 @@ type Replay = Awaited<ReturnType<typeof replayAtsChecks>>;
 export interface LedgerRow {
   id: string;
   scenario: string;
-  kind: "calculation" | "document-copy" | "binary-attachment";
+  kind:
+    | "calculation"
+    | "document-copy"
+    | "binary-attachment"
+    | "native-value"
+    | "native-w2-value"
+    | "native-retirement-value";
   result: string;
   basis: string;
   sourceUrl: string;
@@ -28,6 +34,41 @@ export function buildAtsCheckLedger(report: Replay) {
         basis: `${c.basis}: ${c.sourceLocation}`,
         expected: c.expected,
         actual: c.actual ?? null,
+      });
+    }
+    for (const c of s.preparation.nativeValueCoverage.rows) {
+      rows.push({
+        ...common,
+        id: `${s.id}:native-value:${c.path}`,
+        kind: "native-value",
+        result: c.result,
+        basis: `${c.basis}: ${c.sourceLocation}; XML ${c.root}/${c.field}`,
+        expected: c.expected,
+        actual: c.actual,
+      });
+    }
+    for (const c of s.preparation.w2ValueCoverage.rows) {
+      rows.push({
+        ...common,
+        id: `${s.id}:native-w2-value:page${c.sourcePage}:${c.field}`,
+        kind: "native-w2-value",
+        result: c.result,
+        basis:
+          `Issued W-2 page ${c.sourcePage}, ${c.employerName}; XML IRSW2/${c.field}`,
+        expected: c.expected,
+        actual: c.actual,
+      });
+    }
+    for (const c of s.preparation.retirementValueCoverage.rows) {
+      rows.push({
+        ...common,
+        id: `${s.id}:native-retirement-value:page${c.sourcePage}:${c.field}`,
+        kind: "native-retirement-value",
+        result: c.result,
+        basis:
+          `Issued 1099-R page ${c.sourcePage}, ${c.copyName}; XML IRS1099R/${c.field}`,
+        expected: c.expected,
+        actual: c.actual,
       });
     }
     for (const d of s.documentCoverage.rows) {
@@ -76,7 +117,14 @@ export function buildAtsCheckLedger(report: Replay) {
   const evaluated = nonprovisional.filter((c) => c.result !== "not-produced");
   const matches = evaluated.filter((c) => c.result === "match").length;
   const byKind = Object.fromEntries(
-    (["calculation", "document-copy", "binary-attachment"] as const).map(
+    ([
+      "calculation",
+      "document-copy",
+      "binary-attachment",
+      "native-value",
+      "native-w2-value",
+      "native-retirement-value",
+    ] as const).map(
       (kind) => {
         const selected = rows.filter((r) => r.kind === kind);
         return [kind, {
@@ -107,12 +155,17 @@ export function buildAtsCheckLedger(report: Replay) {
       provisional: checks.length - nonprovisional.length,
       percent: evaluated.length ? 100 * matches / evaluated.length : null,
     },
+    attachmentCoverReviews: report.scenarios.map((s) => ({
+      scenario: s.id,
+      sourceUrl: s.sourceUrl,
+      review: s.attachmentCoverage.coverSheetReview,
+    })),
     attachmentRequirementsNotInventoried: report.scenarios.filter((s) =>
       !s.attachmentCoverage.requirementsInventoried
     ).map((s) => s.id),
     unenumeratedScopes: [
       "Remaining printed and independently derived scenario expectations",
-      "Native/PDF values, ownership and presentation",
+      "Remaining native values and all PDF values, ownership and presentation",
       "Complete attachment requirements and contents",
       "Applicable IRS business rules and submission-package checks",
     ],

@@ -1,3 +1,14 @@
+import {
+  ATS_RETIREMENT_TARGETS,
+  compareAtsRetirementValues,
+} from "./ty2025-retirement-value-coverage.ts";
+import type { IssuedCopyTarget } from "./ty2025-issued-copy-values.ts";
+import {
+  ATS_W2_TARGETS,
+  compareAtsW2Values,
+  type W2Target,
+} from "./ty2025-w2-value-coverage.ts";
+import { compareAtsNativeValues } from "./ty2025-native-value-coverage.ts";
 import { compareAtsAttachments } from "./ty2025-attachment-coverage.ts";
 import { assertPreparedAttachmentManifest } from "../../2025/mef/attachments/prepared-attachment-manifest.ts";
 import { compareAtsDocuments } from "./ty2025-document-coverage.ts";
@@ -190,6 +201,12 @@ export const ATS_REPLAY_TARGETS = z.array(scenarioSchema).parse([
     targets: [
       ...wage(31232, 1754),
       target(
+        "f1040.line28_actc",
+        0,
+        TargetBasis.Derived,
+        "Scenario5 explicit ACTC opt-out; no refundable additional child credit",
+      ),
+      target(
         "f1040.taxpayer_blind",
         true,
         TargetBasis.Printed,
@@ -277,6 +294,18 @@ export const ATS_REPLAY_TARGETS = z.array(scenarioSchema).parse([
   {
     id: "1040-12",
     targets: [
+      printed1040("line1z_total_wages", 100836),
+      printed1040("line14_deductions_qbi_total", 15000),
+      printed1040("line18_total_tax_before_credits", 18634),
+      printed1040("line22_tax_after_credits", 18634),
+      printed1040("line25d_total_withholding", 14444),
+      printed1040("line33_total_payments", 14444),
+      target(
+        "f1040.digital_assets",
+        false,
+        TargetBasis.Printed,
+        "Form1040 p.2 digital-assets No",
+      ),
       printed1040("line1a_wages", 100836),
       printed1040("line8_additional_income", 24328),
       printed1040("line9_total_income", 125164),
@@ -306,6 +335,20 @@ export const ATS_REPLAY_TARGETS = z.array(scenarioSchema).parse([
   {
     id: "1040-13",
     targets: [
+      printed1040("line1z_total_wages", 31620),
+      printed1040("line9_total_income", 31620),
+      printed1040("line14_deductions_qbi_total", 30000),
+      printed1040("line18_total_tax_before_credits", 162),
+      printed1040("line21_credits_total", 162),
+      printed1040("line22_tax_after_credits", 0),
+      printed1040("line25d_total_withholding", 609),
+      printed1040("line33_total_payments", 609),
+      target(
+        "f1040.digital_assets",
+        false,
+        TargetBasis.Printed,
+        "Form1040 p.2 digital-assets No",
+      ),
       printed1040("line1a_wages", 31620),
       printed1040("line11_agi", 31620),
       printed1040("line12a_standard_deduction", 30000),
@@ -316,6 +359,66 @@ export const ATS_REPLAY_TARGETS = z.array(scenarioSchema).parse([
       printed1040("line25a_w2_withheld", 609),
       printed1040("line34_overpayment", 609),
       printed1040("line35a_refund", 609),
+      target(
+        "form6251.regular_tax_income",
+        1620,
+        TargetBasis.Printed,
+        "Form6251 p.5 line1b; issued Scenario13 answer retained",
+      ),
+      target(
+        "form6251.line2a_taxes_paid",
+        30000,
+        TargetBasis.Printed,
+        "Form6251 p.5 line2a; issued Scenario13 answer retained",
+      ),
+      target(
+        "form6251.amti",
+        31620,
+        TargetBasis.Printed,
+        "Form6251 p.5 line4; issued Scenario13 answer retained",
+      ),
+      target(
+        "form6251.exemption",
+        137000,
+        TargetBasis.Printed,
+        "Form6251 p.5 line5; issued Scenario13 answer retained",
+      ),
+      target(
+        "form6251.taxable_excess",
+        0,
+        TargetBasis.Printed,
+        "Form6251 p.5 line6; issued Scenario13 answer retained",
+      ),
+      target(
+        "form6251.tentative_tax",
+        0,
+        TargetBasis.Printed,
+        "Form6251 p.5 line7; issued Scenario13 answer retained",
+      ),
+      target(
+        "form6251.amtftc",
+        0,
+        TargetBasis.Printed,
+        "Form6251 p.5 line8; issued Scenario13 answer retained",
+      ),
+      target(
+        "form6251.net_tmt",
+        0,
+        TargetBasis.Printed,
+        "Form6251 p.5 line9; issued Scenario13 answer retained",
+      ),
+      target(
+        "form6251.regular_tax",
+        162,
+        TargetBasis.Printed,
+        "Form6251 p.5 line10; issued Scenario13 answer retained",
+      ),
+      target(
+        "form6251.line11_amt",
+        0,
+        TargetBasis.Printed,
+        "Form6251 p.5 line11; issued Scenario13 answer retained",
+      ),
       target(
         "schedule3.line6j_alt_fuel_vehicle_refueling",
         162,
@@ -364,10 +467,19 @@ export enum PreparationResult {
 }
 async function replayPreparation(
   execution: ReturnType<typeof f1040_2025.executeReturn>,
+  targets: z.infer<typeof targetSchema>[],
+  w2Targets: readonly W2Target[],
+  retirementTargets: readonly IssuedCopyTarget[],
 ) {
   if (execution.diagnostics.some((d) => d.severity === "error")) {
     return {
       result: PreparationResult.GraphBlocked,
+      nativeValueCoverage: compareAtsNativeValues(null, targets),
+      w2ValueCoverage: compareAtsW2Values(null, w2Targets),
+      retirementValueCoverage: compareAtsRetirementValues(
+        null,
+        retirementTargets,
+      ),
       documentRoots: [],
       attachments: null,
       reason: "Resolve graph diagnostics before preparation",
@@ -381,6 +493,12 @@ async function replayPreparation(
     await assertPreparedAttachmentManifest(prepared.bundle);
     return {
       result: PreparationResult.PartialPrepared,
+      nativeValueCoverage: compareAtsNativeValues(prepared.bundle.xml, targets),
+      w2ValueCoverage: compareAtsW2Values(prepared.bundle.xml, w2Targets),
+      retirementValueCoverage: compareAtsRetirementValues(
+        prepared.bundle.xml,
+        retirementTargets,
+      ),
       attachments: prepared.bundle.attachments.map((attachment) => ({
         description: attachment.description,
         fileName: attachment.fileName,
@@ -398,6 +516,12 @@ async function replayPreparation(
   } catch (error) {
     return {
       result: PreparationResult.NativeBlocked,
+      nativeValueCoverage: compareAtsNativeValues(null, targets),
+      w2ValueCoverage: compareAtsW2Values(null, w2Targets),
+      retirementValueCoverage: compareAtsRetirementValues(
+        null,
+        retirementTargets,
+      ),
       documentRoots: [],
       attachments: null,
       reason: String(error),
@@ -413,7 +537,12 @@ export async function replayAtsChecks() {
         throw new Error(`Missing ATS source/input ${scenario.id}`);
       }
       const execution = f1040_2025.executeReturn(factory());
-      const preparation = await replayPreparation(execution);
+      const preparation = await replayPreparation(
+        execution,
+        scenario.targets,
+        ATS_W2_TARGETS[scenario.id] ?? [],
+        ATS_RETIREMENT_TARGETS[scenario.id] ?? [],
+      );
       return {
         id: scenario.id,
         sourceUrl: source.sourceUrl,
@@ -429,10 +558,13 @@ export async function replayAtsChecks() {
             ? preparation.documentRoots
             : null,
         ),
-        attachmentCoverage: compareAtsAttachments(
-          source.requiredBinaryAttachmentDescriptions ?? null,
-          preparation.attachments,
-        ),
+        attachmentCoverage: {
+          ...compareAtsAttachments(
+            source.requiredBinaryAttachmentDescriptions ?? null,
+            preparation.attachments,
+          ),
+          coverSheetReview: source.binaryAttachmentCoverReview ?? null,
+        },
         checks: scenario.targets.map((check) =>
           compareAtsTarget(execution.pending, check)
         ),

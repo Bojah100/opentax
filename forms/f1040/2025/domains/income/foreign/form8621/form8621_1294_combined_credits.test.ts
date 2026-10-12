@@ -119,7 +119,13 @@ for (
       ".pdf-cache",
       packet.bundle,
     );
-    const out = Deno.env.get("FORM8621_COMBINED_EVIDENCE_DIR");
+    const permission = await Deno.permissions.query({
+      name: "env",
+      variable: "FORM8621_COMBINED_EVIDENCE_DIR",
+    });
+    const out = permission.state === "granted"
+      ? Deno.env.get("FORM8621_COMBINED_EVIDENCE_DIR")
+      : undefined;
     if (out) {
       const dir = `${out}/${testCase.id}`;
       await Deno.mkdir(dir, { recursive: true });
@@ -149,12 +155,11 @@ for (
   });
 }
 
-Deno.test("QEF without Election B retains the unverified carryforward combination guard", () => {
+Deno.test("QEF without Election B retains actual adoption carryforward", () => {
   const input = source(64500, 72500, 7405);
   delete (input.f8621[0] as Record<string, unknown>).qef_1294_election;
-  assertThrows(
-    () => f1040_2025.executeReturn(input),
-    Error,
-    "Form 8839 with Form 8621 carryforward filing is not supported",
-  );
+  const result = f1040_2025.executeReturn(input);
+  assertEquals(result.diagnostics, []);
+  assertEquals(result.carryforwards.adoption_credit_2025, 95);
+  assertEquals(buildPending(result.pending).f1040?.line24_total_tax, 0);
 });

@@ -1,5 +1,960 @@
 # TY2025 Form 8995-A coverage gap
 
+## October 12 qualified dividends with joint loss-employer credits
+
+Current-loss WOTC returns now accept positive qualified dividends when each
+employer's retained zero-dividend answer is false and agrees with the investment
+inventory. A zero-dividend answer remains required and is checked both ways;
+false with no qualified dividends and true with positive dividends both reject.
+The previous true-only payroll schema unnecessarily excluded this combination.
+Existing native/full-PDF investment replay still validates issued copies, owner,
+qualified holding-period review, source totals and final preferential-rate tax.
+Other WOTC routes retain their existing source and export conditions.
+
+The [Form8995-A line34 instructions](https://www.irs.gov/instructions/i8995a)
+include qualified dividends with net capital gains in the QBI income limitation.
+Four joint common-control cases now retain two dividend copies with ordinary
+amounts2,000/1,000, qualified amounts1,000/500 and capital distributions1,000/800.
+Each qualified copy has its dated ordinary-stock holding review. Interest1,700,
+business profits2,000/4,000/-1,000/-2,000, half-SE156, and credit2,400 remain
+unchanged; line34 is3,300. Dividends/gains receive15% treatment in these cases.
+
+| Employer arrangement | QBI | Taxable income | Regular tax | Total tax | Balance |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| Both loss-making | 150 | 577,694 | 140,627 | 141,959 | 81,959 |
+| Primary profitable / spouse loss | 292 | 577,552 | 140,578 | 141,910 | 81,910 |
+| Primary loss / spouse profitable | 427 | 577,417 | 140,530 | 141,862 | 81,862 |
+| Both loss-making / phase-in | 332 | 450,768 | 97,811 | 98,002 | 38,002 |
+
+The phase-in ratio remains56.5% and components112/220; line35 is447,800
+and line36 is89,560. All four have247 NIIT and zero AMT. Independent decimal
+calculations verify loss allocation, QBI limits, regular/AMT preferential tax,
+SE/Medicare, credits and balance against emitted native amounts.
+
+Four typed packet tests pass (1m4s), plus one focused zero-review test covering
+all four employer arrangements. Related capital-distribution, ordinary/group
+WOTC and investment regression passes24/0 (5m1s). In total20 public mutations and72 native/72
+fresh-PDF mutations reject; these include inconsistent qualified copies, final
+qualified totals, individual payroll reviews and changes too small to alter the
+rounded wage-credit shares. Reversing all related source inventories preserves
+tax and native preparation. Initial fixture export correctly rejected missing
+holding-period evidence; the retained fixtures now supply that existing review.
+
+All four complete returns pass TY2025v5.4 XSD. The160-page qualified review
+uses26 newly observed images on seven contact sheets,132 exact matches to
+previously observed pages and two within-batch duplicates. Reopened PDFs have
+zero fields/widgets. Existing26/68/76/84 qualifications recur: skipped3800
+SectionB intermediates, primary-only6251 name, partly blank zero cells and
+missing native6251 line1a. Group statement members/shares and reference IDs
+reconcile. No new layout finding or deferred repair is recorded.
+
+Evidence: `.state/research/form8995a-group-dividends-2026-10-12/` contains
+packet inputs, pending/XML/PDF, independent arithmetic, XSD results, image
+provenance and test logs. Synthetic reviewed records do not authenticate issued
+sources; the broader QBI parent remains open.
+
+
+## October 12 capital distributions with joint loss-employer credits
+
+The current-loss route now permits retained capital gains alongside employer
+WOTC. The former zero-preferential-income guard now checks the actual condition
+in the payroll review: zero qualified dividends. Positive qualified dividends
+remain rejected. Existing investment-source replay still binds payer, recipient,
+issued-copy amounts, capital contributions and the final tax worksheet; the
+payroll, proprietor and group-allocation checks remain intact.
+
+The [Form8995-A line34 instructions](https://www.irs.gov/instructions/i8995a)
+require capital gain in the income limitation, while the
+[Form5884 line2 instructions](https://www.irs.gov/instructions/i5884) reduce wage
+deductions by the determined credit. Four joint common-control returns now
+combine these rules with four business profits2,000/4,000/-1,000/-2,000,
+owned half-SE deductions14/142, interest1,700, ordinary dividends3,000 and
+capital distributions1,800. Two fund copies retain zero qualified dividends.
+The shared employee cap gives2,400 WOTC, allocated1,200 per employer.
+
+| Employer arrangement | QBI | Taxable income | Regular tax | Total tax | Balance |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| Both loss-making | 150 | 577,694 | 140,927 | 142,259 | 82,259 |
+| Primary profitable / spouse loss | 292 | 577,552 | 140,878 | 142,210 | 82,210 |
+| Primary loss / spouse profitable | 427 | 577,417 | 140,830 | 142,162 | 82,162 |
+| Both loss-making / phase-in | 332 | 450,768 | 98,066 | 98,257 | 38,257 |
+
+Capital distributions receive15% treatment in these cases. The phase-in return
+has451,100 taxable income before QBI,56.5% phase-in and112/220 business
+components; line34 retains1,800, line35 is449,300 and line36 is89,860.
+All four have247 NIIT and zero AMT. An independent decimal ledger checks
+regular tax using [2025 tax computation offsets](https://www.irs.gov/publications/p1040),
+AMT preferential tax, SE/additional Medicare, credit use and balance against
+native XML. Source order reversal preserves the result and prepares natively.
+
+The focused typed suite passes4/0 (57s); the related ordinary/group WOTC and
+investment regression passes17/0 (3m46s). It rejects16 public-source mutations
+and60 native/60 fresh-PDF mutations, including a small payroll mismatch that
+leaves rounded credit shares unchanged. Those four small changes have no
+calculation diagnostic but both exporters reject the issued-wage mismatch.
+All four full returns pass local TY2025v5.4 XSD.
+
+The160-page qualified review uses30 newly observed images on eight contact
+sheets,128 exact prior-image matches and two within-batch duplicates. All
+reopened PDFs have zero fields/widgets. Group allocation page31 retains both
+employers and their1,200 shares; native statement references reconcile.
+Existing26/68/76/84 qualifications recur: skipped Form3800 SectionB amounts,
+joint Form6251 primary-only name, blank required zeros and omitted native6251
+line1a. No new layout issue or deferred repair is recorded.
+
+Evidence: `.state/research/form8995a-group-capital-2026-10-12/` retains the
+original four calculation/export blocks, unchanged source inputs, prepared
+packets, independent arithmetic, image mappings and test logs. Synthetic source
+joins do not authenticate issued records; wider qualified-dividend and other
+QBI combinations and the broad main-board parent remain open.
+
+## October 12 unequal cent payroll in loss-employer groups
+
+Four additional joint common-control packets retain unequal employer payroll
+of4,000.49/3,000.52 for the same reviewed worker. Under the
+[Form5884 group allocation instructions](https://www.irs.gov/instructions/i5884),
+the shared6,000 wage cap still gives credit2,400. Proportionate whole-dollar
+shares are1,371/1,029, leaving deductible/QBI wages2,629.49/1,971.52.
+Gross receipts and reviewed nonpayroll expenses preserve the four business
+profits2,000/4,000/-1,000/-2,000 and owner half-SE deductions14/142.
+
+Both-loss employers, profitable primary/loss spouse, loss primary/profitable
+spouse and joint phase-in retain QBI150/292/427/359 and total tax
+140,097/140,048/140,000/96,227, respectively. A profitable employer's filed
+wage base is2,629 and its50% limit1,315; loss-employer payroll contributes zero
+after loss netting. This follows the [Form8995-A ScheduleC note](https://www.irs.gov/instructions/i8995a).
+The credit shares conserve the full2,400 despite unequal cents and source order.
+
+The common-control fixtures now use one shared test helper. All four original
+inputs deep-compare equal to the preceding retained packet sources; production
+calculation and export code are unchanged. New tests also reverse businesses,
+employees, group members and filed-member reviews together, then prepare native
+returns with the same final tax. Public mutations cover payroll, issued W-2,
+net wages and ownership; retained mutations also cover credit shares, employee
+identity, certification and statement members.
+
+The two-module typed gate passes8/0 (1m51s), including all four original group
+cases. New cases reject16 public mutations and32 native/32 fresh-PDF mutations.
+All four new returns pass local TY2025 v5.4 XSD and independent final-tax checks.
+Decimal share audits agree with both linked native allocation statements.
+The152-page review uses14 newly observed images on four contact sheets,
+130 exact previously observed image matches and eight within-batch duplicates.
+Reopened PDFs have zero fields/widgets. Existing26/68/76/84 qualifications
+remain; no new layout issue was found and prior packet totals are not recounted.
+
+Evidence is retained under
+`.state/research/form8995a-group-loss-cents-2026-10-12/`. Synthetic source joins
+remain distinct from issued payroll/ownership proof; wider combinations and
+parent completion remain open, and no deferred item is repaired.
+
+## October 12 joint common-control employers with current losses
+
+Native and PDF exports now accept the reviewed two-member joint common-control
+WOTC inventory alongside current QBI losses. The former blanket group rejection
+is replaced by complete employer-name/EIN, proprietor, business-reference and
+filed-member reconciliation. Shared employee references are joined by employer
+EIN as well, preserving distinct W-2, SSA, certification and payroll records.
+The existing group calculator still applies the shared-worker wage cap and
+allocates the credit before the business wage reductions and QBI calculation.
+
+The [Form5884 group instructions](https://www.irs.gov/instructions/i5884) treat
+common-control businesses as one employer and require proportionate credit
+shares and an allocation statement. Each synthetic employer here pays4,000 to
+the same reviewed worker. The6,000 group wage cap gives total credit2,400,
+allocated1,200 per member; each deducts2,800 wages. The same four-business
+profits2,000/4,000/-1,000/-2,000, owned SE deductions14/142 and gross-income
+allocations from the ordinary joint checkpoint remain intact. Lower payroll
+and corresponding nonpayroll expenses preserve those independently reviewed
+profits without changing loss netting.
+
+| Employer arrangement | QBI | Positive-business wage limits | Group credit | Total tax | Owed |
+| --- | ---: | --- | ---: | ---: | ---: |
+| Both loss-making | 150 | 50 / 100 | 2,400 | 140,097 | 80,097 |
+| Primary profitable, spouse loss | 292 | 1,400 / 100 | 2,400 | 140,048 | 80,048 |
+| Primary loss, spouse profitable | 427 | 50 / 1,400 | 2,400 | 140,000 | 80,000 |
+| Both loss-making, joint phase-in | 359 | 50 / 100 | 2,400 | 96,227 | 36,227 |
+
+The group source must include exactly both filed ScheduleC employers and their
+matching joint ownership review. Nonjoint groups, incomplete membership,
+external member shares and unsupported source combinations remain guarded.
+Synthetic records prove calculation and source joins, not issued certifications
+or authenticated ownership. No deferred work is implemented and the broad
+Forms8995/8995-A parent remains open.
+
+The six-module typed regression passes32/0 (7m15s); the focused suite passes
+4/0 (57s), with32 public-source rejections and
+44 native/44 fresh-PDF mutation rejections. Independent decimal calculations
+reconcile all four final taxes and native QBI/wage limits. Each full return
+passes TY2025 v5.4 XSD, including both linked native group statements. Member
+names, qualified wages3,000 each, credit shares1,200 each and document IDs agree.
+The152-page review comprises17 newly observed images on five contact sheets,
+122 exact prior-image matches and13 within-batch duplicates. Reopened PDFs
+have zero fields/widgets. Printed page30 contains the complete group allocation;
+existing26/68/76/84 presentation qualifications recur without a new layout issue.
+
+Evidence: `.state/research/form8995a-group-loss-wotc-2026-10-12/` retains the
+valid-source pre-change export rejection, post-change replay and filing packets.
+
+## October 12 independent joint employers with current losses
+
+Four complete-return cases now verify both spouses' ordinary employer WOTC
+alongside the four-business current-loss inventory. The existing runtime
+supports two loss-making employers, a profitable primary employer plus a loss
+spouse employer, the reverse arrangement, and joint wage-limit phase-in.
+Each employer retains6,000 payroll,2,400 determined credit and3,600 deductible
+wages. The complete ordinary joint-employer review binds both business EINs,
+proprietor SSNs and spousal-attribution exceptions; controlled groups remain
+outside this checkpoint. No production change was needed.
+
+The [Form5884 instructions](https://www.irs.gov/instructions/i5884) govern the
+wage deduction reduction. The [Form8995-A ScheduleC instructions](https://www.irs.gov/instructions/i8995a)
+keep loss-business wages out of the parent limit after proportional loss netting.
+The four retained profits remain2,000/4,000/-1,000/-2,000, with owner SE taxes
+27/283 and half-SE deductions14/142. Primary gross-income allocation7/7 and
+spouse81.14/60.86 produce filed QBI1,993/3,919/-1,007/-2,061; losses3,068 offset
+positive businesses1,034/2,034, leaving959/1,885. When only the primary positive
+business and spouse loss business employ workers, primary allocation10.50/3.50
+instead gives filed QBI1,990/3,919/-1,004/-2,061 and adjusted958/1,886.
+
+| Employer arrangement | QBI | Wage limits on positive businesses | Regular tax | Total tax | Owed |
+| --- | ---: | --- | ---: | ---: | ---: |
+| Both loss-making | 150 | 50 / 100 | 139,012 | 137,697 | 77,697 |
+| Primary profitable, spouse loss | 292 | 1,800 / 100 | 138,963 | 137,648 | 77,648 |
+| Primary loss, spouse profitable | 427 | 50 / 1,800 | 138,915 | 137,600 | 77,600 |
+| Both loss-making, joint phase-in | 359 | 50 / 100 | 96,283 | 93,827 | 33,827 |
+
+All four use the full4,800 credit and retain60,000 withholding. At phase-in,
+taxable income before QBI444,600 yields50% reduction; components121/238 give
+QBI359. Independent decimal calculations use the official
+[2025 Tax Computation Worksheet](https://www.irs.gov/publications/p1040),
+including the joint32% subtraction45,874, and agree with every Form1040 tax,
+credit and balance. Native audits also reconcile both employer credits,
+QBI/loss rows, wage limits and Form3800 current use.
+
+The typed suite passes4/0 (55s). Five altered public source contracts per case
+reject (20 total); eight retained-input mutations per case reject native and
+fresh PDF export (32 each). Reversing businesses and employees preserves tax.
+All four full returns pass TY2025 v5.4 XSD. The148-page review comprises30
+new unique images on eight observed contact sheets,107 exact prior-image matches
+and11 within-batch duplicates. Reopened packets have zero fields/widgets.
+Existing26/68/76/84 qualifications recur: skipped Form3800 intermediate lines,
+joint Form6251 name, blank QBI zeros and omitted native Form6251 line1a.
+No new layout defect was found. Evidence is retained under
+`.state/research/form8995a-dual-loss-wotc-2026-10-12/`.
+
+Synthetic ownership, payroll and certification references establish calculation
+joins only. Wider employer/control arrangements, source authenticity, broad
+parent completion and IRS acceptance remain open; deferred work is untouched.
+
+## October 12 loss-making employer payroll and WOTC
+
+The reviewed current-loss route now retains WOTC payroll on a business with
+negative QBI. Its wage-credit reduction still changes ScheduleC profit and the
+owner's SE basis, but its wages contribute zero to the parent QBI limitation.
+This follows the [Form8995-A ScheduleC column(c) note](https://www.irs.gov/instructions/i8995a):
+W-2 wages and qualified-property basis must be zero for a business whose
+adjusted QBI is zero or negative. No wage allowance transfers to another trade.
+Unreviewed loss-business payroll and nonzero loss-business UBIA remain guarded.
+
+Eight public cases retain four businesses with profits2,000/4,000/-1,000/-2,000.
+The primary loss employer has gross6,000, raw payroll6,000, WOTC2,400,
+deductible wages3,600 and expenses3,400. Its ordinary single-owner half-SE
+allocation is10/13.33/10/6.67, giving filed QBI1,990/3,987/-1,010/-2,007.
+Loss offsets1,004/2,013 yield adjusted QBI986/1,974. Native and PDF parent wages
+are100/200/0/0 and wage limits50/100/0/0, despite the retained employer wages3,600.
+
+The joint primary-employer allocation7/94.67/7/47.33 gives adjusted QBI961/1,883.
+The spouse-employer variant moves reviewed payroll to the fourth business:
+gross6,000 minus wages3,600 and expenses4,400 gives loss2,000. Its proprietor
+allocation10.50/81.14/3.50/60.86 gives adjusted QBI958/1,886. Both owner cases
+retain separate SE computations and the same independent wage limits.
+
+| Case | QBI | Regular tax | WOTC used | Total tax | Owed / (refund) | Pages |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: |
+| Single above range | 150 | 70,018 | 2,400 | 68,623 | 8,623 | 35 |
+| Single limited credit | 150 | 70,018 | 58,763 | 12,260 | (47,740) | 35 |
+| Single phase-in | 370 | 48,081 | 2,400 | 46,102 | (13,898) | 35 |
+| Joint primary employer | 150 | 139,012 | 2,400 | 140,097 | 80,097 | 37 |
+| Joint spouse employer | 150 | 139,012 | 2,400 | 140,097 | 80,097 | 37 |
+| Head of household | 150 | 65,524 | 2,400 | 64,129 | 4,129 | 35 |
+| Qualifying surviving spouse | 150 | 50,808 | 2,400 | 49,413 | (10,587) | 35 |
+| Married filing separately | 150 | 70,018 | 2,400 | 69,298 | 9,298 | 35 |
+
+The limited-use loss employer pays480,000 to80 reviewed workers, generating
+WOTC192,000 and deductible wages288,000. Gross310,000 and expenses23,000 still
+produce loss1,000. Deduction shares.73/.98/37.80/.49 precede loss netting.
+All288,000 retained QBI wages are excluded from the loss business's wage limit;
+current credit use58,763 does not replace the full192,000 wage reduction.
+
+The nine-module typed regression passes74/0 (6m58s); the focused suite passes
+8/0 (2m6s), with48 public diagnostic rejections and
+96 native/96 fresh-PDF mutation rejections. Independent decimal calculations
+reconcile all eight final taxes, credits and balances; native audits verify
+four business identities, QBI/loss allocations and zero loss-employer wage
+limitations. All eight complete returns pass the local TY2025 v5.4 XSD.
+All284 packet pages were reviewed:45 new unique images on12 contact sheets,
+212 exact matches to previously observed images and27 within-batch duplicates.
+Reopened PDFs contain zero fields/widgets. Existing qualifications26/68/76/84
+recur (Form3800 skipped values, joint/MFS names, blank QBI zeros and native
+Form6251 line1a omission); no new layout defect was found. Final native audits
+independently agree on Form1040, Form5884 and current Form3800 amounts.
+The initial test draft used the wrong spouse identity property and failed type
+checking; it was corrected before the successful typed run.
+
+Evidence is retained in `.state/research/form8995a-loss-employer-2026-10-12/`.
+The initial source replay documents the previous blanket payroll rejection.
+Synthetic source joins do not authenticate employer W-2s or SWA certifications.
+Controlled groups, wider payroll methods and the broad parent TODO remain open;
+no deferred defect was repaired and no IRS acceptance is claimed.
+
+
+## October 12 employer WOTC with ordinary current losses
+
+Reviewed employer payroll now coexists with the ordinary multi-business loss
+inventory. The graph retains the full wage-credit reduction, then attributes
+half-SE deductions using the owner's reviewed gross income before loss netting.
+Native parent, loss companion and PDF exports replay the employer W-2 records,
+certified employee payroll, business inventory, proprietor, determined credit,
+Form3800 source and retained wage reductions. Existing positive-only WOTC
+routes keep their separate source contracts.
+
+The six public cases use four businesses with gross income6,000/8,000/2,000/4,000
+and profits2,000/4,000/-1,000/-2,000. The first business pays6,000 in wages:
+WOTC2,400 reduces deductible/QBI wages to3,600, with400 other expenses. This
+follows the [Form5884 line2 instruction](https://www.irs.gov/instructions/i5884)
+to reduce wage deductions by the determined credit, independently of current
+credit use. All six cases currently use the full2,400 credit. The
+[Form8995-A instructions](https://www.irs.gov/instructions/i8995a) govern the
+separate current-loss netting and wage limitations.
+
+Single-owner half-SE40 allocates12/16/4/8 before netting; the joint inventory
+retains T/S/T/S ownership and half-SE156 allocated10.50/94.67/3.50/47.33.
+The first positive business now has enough QBI wages for its full20% component;
+the second still faces its own200 wage base. Single phase-in at50% gives
+components197/247 and QBI444; joint above-range components are192/100.
+
+| Case | QBI | Regular tax | WOTC used | Total tax | Owed / (refund) | Pages |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: |
+| Single above range | 297 | 69,967 | 2,400 | 68,572 | 8,572 | 35 |
+| Single phase-in | 444 | 48,057 | 2,400 | 46,078 | (13,922) | 35 |
+| Joint two-owner | 292 | 138,963 | 2,400 | 140,048 | 80,048 | 37 |
+| Head of household | 297 | 65,472 | 2,400 | 64,077 | 4,077 | 35 |
+| Qualifying surviving spouse | 297 | 50,773 | 2,400 | 49,378 | (10,622) | 35 |
+| Married filing separately | 297 | 69,967 | 2,400 | 69,247 | 9,247 | 35 |
+| Single limited credit | 295 | 69,968 | 58,726 | 12,247 | (47,753) | 35 |
+
+The seventh case has80 certified workers and480,000 payroll. Full WOTC192,000
+reduces deductible/QBI wages to288,000 even though current use is only58,726.
+Gross310,000 minus wages288,000 and expenses20,000 preserves profit2,000;
+the changed gross-income basis reallocates half-SE as38.27/.99/.25/.49.
+Filed QBI1,962/3,999/-1,000/-2,000 nets to975/1,986, giving components195/100.
+Independent specified-credit limitation69,968 - round(25% * (69,968 -25,000))
+is58,726, and final tax12,247 matches native and PDF.
+
+The18-module grouped gate passes129 typed tests with zero failures or ignored
+(7m39s); the added limited-use case passes separately1/0 (13s). The seven new
+cases reject42 public-source mutations and84 native/84 fresh-PDF mutations. Independent decimal calculations
+reconcile SE tax, half-SE, regular tax, Medicare tax, current credit and balance;
+XML audits additionally join all four QBI/loss rows, components and EINs.
+All seven full returns pass the local TY2025 v5.4 XSD. All247 flattened pages were
+observed:58 new unique images on16 contact sheets,132 exact matches to previously
+observed pages (including the first six cases) and57 within-batch duplicates. Reopened PDFs contain no fields
+or widgets. Deferred26 skipped Form3800 lines,68 names,76 blank zeros and84
+native Form6251 line1a omission remain qualified; no new clipping was observed.
+
+Evidence is retained under
+`.state/research/form8995a-loss-wotc-2026-10-12/`, with complete sources, packets,
+render hashes, independent tax, XML audits and visual-review mapping. Initial
+test expectations were corrected using decimal rounding, and the MFS fixture
+now explicitly answers the required spouse business-credit question.
+
+The original pre-change probe is preserved under `before/`: a required QBI node
+failed, but return preparation emitted XML with no QBI form and tax68,676.
+General diagnostic-to-export handling is newly deferred161 and was not repaired;
+this feature removes that calculation failure only for the supported sources.
+Controlled-group losses, preferential-income coexistence,
+loss-making WOTC employers and wider payroll methods remain outside this
+checkpoint. Synthetic records establish calculation/source joins, not payroll
+or SWA authenticity. The broad parent TODO and IRS acceptance remain open.
+
+
+## October 12 broker gains and capital-loss boundary audit
+
+Three source-backed cases now retain complete broker-gain evidence alongside
+current business losses and deductible SE tax: Single phase-in, joint two-owner
+and MFS. Two taxpayer-owned covered sales add a2,000 long-term gain and1,000
+short-term loss to1,800 capital distributions. ScheduleD combines long-term3,800
+and short-term-1,000 to2,800; qualified dividends1,800 produce a4,600 QBI capital
+limit. All investment copies belong to the primary filer. Existing gross-income
+SE allocation and four identified business loss rows remain unchanged.
+
+| Case | QBI deduction | Regular tax | NIIT | Total tax | Owed / (refund) | Pages |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: |
+| Single phase-in gain | 304 | 49,720 | 285 | 50,426 | (9,574) | 26 |
+| Joint two-owner gain | 150 | 140,717 | 285 | 144,487 | 84,487 | 28 |
+| Separate-return gain | 150 | 71,723 | 285 | 73,688 | 13,688 | 26 |
+
+Independent decimal calculations recompute source gains, preferential income,
+filing-status tax, QBI phase-in, NIIT and balances. Single pre-QBI taxable229,800
+produces65% phase-in and components101/203. These three cases agree through
+Form1040 and native tax. The focused typed suite passes3 tests, rejecting12
+public business-source mutations plus51 native and51 fresh-PDF mutations;
+additional broker mutations cover recipient, reused transaction ID, basis and
+wash-sale adjustment. The five-module grouped gate passes182 typed tests, zero
+failures or ignored (1m33s), covering both recent QBI suites, distinct capital
+sources, ScheduleD and Form8960. The MFS loss probe also rejects through both native and
+fresh-PDF export with the explicit finalized-ScheduleD mismatch.
+
+The six-case audit preserves the negative cases as entered. A5,000 long-term
+loss,1,000 short-term gain and1,800 distributions produce net loss2,200. The
+Single and joint cases calculate QBI349/150 and regular tax48,581/139,527
+correctly, but ScheduleD sends only positive capital income to Form8960.
+Consequently both native/PDF packets report NIIT179 rather than95: final tax
+49,181/143,191 instead of49,097/143,107. The [Form8960 line5a instructions](https://www.irs.gov/instructions/i8960)
+require the Form1040 capital gain or loss; these ordinary investment sales have
+no excluded-property adjustment. This is deferred159, with original incorrect
+outputs retained, not an approved tax result.
+
+The MFS loss case omits filing status from retained public ScheduleD input,
+using the ordinary3,000 loss limit instead of the required1,500 limit in the
+[ScheduleD instructions](https://www.irs.gov/instructions/i1040sd). Public AGI
+305,460 should be306,160; after also correcting NIIT, final tax should be72,580.
+Both final export routes already reject the ScheduleD/Form1040 mismatch, so no
+MFS loss packet is counted. This is deferred160. Neither new defect was repaired.
+
+Five complete returns pass local TY2025 v5.4 XSD: three tax-reconciled gain
+packets/80 pages and two incorrect-NIIT loss packets/54 pages. All134 flattened
+pages were reopened with zero fields/widgets and observed:36 new unique images
+on9 sheets,92 exact matches to the prior observed investment batch and6 duplicate
+pages within this batch. No clipping was observed. Existing deferred15 repeats
+in missing native ScheduleD totals/conditional indicators; deferred68 repeats in
+joint primary-only ScheduleB/ScheduleD headers and the MFS spouse row; deferred76
+repeats in blank zero QBI/business fields. Structural success does not resolve
+those native/presentation qualifications or the two tax discrepancies.
+
+Evidence: `.state/research/form8995a-loss-brokers-2026-10-12/` retains six original
+inputs/pending records, five XML/PDF packets, the MFS rejection, independent
+expected-versus-actual arithmetic, native ScheduleD observations, page hashes and
+qualified visual review. No production runtime changed in this audit. Wider QBI
+conditional routes, external authenticity and IRS acceptance remain open.
+
+## October 12 current losses, SE deductions and investment income
+
+The current-loss export now reconciles retained owner SE deductions when the
+return also contains reviewed interest, dividends and capital-gain distributions.
+Previously it rejected this combination and its investment-tax check always used
+Single rates. The check now uses the actual filing status and reconciles total
+income, adjustments and AGI before replaying the preferential-rate worksheet.
+Source ownership, distinct capital contributions, SE allocation, business loss
+netting and MFS property-regime reviews remain enforced.
+
+Each of six complete returns retains two taxpayer-owned INT copies (1,000/700)
+and two DIV copies (ordinary2,000/1,000; qualified1,200/600; distributions1,000/800).
+The investment total is6,500; equal qualified-dividend and capital-gain contributions
+of1,800 each remain distinct and give Form8995-A line34 of3,600, following the
+[Form8995-A instructions](https://www.irs.gov/instructions/i8995a).
+The four businesses and owner gross-income allocation are the same as the
+SE-only checkpoint below. All investments in this batch belong to the primary
+filer, including the joint case; spouse investments and broker sales are not
+proved by these six packets.
+
+| Case | Half-SE | QBI deduction | Regular tax | NIIT | Total tax | Owed / (refund) | Pages |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
+| Single high income | 40 | 150 | 71,573 | 247 | 72,825 | 12,825 | 24 |
+| Single phase-in | 40 | 313 | 49,567 | 247 | 50,235 | (9,765) | 24 |
+| Joint two owners | 156 | 150 | 140,567 | 247 | 144,299 | 84,299 | 26 |
+| Head of household | 40 | 150 | 67,079 | 247 | 68,331 | 8,331 | 24 |
+| Surviving spouse | 40 | 150 | 52,044 | 247 | 53,296 | (6,704) | 24 |
+| Separate return | 40 | 150 | 71,573 | 247 | 73,500 | 13,500 | 24 |
+
+The added income raises the phase-in case's pre-QBI taxable income to228,800,
+producing63% phase-in and components104/209. Independent decimal arithmetic applies
+the [2025 tax worksheet](https://www.irs.gov/instructions/i1040gi),15% capital
+rates and [NIIT thresholds](https://www.irs.gov/instructions/i8960); all six final
+taxes, owner SE amounts and balances agree. An independent native audit checks
+business identities, loss offsets, adjusted QBI, both capital contributions,
+Form1040 investment/adjustment/tax lines and Form8960 investment income/tax.
+
+All six full returns pass local TY2025 v5.4 Return1040 XSD. All146 flattened pages
+were reopened with zero fields/widgets and visually observed through62 unique
+images on16 sheets; final PDF hashes match those reviewed. ScheduleB payer rows,
+seven owner ScheduleSE copies, QBI continuations, phase-in and final amounts
+reconcile. Joint ScheduleB page7 retains a primary-only header and MFS Form1040
+page1 repeats the spouse name in the joint-only row (deferred68); blank zero
+QBI/business fields repeat deferred76. The positive joint Form8960 page21 shows
+both names. These presentation findings remain deferred without repair.
+
+The focused suite passes six typed tests and rejects24 public business-source
+mutations plus78 native and78 fresh-PDF mutations. Export probes cover investment
+owner changes in both retained copies, collapsed capital contributions, inadequate
+qualified-dividend holding review, altered ScheduleB print amounts, AGI, adjustments,
+regular tax and the earlier owner-SE source joins. The first test draft used a
+nonexistent tax field in one mutation; correcting the test to the actual Form1040
+income-tax field makes that rejection meaningful. Production tax logic did not
+change to accommodate a test expectation. The20-module grouped gate passes209
+typed tests, zero failures or ignored (5m15s), including prior SE/loss/owner/MFS
+routes, source schemas, native companions and distinct investment contributions.
+
+Evidence: `.state/research/form8995a-loss-investments-2026-10-12/` retains inputs,
+filer/pending/projection records, full XML/PDF, schema logs, independent arithmetic
+and native audits, rendered-image mappings and qualified visual review. This
+extends the existing QBI and return-wide investment/adjustment work; broader
+conditional paths, external authenticity and IRS acceptance remain open.
+
+## October 12 current losses with deductible self-employment tax
+
+Ordinary Schedule C current-loss inventories now retain positive owner-specific
+half-SE deductions before applying QBI loss netting. The new per-business review
+records gross-income attribution, the allocated deduction, complete owner inventory
+and workpaper provenance. Gross income is rebuilt from receipts, allowances, COGS
+and other business income. Cent shares use exact integer ratios and stable business
+references for residual ties. A loss business with gross income receives its share;
+spouses' deductions never cross owners. Existing ordinary positive-only allocation
+routes are unchanged and are separately recorded as deferred157.
+
+This ordering follows [26 CFR1.199A-3(b)(1)(vi)](https://www.govinfo.gov/content/pkg/CFR-2025-title26-vol4/pdf/CFR-2025-title26-vol4-sec1-199A-3.pdf)
+and the [Form8995-A loss-netting instructions](https://www.irs.gov/instructions/i8995a).
+The public graph retains raw Schedule C profit and the separate SE deduction;
+QBI rows reflect the deduction before proportional loss offsets and per-business
+wage/property limitations. Native and fresh-PDF exports rebuild source profits,
+owner SE and wage records, and reconcile Schedules1/2 and Form1040. Exempt trades,
+other SE sources and health/retirement adjustments remain outside this extension;
+investment combinations are covered by the newer checkpoint above, while existing prior-loss, SSTB, aggregation, cooperative and
+MFS property-regime boundaries continue to apply.
+
+All six cases have gross business income6,000/8,000/2,000/4,000 and net profits
+2,000/4,000/-1,000/-2,000. One-owner half-SE40 allocates12/16/4/8, yielding filed
+QBI1,988/3,984/-1,004/-2,008 and offsets1,003/2,009. The joint case assigns the
+first/third trades to T and second/fourth to S: SE taxes27/283 yield deductions
+14/142, allocated10.50/94.67/3.50/47.33. Filed QBI1,990/3,905/-1,004/-2,047 nets
+to960/1,884 after offsets1,030/2,021. A separate public calculation keeps T's
+deduction14 when S's loss makes combined profit-1,000, retaining QBI carry1,014;
+this remains QBI-stage evidence with a Form461 source-review diagnostic
+(deferred158), not a complete return or an additional packet. The existing
+zero-other-item review was not falsely asserted for the positive SE deduction.
+All businesses remain separately identified
+in both representations and continuation pages.
+
+| Case | Half-SE | QBI deduction | Final tax | Balance owed / (refund) | Pages |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| Single high income | 40 | 150 | 71,023 | 11,023 | 23 |
+| Single 50% phase-in | 40 | 370 | 48,502 | (11,498) | 23 |
+| Joint two owners | 156 | 150 | 142,497 | 82,497 | 25 |
+| Head of household | 40 | 150 | 66,529 | 6,529 | 23 |
+| Surviving spouse | 40 | 150 | 51,813 | (8,187) | 23 |
+| Separate return | 40 | 150 | 71,698 | 11,698 | 23 |
+
+Independent decimal calculations apply the [2025 tax worksheet](https://www.irs.gov/instructions/i1040gi)
+and [Additional Medicare thresholds](https://www.irs.gov/instructions/i8959),
+including each filed SE line and owner deduction. All six final taxes and balances
+agree. The initial test draft corrected two hand-calculated expectations (phase
+370 and spouse SE283/half142); source cases and production tax calculations did
+not change. A one-dollar gross-income mutation legitimately preserved cent shares;
+the rejection probe now changes gross and offsetting expenses by1,000 to test a
+material attribution conflict without changing net profit.
+
+All six full returns pass local TY2025 v5.4 Return1040 XSD. All140 flattened pages
+have zero fields/widgets and were observed through61 unique images on16 sheets.
+Seven ScheduleSE copies, source owner/name/EIN, QBI amounts, phase-in, continuations
+and final tax reconcile without observed clipping. Deferred68 repeats in the joint
+Form8960 primary-only header and the separate Form1040 spouse row; deferred76
+repeats in blank zero fields. Neither presentation issue was repaired.
+
+The six focused typed cases pass and reject24 public-source,36 native and36
+fresh-PDF mutations. Additional allocation tests cover stable cent ties, source
+permutations, zero gross, subcent bases, exempt trades and missing owner sources.
+The19-module grouped gate passes203 typed tests, zero failures or ignored; the
+first attempt had199 passes and one missing-pdftotext environment failure. After
+correcting PATH, it passes unchanged. Final review then added net-loss deduction
+attribution and its guarded joint case; the final allocation/current-loss replay
+passes12 typed tests. All six final PDFs, inputs, filer records, projections and
+pending records are byte-identical to the reviewed packets; XML differs only in
+ReturnTs. Independent final-tax and native business-row audits also pass on the
+final replay.
+
+Evidence: `.state/research/form8995a-loss-se-2026-10-12/` retains public inputs,
+prepared pending/filer records, projections, XML/XSD logs, PDFs, independent tax
+arithmetic, image hashes and qualified visual review. This completes this SE-loss
+extension of the existing QBI task; broader parent readiness remains open.
+
+
+## October 12 separate-return ordinary loss inventories
+
+MFS ordinary current-loss inventories now use taxpayer-owned businesses with
+retained domicile, property-regime, separate-earnings and spouse-deduction reviews.
+Each business identifies its owner; common owner/spouse/domicile facts must agree
+across the inventory. Native and PDF exports join those facts to general inputs,
+Form1040, actual wage recipients and the final filer/address. An SSTB-only owner
+check no longer incorrectly rejects ordinary losses; SSTB validation remains in
+its own branch.
+
+This reuses the existing separate-income review schema rather than treating a
+mailing state as proof of property character. Mandatory community-property states,
+elected or retained community income, spouse-owned businesses and an itemizing
+spouse remain outside this path. The review follows the distinctions in
+[Publication555](https://www.irs.gov/publications/p555). Broader property allocations,
+source authenticity, positive SE adjustments and prior accepted losses remain open;
+each proprietor still must have net profit below400.
+
+| Case | Pre-QBI taxable income | Phase | QBI deduction | Final tax | Refund | Pages |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: |
+| Colorado midpoint | 222,300 | 50% | 57 | 49,196 | 10,804 | 21 |
+| Alaska upper endpoint | 247,300 | 100% | 55 | 57,421 | 2,579 | 21 |
+| New York fractional | 222,301 | 50.002% | 57 | 49,196 | 10,804 | 21 |
+
+Each source contains four businesses with QBI1,000/2,000/-900/-1,800,
+proportional offsets900/1,800, adjusted positive QBI100/200, wages30/100 and
+zero UBIA. The [Form8995-A instructions](https://www.irs.gov/instructions/i8995a)
+use the nonjoint197,300 threshold and50,000 range for MFS. Independent decimal
+arithmetic applies the [1040 tax worksheet, Section C](https://www.irs.gov/instructions/i1040gi)
+(32% of taxable income less22,937), producing regular taxes48,181/56,181/48,181.
+The [Form8959 MFS threshold](https://www.irs.gov/instructions/i8959) is125,000;
+Additional Medicare tax1,015/1,240/1,015 reconciles all final taxes and refunds.
+All three original cases pass; no source amount was substituted to avoid a failure.
+
+All three full returns pass local TY2025 v5.4 Return1040 XSD. All63 flattened
+pages have zero fields/widgets and were reviewed through33 unique images:
+28 newly observed images on seven sheets plus five prior-reviewed SHA256 matches.
+Business identity, taxpayer ownership, loss rows, phase amounts and continuation
+order reconcile without observed clipping. Existing deferred68 repeats the
+spouse name in the joint-only Form1040 row and MFS field; deferred76 repeats
+blank zero fields. These qualifications remain deferred without repair.
+
+The focused typed replay passes3/0. It rejects18 public-source mutations and
+39 native plus39 fresh-PDF mutations, including spouse deduction conflicts,
+altered review facts propagated into both QBI companions, wage-recipient swaps
+and detached taxpayer/spouse/address headers. Reversed business inventories
+preserve the final tax. The initial run found a test-only assertRejects overload
+error, corrected by specifying Error without changing the cases.
+
+The expanded17-module QBI/Schedule C batch passes194 typed tests, zero failures
+or ignored. Final diff review tightened the PDF status condition to preserve the
+previous rejection of non-SSTB, non-loss MFS paths; only validated ordinary loss
+inventories bypass the SSTB-only owner assertion. The final MFS/SSTB rerun passes
+11 typed tests with zero failures or ignored. All three final PDFs, projections
+and pending records exactly match the reviewed artifacts; XML differs only in
+ReturnTs.
+
+Evidence: `.state/research/form8995a-mfs-losses-2026-10-12/` retains inputs,
+pending/filer records, projections, XML/XSD logs, actual PDFs, independent decimal
+tax arithmetic, render hashes and visual review. This advances the existing
+QBI source and owner task; it does not close the broader parent.
+
+## October 12 joint, head-of-household and surviving-spouse losses
+
+The ordinary current-loss route now retains explicit taxpayer/spouse business
+ownership for MFJ and taxpayer ownership for HOH/QSS. It joins filing status and
+SSNs to the final return/header and, for joint returns, rebuilds the retained
+owner-specific SE inventory even when neither proprietor owes SE tax. Missing
+or inconsistent owners reject. Each proprietor must remain below the existing
+400 net-profit boundary; cross-owner losses cannot hide an unsupported SE
+allocation. MFS, prior losses and other existing exclusions remain guarded.
+
+The [2025 Form8995-A instructions](https://www.irs.gov/instructions/i8995a)
+use a394,600 threshold/100,000 phase-in range for MFJ and197,300/50,000 for
+HOH/QSS. QSS retains joint ordinary income-tax brackets without receiving the
+joint QBI threshold. All five cases have four businesses with QBI1,000/2,000/
+-900/-1,800, adjusted positive QBI100/200 and wage limits15/50. At50% phase-in,
+components17/40 produce deduction57; the adjacent QSS case has50.002%.
+
+| Case | Wage income | Business owners | Expected / actual final tax | PDF pages |
+| --- | ---: | --- | ---: | ---: |
+| Joint primary owner | 475,800 | T/T/T/T | 98,412 / 98,412 | 21 |
+| Joint both owners; spouse wages | 475,800 | T/S/T/S | 98,412 / 98,412 | 21 |
+| Head of household | 245,625 | T/T/T/T | 46,853 / 46,853 | 21 |
+| Surviving spouse, original half-dollar | 253,500 | T/T/T/T | **39,514 / 39,513** | 21 |
+| Surviving spouse, adjacent dollar | 253,501 | T/T/T/T | 39,515 / 39,515 | 21 |
+
+All five full returns pass the local v5.4 Return1040 XSD. Independent final-tax
+checks pass four and fail one: the original QSS wage case computes Additional
+Medicare tax481 instead of482 because binary multiplication puts481.50 just
+below the rounding boundary. The [1040 whole-dollar rule](https://www.irs.gov/instructions/i1040gi)
+rounds half dollars upward. Deferred156 retains the source and incorrect return;
+its QBI deduction57 is independently correct. The adjacent-dollar case supplements
+the original and does not replace it. No Medicare code was changed.
+
+All105 flattened pages have zero fields/widgets. Visual review covers47 unique
+images:44 newly observed images on11 sheets and three SHA256 matches to earlier
+reviewed pages. Both joint names, each Schedule C proprietor/SSN, four business
+identities, loss allocations and continuation order reconcile; the spouse's
+second/fourth trades print the spouse identity. No filled-content clipping was
+observed. Blank loss-business parent zeros and some Schedule C zero fields repeat
+deferred76; the half-dollar tax defect is visible in the original PDF.
+
+The initial six-case replay passed. Subsequent public-source and empty-owner
+inventory checks expanded the test coverage; the companion Schedule A/B/D batch
+passes16 typed tests. The first combined compiler run reported TS2590 in the
+registry callable union; the previous commit9f353cce4 passes the matching baseline
+compiler check. The five QBI builders now take raw values as `unknown` and retain
+strict schema parsing before accessing fields, avoiding expansion of the deep
+QBI input union at dispatch. No global registry or deferred reliability change
+was made. Initial test-only unknown-spread/enum typing errors were also corrected.
+
+The final15-module run passes87 typed tests with zero failures or ignored;
+with the16 companion passes, this checkpoint has103 related typed passes.
+The new cases reject ten public-source mutations and29 native plus29 fresh-PDF
+mutations, including empty joint-owner inventories. All five final PDFs,
+projections and tax-audit records exactly match the reviewed artifacts; XML
+matches after excluding only ReturnTs. The separate final-tax audit remains
+four passes/one deferred156 failure. The historical four deferred65 RPE fixture
+path failures are not reclassified or repaired by these passing batches.
+
+Evidence is retained in `.state/research/form8995a-loss-owners-2026-10-12/`,
+including source inputs, filer/pending records, projections, XML/XSD logs, actual
+PDFs, render/hash inventories and a separate final-tax audit. This advances the
+existing QBI source/ownership task without closing its broader parent.
+
+## October 12 current-loss phase-in and continuation checkpoint
+
+The ordinary Single current-loss route now applies the wage/property phase-in
+between taxable income197,300 and247,300, including the upper endpoint. Each
+positive business first absorbs its allocated loss, then uses its own wage and
+property limit. Only businesses whose limit is below20% of adjusted QBI need
+Part III. Native XML retains the business reduction and shared phase percentage;
+the PDF includes Part III on each continuation that needs it, with overall
+Part IV totals on the first copy only. This follows the
+[Form8995-A Part III instructions](https://www.irs.gov/instructions/i8995a).
+
+| Case | Pre-QBI taxable income | Phase | Business components | Deduction | Tax / refund | Pages |
+| --- | ---: | ---: | --- | ---: | --- | ---: |
+| Seven businesses, midpoint | 222,300 | 50% | 6 / 11 / 18 / 22 | 57 | 48,521 / 11,479 | 30 |
+| Four businesses, fractional | 222,251 | 49.902% | 18 / 40 | 58 | 48,504 / 11,496 | 21 |
+| Seven businesses, upper endpoint | 247,300 | 100% | 6 / 10 / 18 / 20 | 54 | 56,747 / 3,253 | 30 |
+
+The business inventories, loss allocations, wages and property amounts are the
+same as the preceding continuation checkpoint. Wage income is237,750/237,701/
+262,750 respectively; each return keeps net business income300 and withholding
+60,000. Additional Medicare tax340/339/565 and regular tax48,181/48,165/56,182
+reconcile independently to the final totals. The midpoint and upper-endpoint
+cases require Part III for both the second and fourth profitable businesses;
+the fractional case retains the printed49.902% and rounds its reduction to2.
+
+All three complete returns pass the local TY2025 v5.4 Return1040 XSD. All81
+flattened pages have zero fields/widgets and were reviewed through54 distinct
+images:28 new images on seven sheets plus26 matching prior-reviewed images by
+SHA256. Business identities, loss rows, phase reductions, final totals and
+continuation order reconcile with no observed clipping. Blank loss-business
+parent zeros and some Schedule C zero fields repeat existing deferred76.
+
+The focused typed replay passes3/0 and rejects12 native plus12 fresh-PDF
+mutations. It also reverses source order and verifies that projected identity
+changes cannot replace retained sources. Initial runs retained a compiler
+complexity failure and an incorrect test expectation that a refund return
+retains a zero amount-owed field; the latter was corrected without changing
+source amounts or calculated tax. Evidence is retained in
+`.state/research/form8995a-loss-phase-in-2026-10-12/`, including full packets,
+projections, XSD logs, commands, initial/final logs, render hashes and review.
+
+The final13-module batch passes **73 typed tests, zero failures or ignored**.
+The additional Schedule A/B/D and RPE batch has16 passes and four failures on
+the already deferred65 moved RPE fixture path; no path repair was made. The
+final replay's three PDFs and projections exactly match the reviewed artifacts;
+XML matches after excluding only ReturnTs. The intermediate no-check run also
+passed73 tests but is superseded by the final typed result.
+
+The baseline1d03b3f99 passes the matching compiler check. Initial implementations
+expanded the registry's optional-builder type union, producing TS2590 and one
+heap exhaustion. The five Form8995-A descriptors now retain their implemented
+members with `satisfies` and explicitly absent optional builders; Schedule B's
+binary attachments and optional call contexts remain supported. Part III uses
+a small shared numeric helper, preserving the prior loss-result type. Final
+type checks pass without disabling validation or increasing the heap. This is
+a local integration fix, not closure of deferred general compiler reliability.
+
+Single ownership, net QBI below400 and the existing ordinary active source
+checks remain; this extension removes the above-phaseout-only boundary.
+Other owners, positive SE allocations, prior accepted histories, source
+authenticity and IRS acceptance remain open. No deferred task was implemented.
+
+## October 12 business-inventory continuation checkpoint
+
+The ordinary current-loss route now retains more than three identified
+businesses through calculation, native XML and the complete PDF. Parent
+continuations print business identity and Part II columns in groups of three;
+the first copy alone retains overall totals and Part IV. Schedule C similarly
+prints every loss-netting row, with totals only on its first copy. Footer row
+ranges identify each continuation. The [Form8995-A instructions](https://www.irs.gov/instructions/i8995a)
+require additional business detail beyond three rows; the native business and
+loss-netting groups permit unbounded repeats.
+
+| Case | Positive QBI | Current losses | Adjusted positive QBI | Components | Deduction | Packet pages |
+| --- | --- | --- | --- | --- | ---: | ---: |
+| Four businesses | 1,000 / 2,000 | 900 / 1,800 | 100 / 200 | 15 / 40 | 55 | 21 |
+| Seven businesses | 1,000 / 2,000 / 3,000 / 4,000 | 1,900 / 2,800 / 5,000 | 30 / 60 / 90 / 120 | 6 / 10 / 18 / 20 | 54 | 29 |
+
+Both source-backed synthetic returns retain wages300,000, net business income300,
+AGI300,300, Additional Medicare tax900, total tax70,021 and amount owed10,021.
+The four-business case uses wages30/100; the seven-business case uses
+wages100/20/0/40 and UBIA0/0/800/0. Separate wage/property limits apply after
+proportional loss allocation, including the profitable fourth business on a
+continuation page.
+
+Both complete returns pass the retained TY2025 v5.4 Return1040 XSD. The50
+flattened pages have zero remaining fields/widgets; all38 distinct rendered
+images were inspected across10 contact sheets, with hashes identifying repeated
+pages. Names, EINs, source amounts, loss allocations, first-copy totals and
+final tax reconcile. Existing blank loss-business parent zeros and some
+Schedule C zero fields repeat deferred76; no new presentation defect was found.
+
+The12-module related batch passes **67 typed tests, zero failures or ignored**
+(1m34s); three shared farm/WOTC loss regressions also pass. The new cases
+reject eight native and eight fresh-PDF mutations to
+final deduction, companion totals, last-business identity and missing overflow
+source. Reversing both complete source inventories preserves each business's
+amounts; detached projected identities are replaced from validated retained
+sources. No descriptor or field mapping was added.
+
+Evidence is retained in `.state/research/form8995a-loss-continuations-2026-10-12/`:
+inputs, pending/projections, full XML/PDF, XSD logs, grouped replay, render hashes
+and `visual-review.json`. The route still requires the reviewed Single,
+above-phaseout, ordinary active Schedule C source path with net QBI below400
+at this checkpoint (the later phase-in checkpoint above extends its income range);
+prior losses, adjustments, owners, SE combinations, aggregation and patron routes
+retain their existing boundaries. The original all-loss filing guard remains
+deferred8. Wider source authenticity and IRS acceptance remain open.
+
+## October 12 proportional current-loss allocation checkpoint
+
+The ordinary high-income single-filer Schedule C route now supports two
+profitable businesses and one current-loss business. Losses are allocated
+across the positive businesses before applying each business's own wage/property
+limit, and both positive columns remain distinct in native XML and the PDF.
+The [Form8995-A instructions](https://www.irs.gov/instructions/i8995a) require
+proportional allocation and zero wage/property amounts when adjusted QBI is
+nonpositive. This extends the existing three-business route; its source,
+owner, activity, prior-loss and adjustment guards remain.
+
+| Case | Positive QBI | Loss | Allocated loss | Adjusted QBI | Business components | Deduction | Tax / owed |
+| --- | --- | ---: | --- | --- | --- | ---: | --- |
+| Unequal profits and wages | 2,000 / 1,000 | 2,700 | 1,800 / 900 | 200 / 100 | 40 / 10 | 50 | 70,022 / 10,022 |
+| Rounding remainder | 1,200 / 1,100 | 2,000 | 1,043 / 957 | 157 / 143 | 31 / 20 | 51 | 70,022 / 10,022 |
+| Separate property limit | 2,000 / 1,000 | 2,700 | 1,800 / 900 | 200 / 100 | 10 / 20 | 30 | 70,029 / 10,029 |
+
+The first two cases retain business wages100/20 and100/40 respectively. The
+property case retains wages20/0 and UBIA0/800, so one business cannot use the
+other's limitation amount. All three retain wages300,000, business income300,
+AGI300,300, withholding60,000 and Additional Medicare tax900. Whole-dollar
+loss allocation conserves the filed total using largest remainders, with stable
+business references breaking exact ties; input order does not change ownership.
+
+All three complete returns pass the retained TY2025 v5.4 Return1040 schema.
+The51 flattened PDF pages (29 distinct images) were reviewed on October12:
+source identities, individual loss reductions, separate parent columns,
+deductions and final taxes reconcile without observed clipping. Zero amounts
+in the loss-business parent column and some Schedule C fields still print
+blank (existing deferred76), so presentation remains qualified.
+
+The focused replay passes four typed tests and rejects12 native/12 fresh-PDF
+mutations. It checks all six source orders for each positive case and all six
+orders for tied rounding, fully offset profit and excess loss. The latter cases
+retain the required Form461 scope review; its initially omitted review is
+recorded, with source amounts unchanged. They demonstrate calculation
+boundaries, not new complete all-loss filing support.
+
+The final11-module related batch passes **65 typed tests, zero failures or
+ignored** (1m18s), including the original loss, fractional and capital-source
+cases. Initial combined type checks hit TS2590, and an isolated check exhausted
+the4GB heap. The unchanged branch passed the comparison check; declaring this
+calculator's result type explicitly resolved the new inference expansion.
+The final full batch passes without disabling type checking. This does not
+close the separate general compiler-reliability item72.
+
+Evidence is retained in `.state/research/form8995a-proportional-losses-2026-10-10/`
+(the work began October10 and resumed October12), including original compiler
+and source-review failures, inputs, projections, complete XML/PDF, final replay
+logs, render hashes and `visual-review.json`. The original all-loss filing
+blocks remain deferred8. Four-or-more rows are covered by the later continuation
+checkpoint above; wider owner/SE/adjustment paths,
+prior accepted histories, source authenticity and IRS acceptance remain open.
+
+
+## October 10 three-business loss-offset complete-return checkpoint
+
+The ordinary single-filer loss-netting route now retains three identified
+Schedule C businesses: one profitable business and two current-loss businesses.
+The parent PDF preserves all three names/EINs, and its Schedule C prints all
+three source rows, the combined loss reduction and adjusted QBI. Four new
+third-row PDF mappings pass independent pdf-lib and pypdf field checks.
+
+| Public source case | Profit | Losses | Filed adjusted QBI | Deduction | Total tax / owed |
+| --- | ---: | --- | ---: | ---: | --- |
+| Income-limited | 2,200 | 1,200 / 800 | 200 | 40 | 69,991 / 9,991 |
+| Wage-limited | 2,300 | 1,200 / 800 | 300 | 50 | 70,022 / 10,022 |
+| Source cents | 2,301.25 | 1,200.49 / 800.51 | 300 | 50 | 70,022 / 10,022 |
+
+All three public returns have consistent300,000 wages,60,000 withholding,
+100 business wages and900 Additional Medicare tax. Losses are fully used;
+no QBI loss carryforward remains. The cents case retains raw net300.25 and
+AGI300,300.25; filed profit2,301 less losses1,200/801 yields300, and filed
+AGI is300,300. The initial test incorrectly expected whole-dollar amounts in
+raw pending fields; only that expectation was corrected, with sources intact.
+
+All three complete returns pass the TY2025 v5.4 Return1040 schema. The actual
+flattened PDFs contain17 pages each, no remaining fields/widgets, and preserve
+all three business identities and final tax amounts. Visual review covers
+**51 pages through29 distinct rendered images**, with hash equality proving
+repeated pages. Parent loss-business columns and some Schedule C zero fields
+remain blank (existing deferred76); this is a qualified presentation review.
+
+The nine-module related batch passes **58 tests, zero failures or ignored**.
+The final focused replay passes3/0 and rejects12 native plus12 fresh-PDF
+mutations to deduction, income, companion values and third-business identity.
+Seven descriptor tests pass (822 filtered out), including real-template field
+names, types and widgets. Private evidence is retained in
+`.state/research/form8995a-three-businesses-2026-10-10/`, including the original
+raw-rounding assertion, final logs, inputs, XML/PDF, source projections,
+two-reader field checks, render inventory and `visual-review.json`.
+
+The original three all-loss cases below remain unchanged and reject all six
+full exports on deferred8. These new positive-offset cases do not replace them.
+At that checkpoint, multiple positive businesses remained unimplemented; the
+October12 checkpoint above extends that case. Four-or-more rows/continuations,
+broader owners, prior history, source authenticity and IRS acceptance remain open; the existing
+single-filer, activity, adjustment, wage/property and source guards remain.
+This checkpoint advances the existing QBI task without closing its broad parent.
+
+
+## October 10 two-current-loss computation checkpoint
+
+The existing single-filer Schedule C loss route now retains **two identified
+current-loss businesses**, with no positive business required. It sums their
+filed losses into Schedule C line3/6 and the current QBI loss origin, keeps both
+native business rows, and projects both identities onto the parent PDF. The
+previous single-loss and one-profit/one-loss paths use the same reconciliation.
+Source, prior-loss, owner, adjustment, activity and wage/property guards remain.
+
+The [2025 IRS instructions](https://www.irs.gov/instructions/i8995a) require
+Schedule C for current QBI losses and carry unused loss into the next year;
+nonpositive adjusted QBI does not retain wage/property limitation amounts.
+This checkpoint retains a current unfiled loss origin, not accepted prior-year
+history or a production next-year import.
+
+| Public source case | Business losses | Carry | AGI | QBI deduction | Total tax / owed |
+| --- | --- | ---: | ---: | ---: | --- |
+| Two losses | 1,200 / 800 | 2,000 | 298,000 | 0 | 69,235 / 9,235 |
+| Reversed source order | 800 / 1,200 | 2,000 | 298,000 | 0 | 69,235 / 9,235 |
+| Retained cents | 1,200.49 / 800.51; filed1,200 / 801 | 2,001 | 297,999 | 0 | 69,234 / 9,234 |
+
+Each case retains consistent300,000 W-2 wages and payroll boxes,60,000
+withholding and reviewed Form461 scope. The three public calculations,
+source-bound native parent/companion and PDF field projections reconcile.
+Thirty-six altered deduction, income and companion component checks reject.
+
+**Complete native and PDF exports still reject all three cases** at the
+existing Form8995 unfiled-loss guard (deferred8). The initial full-export
+failure is retained; no guard was bypassed and no full packet, XSD or visual
+review is claimed for these cases. The broader filing route remains unfinished.
+The new calculation and form-level support is not a filing-readiness checkoff.
+
+Evidence: `.state/research/form8995a-two-losses-2026-10-10/`, including source,
+pending, component XML, projected fields, both full-export errors and logs.
+The focused replay passes3/0. The eight-module related batch passes **55 tests,
+zero failed or ignored**, including the prior single-loss, profit/loss, unused
+loss, cent-valued parent and full-return compatibility cases. The first batch
+reported54/1 because `pdftotext` was absent from PATH; the same command passes
+with `/tmp/opentax-poppler-env/bin` prepended. No source or expectation was
+changed for that environment correction.
+
 Status: the source-reconciled patron Schedule D route below passed local public
 return tests, full TY2025 v5.4 XSD, and filled-PDF review on 2026-10-06. The
 previously recorded WOTC route remains locally proven. Historical sections below

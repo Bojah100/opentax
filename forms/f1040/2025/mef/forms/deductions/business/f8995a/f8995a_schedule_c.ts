@@ -5,14 +5,21 @@ import {
 } from "../../../../../../nodes/intermediate/forms/deductions/business/form8995a/index.ts";
 import { z } from "zod";
 import { element, elements } from "../../../../../../mef/xml.ts";
-import type { MefBuildContext, MefFormDescriptor } from "../../../../form-descriptor.ts";
-import { assertNoFiledForm8995, assertScheduleCLossSources } from "./f8995a.ts";
+import type {
+  MefBuildContext,
+  MefFormDescriptor,
+} from "../../../../form-descriptor.ts";
+import {
+  assertNoFiledForm8995,
+  assertScheduleCLossFiler,
+  assertScheduleCLossSources,
+} from "./f8995a.ts";
 
 type Input = Form8995AInput | readonly [];
 
 export const FIELD_MAP: ReadonlyArray<readonly [string, string]> = [];
 
-function buildScheduleC(rawFields: Input, context?: MefBuildContext): string {
+function buildScheduleC(rawFields: unknown, context?: MefBuildContext): string {
   if (Array.isArray(rawFields) && rawFields.length === 0) return "";
   const fields = inputSchema.strict().parse(rawFields);
   const parent = inputSchema.strict().safeParse(context?.pending?.form8995a);
@@ -34,6 +41,7 @@ function buildScheduleC(rawFields: Input, context?: MefBuildContext): string {
   }
   assertNoFiledForm8995(context?.pending);
   assertScheduleCLossSources(fields, context?.pending);
+  assertScheduleCLossFiler(fields, context?.pending, context?.filer);
   const lines = calculateScheduleCLossLines(fields);
   const form1040 = z.object({ line13_qbi_deduction: z.number() })
     .safeParse(context?.pending?.f1040);
@@ -64,14 +72,18 @@ function buildScheduleC(rawFields: Input, context?: MefBuildContext): string {
   ]);
 }
 
-export const form8995aScheduleC: MefFormDescriptor<
-  "form8995a_schedule_c",
-  Input
-> = {
+export const form8995aScheduleC = {
+  sourcePendingKeys: undefined,
+  buildAdditionalDocuments: undefined,
+  buildBinaryAttachments: undefined,
+
   pendingKey: "form8995a_schedule_c",
   FIELD_MAP,
   pdfUrl: "https://www.irs.gov/pub/irs-pdf/f8995ac.pdf",
-  build(fields, context) {
+  build(fields: unknown, context?: MefBuildContext) {
     return buildScheduleC(fields, context);
   },
-};
+} satisfies MefFormDescriptor<
+  "form8995a_schedule_c",
+  Input
+>;

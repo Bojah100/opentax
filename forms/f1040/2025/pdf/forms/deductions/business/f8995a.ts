@@ -1,3 +1,4 @@
+import { StandardFonts } from "pdf-lib";
 import { assertOwnedScheduleSE } from "../../../../domains/taxes/self-employment/schedule-se/schedule-se-owner-source.ts";
 import { calculateIndependentPatronBusinesses } from "../../../../../nodes/intermediate/forms/deductions/business/form8995a/index.ts";
 import { patronProprietorSsn } from "../../../../domains/deductions/business/form8995a/form8995a_patron_reconciliation.ts";
@@ -8,19 +9,25 @@ import { calculateFarmWotcLines } from "../../../../../nodes/intermediate/forms/
 import { qbiPercentageForPdf } from "../../../reviews/general/composed-returns/qbi-percentage.ts";
 import { assertSstbScheduleCSource } from "../../../../mef/forms/deductions/business/f8995a/f8995a-sstb-source.ts";
 import { assertForm8995APatronReturn } from "../../../../domains/deductions/business/form8995a/form8995a_patron_reconciliation.ts";
-import type { PdfFieldEntry, PdfFormDescriptor } from "../../../review-support/form-descriptor.ts";
+import type {
+  PdfFieldEntry,
+  PdfFormDescriptor,
+} from "../../../review-support/form-descriptor.ts";
 import type { FilerIdentity } from "../../../../../mef/header.ts";
 import {
   assertMfsSstbOwner,
   assertPatron1099PATRSource,
+  calculateLossBusinessPhase,
   calculateOneSstb8995ALines,
   calculateOwnedWotcBusinesses,
   calculateScheduleCLossLines,
+  type Form8995AInput,
   inputSchema,
 } from "../../../../../nodes/intermediate/forms/deductions/business/form8995a/index.ts";
 import {
   assertNoFiledForm8995,
   assertOneBusinessReitSource,
+  assertScheduleCLossFiler,
   assertScheduleCLossSources,
   validateOneBusiness,
 } from "../../../../mef/forms/deductions/business/f8995a/f8995a.ts";
@@ -269,25 +276,9 @@ export function projectOneBusiness8995A(
         "Form 8995-A PDF Schedule C line 39 differs from Form 1040 line 13",
       );
     }
-    return {
-      business_name: (lines.positive ?? lines.negative)!.business_name,
-      business_ein: (lines.positive ?? lines.negative)!.ein,
-      ...(lines.positive
-        ? {
-          business_name_b: lines.negative.business_name,
-          business_ein_b: lines.negative.ein,
-        }
-        : {}),
-      ...lines.parent,
-      ...Object.fromEntries(
-        [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]
-          .map((line) => [`line${line}_b`, 0]),
-      ),
-      line27: lines.parent.line16,
-      // This validated Schedule C route excludes REIT/PTP income and losses.
-      line40: 0,
-    };
+    return projectLossParentCopies(input)[0];
   }
+
   if (
     input.sstb_filing_details || (input.sstb_qbi ?? 0) !== 0 ||
     (input.sstb_w2_wages ?? 0) !== 0 ||
@@ -392,6 +383,75 @@ export function projectOneBusiness8995A(
   };
 }
 
+function projectLossParentCopies(
+  input: Form8995AInput,
+): Record<string, unknown>[] {
+  const lines = calculateScheduleCLossLines(input);
+  const first =
+    lines.businessLines.find((row) => row.business === lines.positive) ??
+      lines.businessLines[0];
+  const rows = [first, ...lines.businessLines.filter((row) => row !== first)];
+  const copies: Record<string, unknown>[] = [];
+  for (let start = 0; start < rows.length; start += 3) {
+    const chunk = rows.slice(start, start + 3);
+    const phases = chunk.map(({ parent }) =>
+      calculateLossBusinessPhase(
+        input.taxable_income,
+        parent.line3,
+        parent.line10,
+        input.filing_status,
+      )
+    );
+    const phaseIn = phases.find((phase) => phase !== undefined);
+    const hasPhaseIn = phaseIn !== undefined;
+    copies.push({
+      ...(phaseIn
+        ? {
+          line20: Math.round(input.taxable_income),
+          line21: phaseIn.threshold,
+          line22: phaseIn.excess,
+          line23: phaseIn.range,
+          line24: qbiPercentageForPdf(phaseIn.ratio),
+        }
+        : {}),
+      ...(start === 0
+        ? { ...lines.parent, line27: lines.parent.line16, line40: 0 }
+        : {}),
+      ...Object.fromEntries(
+        chunk.flatMap(({ business, parent }, index) => {
+          const phase = phases[index];
+          const phaseFields = phase
+            ? {
+              line12: phase.line12,
+              line17: phase.line17,
+              line18: phase.line18,
+              line19: phase.line19,
+              line25: phase.line25,
+              line26: phase.line26,
+            }
+            : {};
+          const suffix = ["", "_b", "_c"][index];
+          return [
+            [`business_name${suffix}`, business.business_name],
+            [`business_ein${suffix}`, business.ein],
+            ...Object.entries({ ...parent, ...phaseFields }).map((
+              [key, value],
+            ) => [`${key}${suffix}`, value]),
+          ];
+        }),
+      ),
+      qbi_loss_continuation: start > 0,
+      qbi_loss_phase_in: hasPhaseIn,
+      qbi_loss_page_note: rows.length > 3
+        ? `Form 8995-A business details ${start + 1}-${
+          Math.min(start + 3, rows.length)
+        } of ${rows.length}; totals on first form`
+        : undefined,
+    });
+  }
+  return copies;
+}
+
 export const form8995aPdf: PdfFormDescriptor = {
   pendingKey: "form8995a",
   pdfUrl: "https://www.irs.gov/pub/irs-prior/f8995a--2025.pdf",
@@ -401,6 +461,21 @@ export const form8995aPdf: PdfFormDescriptor = {
   ],
   fields,
   projectFields: projectOneBusiness8995A,
+  pageIndices: (instance) =>
+    instance.qbi_loss_continuation === true &&
+      instance.qbi_loss_phase_in !== true
+      ? [0]
+      : [0, 1],
+  async decoratePages(document, pages, instance) {
+    if (typeof instance.qbi_loss_page_note !== "string") return;
+    const font = await document.embedFont(StandardFonts.Helvetica);
+    pages[0].drawText(instance.qbi_loss_page_note, {
+      x: 40,
+      y: 9,
+      size: 8,
+      font,
+    });
+  },
   instances(raw, filer, allPending) {
     if (Object.keys(raw).length === 0) return [];
     // The builder passes projected print fields here; validate owner and
@@ -429,7 +504,14 @@ export const form8995aPdf: PdfFormDescriptor = {
           "Form 8995-A PDF MFS status differs from the final filer",
         );
       }
-      assertMfsSstbOwner(input, filer.primarySSN);
+      if (
+        !input.sstb_filing_details &&
+        input.schedule_c_qbi_businesses?.some((business) => business.qbi < 0)
+      ) {
+        calculateScheduleCLossLines(input);
+      } else {
+        assertMfsSstbOwner(input, filer.primarySSN);
+      }
     }
     if (
       input.filing_status === NodeFilingStatus.QSS &&
@@ -449,6 +531,14 @@ export const form8995aPdf: PdfFormDescriptor = {
         );
       }
       return [projectStagedAggregatedParentPdf(input, filer, allPending)];
+    }
+    if (input.schedule_c_qbi_businesses?.some((business) => business.qbi < 0)) {
+      if (!allPending) {
+        throw new Error("Form 8995-A loss copies need retained return sources");
+      }
+      assertScheduleCLossFiler(input, allPending, filer);
+      projectOneBusiness8995A(allPending.form8995a, allPending);
+      return projectLossParentCopies(input);
     }
     return [raw];
   },

@@ -106,6 +106,10 @@ export const itemSchema = z.object({
 
   // Section 199A information used when taxable income exceeds the QBI threshold.
   qbi_specified_service: z.boolean().optional(),
+  // Ordinary loss inventories use the same separate-income/property review as SSTBs.
+  qbi_mfs_loss_review: mfsSstbFilingReviewSchema.extend({
+    owner_ssn: z.string().regex(/^\d{9}$/),
+  }).optional(),
   qbi_w2_wages: z.number().nonnegative().optional(),
   qbi_unadjusted_basis: z.number().nonnegative().optional(),
   qbi_zero_limit_inventory: zeroLimitInventorySchema.optional(),
@@ -139,7 +143,8 @@ export const itemSchema = z.object({
       .optional(),
     no_aggregation_confirmed: z.literal(true).optional(),
     no_ptp_or_loss_carryforward_confirmed: z.literal(true),
-    qualified_dividends_zero_confirmed: z.literal(true),
+    // Loss inventories reconcile this answer against retained investment sources.
+    qualified_dividends_zero_confirmed: z.boolean(),
     no_qualified_property_confirmed: z.literal(true),
     review_reference: z.string().trim().min(1),
     reviewed_by: z.string().trim().min(1),
@@ -208,6 +213,19 @@ export const itemSchema = z.object({
     no_aggregation_confirmed: z.literal(true),
     workpaper_reference: z.string().min(1),
     reviewed_by: z.string().min(1),
+    reviewed_on: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
+  }).strict().optional(),
+
+  // Loss inventories attribute half-SE using gross income before QBI loss netting.
+  qbi_loss_se_tax_allocation_review: z.object({
+    deduction_amount: z.number().finite().nonnegative(),
+    allocation_method: z.literal(
+      "owner_gross_income_proportion_with_cent_residual",
+    ),
+    all_owner_businesses_included_confirmed: z.literal(true),
+    no_other_qbi_adjustments_confirmed: z.literal(true),
+    workpaper_reference: z.string().trim().min(1),
+    reviewed_by: z.string().trim().min(1),
     reviewed_on: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
   }).strict().optional(),
 
