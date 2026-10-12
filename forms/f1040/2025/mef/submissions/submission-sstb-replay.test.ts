@@ -23,6 +23,10 @@ import {
   sstbServiceCases,
   sstbServiceFixture,
 } from "../../domains/deductions/business/form8995a/form8995a_sstb_services_fixture.ts";
+import {
+  sstbFinancialCases,
+  sstbFinancialFixture,
+} from "../../domains/deductions/business/form8995a/form8995a_sstb_financial_fixture.ts";
 import { sha256Hex } from "../../return-processing/prepared-source.ts";
 import {
   buildMefSubmissionArchive,
@@ -47,7 +51,7 @@ function remap<T>(value: T, primary: string, spouse: string): T {
   });
 }
 
-Deno.test("SSTB saved returns preserve all 41 source packets in mixed submission archives", async () => {
+Deno.test("SSTB saved returns preserve all 50 source packets in mixed submission archives", async () => {
   const permission = await Deno.permissions.query({
     name: "env",
     variable: "SSTB_SUBMISSION_EVIDENCE",
@@ -77,8 +81,12 @@ Deno.test("SSTB saved returns preserve all 41 source packets in mixed submission
       name: `service-${c.name}`,
       input: sstbServiceFixture(c),
     })),
+    ...sstbFinancialCases.map((c) => ({
+      name: `financial-${c.name}`,
+      input: sstbFinancialFixture(c),
+    })),
   ];
-  assertEquals(cases.length, 41);
+  assertEquals(cases.length, 50);
   const archives: MefSubmissionArchive[] = [];
   const observations = [];
   let sourceRejected = 0, archiveRejected = 0;
@@ -178,15 +186,30 @@ Deno.test("SSTB saved returns preserve all 41 source packets in mixed submission
       await assertRejects(() => f1040_2025.prepareReturn(changed, filer));
       sourceRejected++;
     }
-    if (c.name.startsWith("service-")) {
+    const classification =
+      input.schedule_c[0].qbi_sstb_filing_review.service_classification_review;
+    if (classification) {
       for (
-        const kind of ["missing-review", "receipt-total", "excluded-service"]
+        const kind of [
+          "missing-review",
+          "receipt-total",
+          "excluded-service",
+          ...(classification.field === "financial_services"
+            ? ["financial-kind"]
+            : []),
+        ]
       ) {
         const changed: Row = saved(pending);
         const business = changed.schedule_c.schedule_cs[0];
         const review = business.qbi_sstb_filing_review;
         if (kind === "missing-review") {
           delete review.service_classification_review;
+        }
+        if (kind === "financial-kind") {
+          const service = review.service_classification_review;
+          service.service_kind = service.service_kind === "financial_advice"
+            ? "loan_arrangement"
+            : "financial_advice";
         }
         if (kind === "receipt-total") {
           review.service_classification_review.revenue_records[0].amount++;
@@ -336,8 +359,8 @@ Deno.test("SSTB saved returns preserve all 41 source packets in mixed submission
     }])
   );
   archiveRejected++;
-  assertEquals(sourceRejected, 200);
-  assertEquals(archiveRejected, 304);
+  assertEquals(sourceRejected, 267);
+  assertEquals(archiveRejected, 371);
   if (evidence) {
     await Deno.writeTextFile(
       `${evidence}/checks.json`,
