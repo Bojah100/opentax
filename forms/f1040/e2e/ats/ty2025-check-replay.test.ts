@@ -1,5 +1,6 @@
+import { atsSourceReconciliation } from "./ty2025-source-reconciliation.ts";
 import { buildAtsCheckLedger } from "./ty2025-check-ledger.ts";
-import { assertEquals } from "@std/assert";
+import { assertEquals, assertThrows } from "@std/assert";
 import {
   ATS_REPLAY_TARGETS,
   CheckResult,
@@ -45,6 +46,33 @@ Deno.test("ATS public-entry matrix retains missing prerequisites and printed con
   assertEquals(report.denominator, 90);
   const ledger = buildAtsCheckLedger(report);
   assertEquals(ledger.count, 343);
+  assertEquals(ledger.sourceReconciliations.length, 8);
+  for (const entry of ledger.sourceReconciliations) {
+    const scenario = report.scenarios.find((s) => s.id === entry.scenario)!;
+    assertEquals(entry.sourceUrl, scenario.sourceUrl);
+    assertEquals(entry.notes, scenario.sourceReconciliation.notes);
+    assertEquals(entry.notes.length > 0, true);
+    assertEquals(entry.completeRequirementsInventoried, false);
+    assertEquals(entry.preparationResult, scenario.preparation.result);
+    assertEquals(entry.firstPreparationReason, scenario.preparation.reason);
+  }
+  // Partial preparation must retain unresolved credits and answer-key conflicts.
+  assertEquals(
+    ledger.sourceReconciliations.filter((s) =>
+      s.preparationResult === PreparationResult.PartialPrepared
+    ).map((s) => s.scenario),
+    ["1040-04", "1040-05", "1040-13"],
+  );
+  const retirement = ledger.sourceReconciliations.find((s) =>
+    s.scenario === "1040-08"
+  )!;
+  assertEquals(
+    retirement.firstPreparationReason.includes("box 2 recipient"),
+    true,
+  );
+  assertEquals(retirement.notes.some((n) => n.includes("QCD")), true);
+  assertEquals(retirement.notes.some((n) => n.includes("1099-DIV")), true);
+  // Notes describe missing evidence; adding them never adds pass/fail rows.
   assertEquals(ledger.byKind, {
     calculation: {
       count: 90,
@@ -258,4 +286,16 @@ Deno.test("ATS public-entry matrix retains missing prerequisites and printed con
     ),
     [42470, 2713, 474],
   );
+});
+
+Deno.test("ATS reconciliation requires a reviewed scenario and protects retained notes from report mutation", () => {
+  assertThrows(
+    () => atsSourceReconciliation("1040-99"),
+    Error,
+    "Missing ATS source reconciliation",
+  );
+  const first = atsSourceReconciliation("1040-01");
+  const expected = [...first.notes];
+  first.notes.splice(0, first.notes.length, "Cleared by caller");
+  assertEquals(atsSourceReconciliation("1040-01").notes, expected);
 });

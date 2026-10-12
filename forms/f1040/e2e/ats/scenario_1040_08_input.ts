@@ -74,3 +74,12 @@ export function scenario104008Input(): Record<string, unknown> {
     }],
   };
 }
+
+/** Known source gaps remain separate from whichever export guard fires first. */
+export const SCENARIO_1040_08_RECONCILIATION = {
+  missing: [
+    "The printed blank IRA gross amount and checked QCD box conflict with the code-Q distribution; obtain corrected source facts or IRS clarification without inventing a charity payment.",
+    "The cover supplies Social Security benefits but no issued SSA-1099 copy reference and box 2 recipient required by full export.",
+    "The cover supplies a REIT capital-gain distribution but no identified Form 1099-DIV payer copy.",
+  ],
+} as const;

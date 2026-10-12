@@ -54,6 +54,11 @@ export function scenario104001Input(): Record<string, unknown> {
 }
 
 export const SCENARIO_1040_01_RECONCILIATION = {
+  missing: [
+    "Schedule H aggregate payroll amounts lack employee-level payroll sources required for complete export.",
+    "Form 5695 line 19e prints 2,740 for other doors, equal to all three listed doors; the extra-door cost/QMID statement is absent.",
+    "Form 5695 line 22b reports another 400 air conditioner without the additional-unit QMID statement.",
+  ],
   form5695: {
     individuallyListedDoorCosts: SCENARIO_1040_01_FACTS.form5695.exteriorDoors
       .map((door) => door.cost),

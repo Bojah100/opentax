@@ -1,3 +1,4 @@
+import { atsSourceReconciliation } from "./ty2025-source-reconciliation.ts";
 import {
   ATS_RETIREMENT_TARGETS,
   compareAtsRetirementValues,
@@ -550,6 +551,7 @@ export async function replayAtsChecks() {
           ? "Current-law reconstruction; printed ATS targets preserved"
           : "Partial source fixture",
         requiredSourceDocuments: source.forms,
+        sourceReconciliation: atsSourceReconciliation(scenario.id),
         diagnostics: execution.diagnostics,
         preparation,
         documentCoverage: compareAtsDocuments(

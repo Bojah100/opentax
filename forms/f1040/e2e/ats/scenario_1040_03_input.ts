@@ -195,7 +195,7 @@ export const SCENARIO_1040_03_RECONCILIATION = {
   notAtsReadyBecause: [
     "Form 1040 marks Single and digital-assets Yes; its result lines remain blank.",
     "The cover supplies a taxable state refund of 3,110, but not the gross issued refund, payer or prior-year recovery workpaper required by the current 1099-G route.",
-    "Schedule D p. 9 aggregate 1a/8a proceeds and basis use the supported aggregate route; no individual broker transaction or issuer identity is asserted.",
+    "Schedule D p. 9 aggregate 1a/8a proceeds and basis calculate, but full export requires retained direct-sale transactions; no individual broker transaction or issuer identity is asserted.",
     "Form 4835 p. 17 marks active participation Yes. Its internal source label does not establish external activity history or QBI eligibility.",
     "The cover says the taxpayer is a specified agricultural-cooperative patron, but no patronage or cooperative-sale allocation facts are supplied for any QBI cooperative reduction.",
     "The taxpayer elects Schedule SE's farm optional method; its calculation and MeF/PDF mapping are coded, but end-to-end validation and any farm K-1 or CRP facts remain pending.",

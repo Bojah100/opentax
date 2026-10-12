@@ -66,6 +66,9 @@ export function scenario104013Input() {
 }
 
 export const SCENARIO_1040_13_RECONCILIATION = {
+  missing: [
+    "Resolve the printed 30,000 deduction and 162 regular-tax/credit limit against the current-law reconstruction's 31,500 deduction and 11 tax/credit; retain both answer sets pending IRS clarification.",
+  ],
   sourceUrl: "https://www.irs.gov/pub/irs-efile/1040-mef-ats-scenario-13.pdf",
   printed: {
     form1040Pages: [2, 3],
