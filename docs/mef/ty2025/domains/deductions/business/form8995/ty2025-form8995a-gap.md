@@ -1,5 +1,57 @@
 # TY2025 Form 8995-A coverage gap
 
+## October 12 cooperative patron investment checkpoint
+
+One-business cooperative patron returns now reconcile owned ordinary interest,
+ordinary/qualified dividends and capital-gain distributions through public QBI,
+complete native XML and PDF export. Previously capital contributions failed the
+public patron guard and investment copies failed final-return reconciliation.
+Primary and spouse investment owners, issuer/account/reference details, qualified
+dividend holding review, Schedule B rows, QBI capital contributions, preferential
+tax and NIIT source lines now use the retained investment-copy checks. Broker
+sales, other QBI activities, REIT/PTP and unreviewed sources retain their guards.
+
+Twelve complete synthetic cases cover farm and Schedule C health-plan businesses
+for Single, HOH, QSS, MFS and either joint proprietor, including the owner's W-2
+job and both spouses' issued investment copies where joint. Sources total 1,700
+interest, 3,000 ordinary dividends (including 1,500 qualified), and 1,800 capital
+distributions. All twelve independent Decimal calculations match QBI, taxable
+income, preferential tax, total tax and balance. The joint farm phase-in increases
+from 93.487% to 99.987%, changing the deduction from 27,263 to 26,228; NIIT is 247
+on 6,500 investment income. The capital adjustment on Form8995-A line34 is 3,300.
+These checks apply the [8995-A instructions](https://www.irs.gov/instructions/i8995a),
+[1040 qualified-dividend worksheet](https://www.irs.gov/instructions/i1040gi) and
+[NIIT instructions](https://www.irs.gov/instructions/i8960); active business income
+stays outside NIIT and independent tentative AMT remains below regular tax.
+
+All twelve complete XML returns pass cached IRS 2025v5.4 XSD (root SHA-256
+`e52dbd0fbd862929c9bc6a46db811fa2c7ae55e915651fc2679c21cb05184c6c`).
+Native income, QBI, parent/companion and final-tax amounts match the independent
+proof; document IDs are unique and references close. Twelve focused tests pass,
+including 204 native and 204 fresh-PDF rejections of changed owner/source amounts,
+missing references or holding review, capital limits, Schedule B, the preferential
+worksheet, NIIT source/total lines and final deduction. Investment mutations are
+mirrored across retained source copies before preparation. The related regression
+has130 passes and one error-message assertion failure in the aggregation test; the
+identical test fails on committed977d37f05 in a detached worktree, confirming
+existing deferred140. Five changed files lint clean; the existing Form8995
+`no-explicit-any` failure is deferred164. No introduced test failure was found.
+
+All 198 pages received qualified review:50 unique new images inspected on13
+contact sheets,112 exact prior observations and36 within-batch duplicates.
+Reopened PDFs have no fields or widgets. Schedule B payer rows and foreign-account
+answers, Form1040 distribution-only mark, Form8995-A capital/phase-in amounts,
+NIIT thresholds and final balances reconcile. Existing findings3/68/76 remain
+qualifications. Initial probes repeat deferred161 (public errors followed by
+successful preparation), and preexisting lint finding164 is recorded separately;
+neither deferred issue was repaired. Wider sources and IRS acceptance remain open.
+
+Evidence: `.state/research/form8995a-patron-investments-2026-10-12/` retains before/
+after probes, source/native/PDF packets, Decimal proof, XSD/test logs, image hashes,
+review mapping and observations. PR totals become153 complete returns/2,490
+qualified pages and8,132 export rejections. The468 native-only cases and114 saved
+SSTB/patron returns with1,808 source/archive rejections remain separate.
+
 ## October 12 saved proprietor-wage submission checkpoint
 
 The [saved patron replay](../../../../testing/ty2025-patron-submission-replay.md#october-12-proprietor-wage-extension)

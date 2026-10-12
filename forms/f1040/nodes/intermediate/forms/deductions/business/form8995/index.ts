@@ -927,7 +927,6 @@ function advancedFormOutput(
       input.qbi_no_prior_loss_or_suspended_loss_confirmed !== true ||
       input.qbi_not_patron_of_specified_cooperative_confirmed === true ||
       sumField(input.qbi) !== 0 || sstbQbi !== 0 ||
-      qbiCapitalTotal(input) !== 0 ||
       sumField(input.line6_sec199a_dividends) !== 0 ||
       (input.qbi_loss_carryforward ?? 0) !== 0 ||
       (input.reit_loss_carryforward ?? 0) !== 0 ||
@@ -976,7 +975,8 @@ function advancedFormOutput(
         one_non_sstb_business_confirmed: true,
         no_aggregation_confirmed: true,
         no_ptp_or_loss_carryforward_confirmed: true,
-        qualified_dividends_zero_confirmed: true,
+        qualified_dividends_zero_confirmed:
+          (input.investment_dividend_totals?.qualified ?? 0) === 0,
         qbi_wages_ubia_sources_confirmed: true,
         taxable_income_before_qbi_confirmed: true,
       },

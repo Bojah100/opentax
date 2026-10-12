@@ -1,3 +1,7 @@
+import {
+  assertMultiBusinessInvestmentSources,
+  assertMultiBusinessInvestmentTax,
+} from "../../../../mef/forms/deductions/business/f8995/f8995-investment.ts";
 import { assertIndependentPatronReturn } from "./form8995a_independent_patron_reconciliation.ts";
 import {
   type FilerIdentity,
@@ -26,7 +30,6 @@ import {
 } from "../../../../../nodes/intermediate/forms/adjustments/health/form7206/index.ts";
 import { singleScheduleCPlanSchema } from "../../../../../nodes/intermediate/forms/adjustments/health/form7206/index.ts";
 import { CONFIG_BY_YEAR } from "../../../../../nodes/config/index.ts";
-import { ordinaryTax2025 } from "../../../../../nodes/intermediate/worksheets/taxes/calculation/tax_table_2025.ts";
 import { normalizeAllPending } from "../../../../return-processing/pending.ts";
 
 /** Replay public patron review, owned business, deductions and final tax joins. */
@@ -185,9 +188,72 @@ export function assertForm8995APatronReturn(
           Math.max(0, medicareThreshold - medicareWages),
       ) * .009,
     );
-  const expectedAgi = Math.round(
-    amounts.profit + wageIncome - source.se_tax_deduction - health,
+  const investment = assertMultiBusinessInvestmentSources(
+    { ...input, taxpayer_ssn: primary },
+    pending,
+    true,
+    joint ? spouse : undefined,
   );
+  assertMultiBusinessInvestmentTax(pending, investment, input.filing_status);
+  const investmentIncome = investment.interest + investment.ordinary +
+    investment.returnCapital;
+  const expectedAgi = Math.round(
+    amounts.profit + wageIncome + investmentIncome - source.se_tax_deduction -
+      health,
+  );
+  const niitThreshold = joint || input.filing_status === "qss"
+    ? 250000
+    : input.filing_status === "mfs"
+    ? 125000
+    : 200000;
+  const niit = Math.round(
+    Math.min(investmentIncome, Math.max(0, expectedAgi - niitThreshold)) * .038,
+  );
+  if (investmentIncome !== 0) {
+    const expectedNiit = {
+      line1_taxable_interest: investment.interest,
+      line2_ordinary_dividends: investment.ordinary,
+      line3_annuities: 0,
+      line4a_passive_income: 0,
+      line4b_rental_net: 0,
+      line5a_net_gain: investment.returnCapital,
+      line5b_net_gain_adjustment: 0,
+      line7_other_modifications: 0,
+      line8_total_investment_income: investmentIncome,
+      line9a_investment_interest_expense: 0,
+      line9b_state_local_tax: 0,
+      line10_additional_modifications: 0,
+      line11_total_deductions: 0,
+      line12_net_investment_income: investmentIncome,
+      line13_magi: expectedAgi,
+      line14_threshold: niitThreshold,
+      line15_magi_excess: Math.max(0, expectedAgi - niitThreshold),
+      line16_taxable_base: Math.min(
+        investmentIncome,
+        Math.max(0, expectedAgi - niitThreshold),
+      ),
+    };
+    if (
+      Object.entries(expectedNiit).some(([key, value]) =>
+        Math.round(Number(pending.form8960?.[key] ?? 0)) !== Math.round(value)
+      )
+    ) {
+      throw new Error(
+        "Patron NIIT source lines must match the owned investment copies and income",
+      );
+    }
+  }
+  if (
+    (input.net_capital_gain ?? 0) !== investment.filedQbiCapitalLimit ||
+    input.business_filing_details?.qualified_dividends_zero_confirmed !==
+      (investment.qualified === 0) ||
+    Math.round(Number(pending.form8960?.line17_niit ?? 0)) !== niit ||
+    (pending.schedule2?.line12_niit ?? 0) !== niit
+  ) {
+    throw new Error(
+      "Patron investment sources, capital limit and NIIT must reconcile to the return",
+    );
+  }
   if (
     !seLines ||
     se[isC ? "net_profit_schedule_c" : "net_profit_schedule_f"] !==
@@ -206,7 +272,7 @@ export function assertForm8995APatronReturn(
     pending.schedule2?.line4_se_tax !== seLines.line12 ||
     f1040?.line8_additional_income !== amounts.profit ||
     Math.round(Number(f1040?.line9_total_income)) !==
-      Math.round(amounts.profit + wageIncome) ||
+      Math.round(amounts.profit + wageIncome + investmentIncome) ||
     Math.round(Number(f1040?.line1a_wages ?? 0)) !== Math.round(wageIncome) ||
     Math.round(Number(f1040?.line1z_total_wages ?? 0)) !==
       Math.round(wageIncome) ||
@@ -218,14 +284,9 @@ export function assertForm8995APatronReturn(
     f1040?.line13_qbi_deduction !== lines.line39 ||
     Math.round(Number(f1040?.line15_taxable_income)) !==
       Math.max(0, input.taxable_income - lines.line39) ||
-    f1040?.line16_income_tax !==
-      ordinaryTax2025(
-        Number(f1040?.line15_taxable_income),
-        input.filing_status,
-      ) ||
     (pending.form8959?.line18_total_tax ?? 0) !== medicareTax ||
     (pending.schedule2?.line11_additional_medicare ?? 0) !== medicareTax ||
-    f1040?.line23_other_taxes !== (seLines?.line12 ?? 0) + medicareTax ||
+    f1040?.line23_other_taxes !== (seLines?.line12 ?? 0) + medicareTax + niit ||
     f1040?.line24_total_tax !==
       Number(f1040?.line22_tax_after_credits) +
         Number(f1040?.line23_other_taxes) ||
@@ -239,10 +300,7 @@ export function assertForm8995APatronReturn(
       "schedule_e",
       "k1_partnership",
       "k1_s_corp",
-      "f1099div",
-      "f1099int",
       "f1099b",
-      "schedule_d",
       "f5884",
       "form8829",
     ].some((key) => pending[key] !== undefined)

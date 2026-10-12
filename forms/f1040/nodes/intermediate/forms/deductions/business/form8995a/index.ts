@@ -2026,12 +2026,13 @@ function assertSupportedSchedulePath(input: Form8995AInput): void {
       (input.qbi ?? 0) !== details.business_qbi ||
       (input.w2_wages ?? 0) !== details.business_w2_wages ||
       (input.unadjusted_basis ?? 0) !== details.business_ubia ||
-      (input.net_capital_gain ?? 0) !== 0 ||
+      ((input.net_capital_gain ?? 0) !== 0 &&
+        (!input.patron_business_source || !input.qbi_capital_sources)) ||
       (input.line6_sec199a_dividends ?? 0) !== 0 ||
       (input.reit_loss_carryforward ?? 0) !== 0
     ) {
       throw new Error(
-        "Form 8995-A Schedule D needs one sourced owner business with zero capital gain and REIT/PTP activity; unsourced projections require Single fully above phase-in",
+        "Form 8995-A Schedule D needs one sourced owner business with sourced capital gain and zero REIT/PTP activity; unsourced projections require Single fully above phase-in",
       );
     }
     const lines = calculateOneBusiness8995ALines(input);

@@ -159,7 +159,8 @@ export function validateOneBusiness(fields: Form8995AInput) {
     (fields.qbi_loss_carryforward ?? 0) !== 0 ||
     (fields.reit_loss_carryforward ?? 0) !== 0 ||
     (fields.aggregation_groups ?? []).length !== 0 ||
-    (!fields.single_schedule_f_source && fields.net_capital_gain !== 0)
+    (!fields.single_schedule_f_source && !fields.patron_business_source &&
+      fields.net_capital_gain !== 0)
   ) {
     throw new Error(
       "Form 8995-A MeF does not yet support SSTB, aggregation, loss, or capital-gain paths",
@@ -200,7 +201,7 @@ export function validateOneBusiness(fields: Form8995AInput) {
     );
   }
   if (
-    !fields.single_schedule_f_source &&
+    !fields.single_schedule_f_source && !fields.patron_business_source &&
     details.qualified_dividends_zero_confirmed !== true
   ) {
     throw new Error(
