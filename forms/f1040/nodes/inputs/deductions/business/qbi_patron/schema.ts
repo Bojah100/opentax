@@ -58,6 +58,30 @@ export const inputSchema = z.object({
 }).strict();
 export type PatronReview = z.infer<typeof inputSchema>;
 
+/** Public issued-copy order is primary followed by spouse, including either proprietor. */
+export function patronW2Sources(
+  review: Pick<PatronReview, "primary_w2_sources" | "spouse_w2_sources">,
+) {
+  const primaryTins = new Set(
+    (review.primary_w2_sources ?? []).map((w) =>
+      String(w.employee_ssn ?? "").replaceAll("-", "")
+    ),
+  );
+  if (
+    (review.spouse_w2_sources ?? []).some((w) =>
+      primaryTins.has(String(w.employee_ssn ?? "").replaceAll("-", ""))
+    )
+  ) {
+    throw new Error(
+      "Patron review cannot place the same owner in both proprietor-side wage copy collections",
+    );
+  }
+  return [
+    ...review.primary_w2_sources ?? [],
+    ...review.spouse_w2_sources ?? [],
+  ];
+}
+
 export function assertPatronFilingStatus(
   review: Pick<PatronReview, "source_1099patr" | "mfs_filing_review">,
   status: string | undefined,

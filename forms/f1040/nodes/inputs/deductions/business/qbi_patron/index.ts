@@ -4,7 +4,7 @@ import { schedule_f } from "../../../../intermediate/forms/income/business/sched
 import { TaxNode } from "../../../../../../../core/types/tax-node.ts";
 import { OutputNodes } from "../../../../../../../core/types/output-nodes.ts";
 import { form8995 } from "../../../../intermediate/forms/deductions/business/form8995/index.ts";
-import { publicSchema as inputSchema } from "./schema.ts";
+import { patronW2Sources, publicSchema as inputSchema } from "./schema.ts";
 export { publicSchema as inputSchema } from "./schema.ts";
 class QbiPatronNode extends TaxNode<typeof inputSchema> {
   readonly nodeType = "qbi_patron";
@@ -13,23 +13,22 @@ class QbiPatronNode extends TaxNode<typeof inputSchema> {
   compute(_ctx: unknown, raw: unknown) {
     const review = inputSchema.parse(raw);
     if ("independent_farm_reviews" in review) {
-      return { outputs: [
-        this.outputNodes.output(form8995, { independent_patron_reviews: review }),
-        this.outputNodes.output(schedule_f, { independent_patron_reviews: review }),
-      ] };
+      return {
+        outputs: [
+          this.outputNodes.output(form8995, {
+            independent_patron_reviews: review,
+          }),
+          this.outputNodes.output(schedule_f, {
+            independent_patron_reviews: review,
+          }),
+        ],
+      };
     }
-    if (review.spouse_w2_sources && review.primary_w2_sources) {
-      throw new Error(
-        "Patron review cannot assert both proprietor-side wage copy collections",
-      );
-    }
-    const wages = review.spouse_w2_sources ?? review.primary_w2_sources;
-    if (wages) {
-      w2Schema.parse({ w2s: wages });
-    }
+    const wages = patronW2Sources(review);
+    if (wages.length) w2Schema.parse({ w2s: wages });
     return {
       outputs: [
-        ...(wages
+        ...(wages.length
           ? [this.outputNodes.output(w2, { patron_filing_review: review })]
           : []),
         this.outputNodes.output(form8995, {

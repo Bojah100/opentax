@@ -1,5 +1,53 @@
 # TY2025 Form 8995-A coverage gap
 
+## October 12 cooperative proprietor wage checkpoint
+
+Reviewed cooperative proprietors can now retain their own W-2 job alongside the
+farm or Schedule C business, including both spouses' wages on a joint return.
+Previously proprietor wages and dual wage collections blocked preparation. Public
+issued copies now join the primary and spouse collections, verify actual owners,
+and use only the proprietor's Social Security wages in that owner's Schedule SE.
+Both spouses' wages still enter joint income, withholding and Additional Medicare.
+The same employee cannot appear in both collections; source and final-tax guards
+remain required.
+
+Twelve synthetic source-backed complete returns cover Single, HOH, QSS, MFS,
+MFJ primary proprietor and MFJ spouse proprietor, each with farm and Schedule C
+health-insurance variants. Farm job wages of 60,000 leave a 116,100 Social Security
+base, producing SE tax 20,824 and deduction 10,412; C job Social Security wages of
+176,100 exhaust that base, producing SE tax 7,097 and deduction 3,549. The latter
+retains a reviewed 6,000 health deduction and employer-plan eligibility review.
+Independent Decimal arithmetic matches all twelve QBI deductions, taxable incomes,
+regular taxes, total taxes and balances, including joint wage withholding and the
+93.487% joint-farm phase-in. Sources: [Schedule SE instructions](https://www.irs.gov/instructions/i1040sse),
+[QBI instructions](https://www.irs.gov/instructions/i8995a),
+[Additional Medicare instructions](https://www.irs.gov/instructions/i8959) and
+[1040 computation worksheet](https://www.irs.gov/instructions/i1040gi).
+
+All twelve complete returns pass the cached IRS 2025v5.4 XSD (root SHA-256
+`e52dbd0fbd862929c9bc6a46db811fa2c7ae55e915651fc2679c21cb05184c6c`).
+Native W-2 owner/employer joins and six numeric fields per copy reconcile with
+sources; document IDs are unique and references close. Thirteen new tests and
+137 existing patron/W-2 tests pass. Altered owners, wages, withholding, employer
+identity, missing sources, switched collections, SE deductions and final tax
+produce 148 native and 148 fresh-PDF rejections; twelve duplicate-owner public
+cases produce error diagnostics, counted separately.
+
+All 186 pages received qualified review: 71 unique new images inspected across
+18 contact sheets, 42 exact prior observations and 73 within-batch duplicates.
+Reopened PDFs have no fields or widgets. Status marks, proprietor identities,
+SE/health amounts, QBI reductions and final balances reconcile. Existing findings
+3 on inherited business pages, 68 on header name order and 76 on applicable blank
+zeros remain qualifications; no deferred item was repaired. Multiple cooperatives,
+wider business combinations, source authenticity and IRS acceptance remain open.
+
+Evidence: `.state/research/form8995a-patron-wages-2026-10-12/` retains before/after
+probes, all source/native/PDF packets, independent proof, test and XSD logs,
+page hashes, review mapping, visual observations and mutation/run metadata.
+Ongoing PR totals: 141 complete returns/2,292 qualified pages and 7,724 export
+rejections; 468 native-only cases and 102 saved SSTB/patron returns with 1,502
+source/archive rejections remain separate. No frozen parent TODO is closed.
+
 ## October 12 saved cooperative patron submission checkpoint
 
 [Saved-return and archive proof](../../../../testing/ty2025-patron-submission-replay.md)

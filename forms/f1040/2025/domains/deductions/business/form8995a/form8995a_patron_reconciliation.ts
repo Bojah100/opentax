@@ -12,7 +12,10 @@ import {
   patronSourceAmounts,
   sourceSchema,
 } from "../../../../../nodes/inputs/deductions/business/qbi_patron/calculation.ts";
-import { inputSchema as reviewSchema } from "../../../../../nodes/inputs/deductions/business/qbi_patron/schema.ts";
+import {
+  inputSchema as reviewSchema,
+  patronW2Sources,
+} from "../../../../../nodes/inputs/deductions/business/qbi_patron/schema.ts";
 import { inputSchema as cSchema } from "../../../../../nodes/inputs/income/business/schedule_c/model.ts";
 import { inputSchema as fSchema } from "../../../../../nodes/intermediate/forms/income/business/schedule_f/index.ts";
 import { inputSchema as seSchema } from "../../../../../nodes/intermediate/forms/taxes/self-employment/schedule_se/index.ts";
@@ -79,33 +82,29 @@ export function assertForm8995APatronReturn(
       .proprietor_recipient;
   const spouseOwned = recipient === "S";
   const owner = spouseOwned ? spouse : primary;
-  const wageOwner = spouseOwned ? primary : spouse;
-  const reviewedWages = spouseOwned
-    ? review.primary_w2_sources
-    : review.spouse_w2_sources;
-  const copies = reviewedWages
-    ? w2Schema.parse({ w2s: reviewedWages }).w2s
-    : [];
+  const primaryCopies = review.primary_w2_sources
+    ? w2Schema.parse({ w2s: review.primary_w2_sources }).w2s : [];
+  const spouseCopies = review.spouse_w2_sources
+    ? w2Schema.parse({ w2s: review.spouse_w2_sources }).w2s : [];
+  const copies = patronW2Sources(review).length
+    ? w2Schema.parse({ w2s: patronW2Sources(review) }).w2s : [];
   const w2Input = pending.w2 ? w2Schema.parse(pending.w2) : undefined;
   const w2s = w2Input?.w2s ?? [];
   if (
     pending.general?.filing_status !== input.filing_status ||
     owner !== review.source_1099patr.recipient_tin ||
     (spouseOwned && !joint) ||
-    (spouseOwned
-      ? review.spouse_w2_sources !== undefined
-      : review.primary_w2_sources !== undefined) ||
+    (!joint && spouseCopies.length > 0) ||
+    primaryCopies.some((row) => row.employee_ssn?.replaceAll("-", "") !== primary) ||
+    spouseCopies.some((row) => row.employee_ssn?.replaceAll("-", "") !== spouse) ||
     String(pending.f1040?.taxpayer_ssn ?? "").replaceAll("-", "") !== primary ||
     (joint && (!/^\d{9}$/.test(spouse) || spouse === primary ||
       String(pending.f1040?.spouse_ssn ?? "").replaceAll("-", "") !==
         spouse)) ||
     JSON.stringify(w2s) !== JSON.stringify(copies) ||
     (copies.length > 0 &&
-      (!joint ||
-        JSON.stringify(w2Input?.patron_filing_review) !==
-          JSON.stringify(review))) ||
+      JSON.stringify(w2Input?.patron_filing_review) !== JSON.stringify(review)) ||
     copies.some((row) =>
-      row.employee_ssn?.replaceAll("-", "") !== wageOwner ||
       !row.source_document_reference || !row.employer_name ||
       !/^\d{9}$/.test((row.employer_ein ?? "").replaceAll("-", "")) ||
       !(row.box5_medicare_wages! > 0) ||
@@ -115,9 +114,11 @@ export function assertForm8995APatronReturn(
     )
   ) {
     throw new Error(
-      "Patron proprietor and reviewed nonproprietor W-2 issued copies must match the joint source return",
+      "Patron proprietor and reviewed primary/spouse W-2 issued copies must match the source return",
     );
   }
+  const ownerSocialSecurityWages = (spouseOwned ? spouseCopies : primaryCopies)
+    .reduce((sum, row) => sum + (row.box3_ss_wages ?? 0), 0);
   const wageIncome = copies.reduce((sum, row) => sum + row.box1_wages, 0);
   const medicareWages = Math.round(
     copies.reduce((sum, row) => sum + (row.box5_medicare_wages ?? 0), 0),
@@ -193,7 +194,7 @@ export function assertForm8995APatronReturn(
       amounts.profit ||
     !noAmount(se[isC ? "net_profit_schedule_f" : "net_profit_schedule_c"]) ||
     se.farm_optional_method_elected === true ||
-    !noAmount(se.w2_ss_wages) || !noAmount(se.unreported_tips_4137) ||
+    (se.w2_ss_wages ?? 0) !== ownerSocialSecurityWages || !noAmount(se.unreported_tips_4137) ||
     !noAmount(se.wages_8919) ||
     seLines.line13 !== source.se_tax_deduction ||
     health !== source.health_insurance_deduction ||
