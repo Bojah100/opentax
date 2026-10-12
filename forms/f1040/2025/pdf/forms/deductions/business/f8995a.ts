@@ -522,9 +522,13 @@ export const form8995aPdf: PdfFormDescriptor = {
         input.schedule_c_qbi_businesses?.some((business) => business.qbi < 0)
       ) {
         calculateScheduleCLossLines(input);
-      } else {
+      } else if (
+        !input.aggregation_filing_details && !input.rpe_aggregation_source
+      ) {
         assertMfsSstbOwner(input, filer.primarySSN);
       }
+      // Aggregations use their separate-income review and complete return join
+      // in projectStagedAggregatedParentPdf below, rather than the SSTB owner.
     }
     if (
       input.filing_status === NodeFilingStatus.QSS &&

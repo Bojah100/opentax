@@ -21,11 +21,28 @@ export function aggregationOwner(input: Form8995AInput, filer?: FilerIdentity) {
   const spouseOwned = recipient === TS.S;
   const ssn = (spouseOwned ? filer?.spouse?.ssn : filer?.primarySSN)
     ?.replaceAll("-", "");
+  const statuses = {
+    [FilingStatus.Single]: HeaderStatus.Single,
+    [FilingStatus.MFJ]: HeaderStatus.MarriedFilingJointly,
+    [FilingStatus.MFS]: HeaderStatus.MarriedFilingSeparately,
+    [FilingStatus.HOH]: HeaderStatus.HeadOfHousehold,
+    [FilingStatus.QSS]: HeaderStatus.QualifyingSurvivingSpouse,
+  };
+  const review = input.aggregation_mfs_review;
+  if (
+    input.filing_status === FilingStatus.MFS &&
+    (!review || review.owner_ssn !== ssn ||
+      review.spouse_ssn !== filer?.spouse?.ssn.replaceAll("-", "") ||
+      review.spouse_ssn === ssn ||
+      review.mailing_address_state !== filer?.address.state)
+  ) {
+    throw Error(
+      "MFS aggregation must match its actual separate owner, spouse and reviewed address",
+    );
+  }
   if (
     !filer ||
-    filer.filingStatus !==
-      (joint ? HeaderStatus.MarriedFilingJointly : HeaderStatus.Single) ||
-    (input.filing_status !== FilingStatus.Single && !joint) ||
+    filer.filingStatus !== statuses[input.filing_status] ||
     (joint &&
       (!filer.spouse ||
         filer.spouse.ssn.replaceAll("-", "") ===

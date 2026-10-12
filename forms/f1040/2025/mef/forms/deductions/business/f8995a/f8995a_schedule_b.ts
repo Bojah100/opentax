@@ -124,6 +124,27 @@ export function assertScheduleBAggregationJoin(
   input: Form8995AInput,
   context: MefBuildContext | undefined,
 ): ReturnType<typeof calculateTwoBusinessAggregationLines> {
+  if (input.filing_status === "mfs") {
+    const review = input.aggregation_mfs_review;
+    const general = context?.pending?.general as
+      | Record<string, unknown>
+      | undefined;
+    const retained = context?.pending?.qbi_aggregation as
+      | Record<string, unknown>
+      | undefined;
+    if (
+      !review || general?.filing_status !== "mfs" ||
+      general.mfs_spouse_itemizing !== false ||
+      String(general.taxpayer_ssn).replaceAll("-", "") !== review.owner_ssn ||
+      String(general.spouse_ssn).replaceAll("-", "") !== review.spouse_ssn ||
+      general.address_state !== review.mailing_address_state ||
+      !isDeepStrictEqual(retained?.aggregation_mfs_review, review)
+    ) {
+      throw Error(
+        "MFS aggregation must retain its current separate-income and spouse deduction source review",
+      );
+    }
+  }
   if (input.rpe_aggregation_source) {
     return assertRpeScheduleBJoin(input, context);
   }

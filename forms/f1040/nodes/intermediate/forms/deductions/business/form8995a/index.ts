@@ -1,3 +1,4 @@
+import { mfsSstbFilingReviewSchema } from "../../../../../inputs/income/business/schedule_c/mfs-sstb-review.ts";
 import { reviewedLossWotcReductions } from "./loss-wotc.ts";
 import { lossSeSourceSchema, reviewedLossSeAllocations } from "./loss-se.ts";
 import {
@@ -131,6 +132,10 @@ const aggregationAnnualDisclosureSchema = z.object({
       ),
     }).strict(),
   ).min(2),
+}).strict();
+
+export const aggregationMfsReviewSchema = mfsSstbFilingReviewSchema.extend({
+  owner_ssn: z.string().regex(/^\d{9}$/),
 }).strict();
 
 export const aggregationFilingDetailsSchema = z.object({
@@ -293,6 +298,7 @@ export const inputSchema = z.object({
   // treatment applied. Omit when no aggregation election has been made.
   aggregation_groups: z.array(aggregationGroupSchema).optional(),
   aggregation_filing_details: aggregationFilingDetailsSchema.optional(),
+  aggregation_mfs_review: aggregationMfsReviewSchema.optional(),
   rpe_aggregation_source: rpeAggregationSourceSchema.optional(),
 
   // An affirmative status requires Schedule D's payment and wage allocation.
@@ -445,7 +451,6 @@ export function validateTwoBusinessAggregationSource(input: Form8995AInput) {
     !source || !group || groups?.length !== 1 ||
     group.group_name !== source.group_name ||
     group.combined_for_limitation !== true ||
-    (input.filing_status !== FilingStatus.Single && !joint) ||
     (owner !== TS.T && !(joint && owner === TS.S)) ||
     !Number.isInteger(input.taxable_income) ||
     input.taxable_income <= threshold ||
@@ -634,13 +639,24 @@ export function validateTwoBusinessAggregationSource(input: Form8995AInput) {
 }
 
 export function calculateTwoBusinessAggregationLines(input: Form8995AInput) {
+  const mfs = input.filing_status === FilingStatus.MFS;
+  const owner = input.aggregation_filing_details?.common_owner_ssn ??
+    input.rpe_aggregation_source?.recipient_tin;
+  const review = input.aggregation_mfs_review;
+  if (
+    mfs
+      ? !review || review.owner_ssn !== owner || review.spouse_ssn === owner
+      : review !== undefined
+  ) {
+    throw Error(
+      "Aggregation needs a consistent separate-owner property and spouse deduction review for MFS only",
+    );
+  }
   if (input.rpe_aggregation_source) {
     const totals = reviewedRpeAggregation(input.rpe_aggregation_source),
       issued = totals.source;
     const group = input.aggregation_groups?.[0];
     if (
-      (input.filing_status !== FilingStatus.Single &&
-        input.filing_status !== FilingStatus.MFJ) ||
       input.taxable_income <=
         (input.filing_status === FilingStatus.MFJ ? 394600 : 197300) ||
       !Number.isInteger(input.taxable_income) || input.net_capital_gain !== 0 ||

@@ -1,5 +1,68 @@
 # TY2025 Form 8995-A coverage gap
 
+## October 12 nonjoint aggregation filing-status checkpoint
+
+Direct-owner and intact S-corporation aggregations now support HOH, QSS and
+reviewed MFS filings. Each uses the nonjoint197,300 threshold and50,000 phase-in
+range from the [2025 Form8995-A instructions](https://www.irs.gov/instructions/i8995a).
+QSS retains its joint-sized standard deduction and tax brackets while using
+the nonjoint QBI band. HOH/QSS fixtures retain reviewed nondependent qualifying
+children and the related household and surviving-spouse facts.
+
+MFS requires the existing separate-property review extended with the actual
+business owner's TIN: both domiciles, no elected community regime or retained
+community income, separately owned wages/business income and a nonitemizing
+spouse. Native and fresh-PDF export bind that review to the retained public
+source, actual owner/spouse and mailing state. These guards preserve the
+[Publication555](https://www.irs.gov/publications/p555) community-property boundary;
+they do not infer domicile from a mailing address. MFS aggregation PDFs now
+use the aggregation owner/return join instead of the unrelated SSTB dispatcher.
+
+| Case | Businesses | QBI deduction | Regular tax | Other taxes | Total tax | Refund / owed |
+| --- | ---: | ---: | ---: | ---: | ---: | --- |
+| HOH direct | 3 | 9,568 | 41,245 | 1,926 | 43,171 | 16,829 refund |
+| HOH direct | 4 | 9,557 | 44,406 | 2,277 | 46,683 | 13,317 refund |
+| HOH RPE | 3 | 48,000 | 61,740 | 0 | 61,740 | 51,740 owed |
+| HOH RPE | 4 | 66,250 | 93,853 | 0 | 93,853 | 83,853 owed |
+| MFS direct | 3 | 8,590 | 45,817 | 2,601 | 48,418 | 11,582 refund |
+| MFS direct | 4 | 8,366 | 49,046 | 2,952 | 51,998 | 8,002 refund |
+| MFS RPE | 3 | 48,000 | 66,235 | 0 | 66,235 | 56,235 owed |
+| MFS RPE | 4 | 66,250 | 98,347 | 0 | 98,347 | 88,347 owed |
+| QSS direct | 3 | 10,547 | 33,201 | 1,926 | 35,127 | 24,873 refund |
+| QSS direct | 4 | 10,748 | 35,329 | 2,277 | 37,606 | 22,394 refund |
+| QSS RPE | 3 | 48,000 | 48,214 | 0 | 48,214 | 38,214 owed |
+| QSS RPE | 4 | 66,250 | 70,234 | 0 | 70,234 | 60,234 owed |
+
+Independent decimal arithmetic reconciles source profits, half-SE allocation,
+group wages/property, phase reductions, income limits, tax, zero AMT and final
+refunds/balances. The [2025 tax worksheet](https://www.irs.gov/pub/irs-pdf/i1040tt.pdf)
+supplies status-specific rates and offsets. Six direct cases exercise phase-in;
+six RPE cases retain the original issuer bytes and full limitation. Component
+checks cover197,300 rejection and197,301/247,299/247,300/247,301 boundaries.
+
+All12 typed packet tests and all12 full2025v5.4 return XSD checks pass. Sixty-eight
+altered records reject both native and fresh-PDF export (136 attempts), and28
+invalid public-source cases reject. Related regression:30 direct/joint/RPE/SSTB
+tests,19 input-source tests and4 retained path-only adapted RPE tests pass.
+The original RPE fixture-path issue remains deferred65/66.
+
+The196 packet pages include annual and issued disclosures. All63 new distinct
+images were observed on16 contact sheets;115 pages exactly match previously
+observed images and18 are within-batch duplicates. Final rerendering introduced
+no new hashes. Full packets reopen without fields/widgets; source owner,
+aggregation members, phase fields, deductions and continuation rows reconcile.
+All four QSS first pages were also checked individually: Avery Child appears
+in the shared HOH/QSS nondependent-child field required by
+[Form1040](https://www.irs.gov/pub/irs-prior/f1040--2025.pdf).
+Existing deferred68/76 qualifications persist: MFS spouse-name duplication,
+blank names on some retained Schedules1/2 and blank required zero fields.
+
+Evidence: `.state/research/form8995a-aggregation-statuses-2026-10-12/`, including
+source/pending packets, before/after replays, XSD/test logs, independent decimal
+proof and final rendered-page mapping/visual review. The main task stays open
+for other source combinations and election histories. Source authenticity and
+IRS acceptance remain separate; no deferred item was implemented.
+
 ## October 12 joint RPE ownership and phase-in checkpoint
 
 One intact S-corporation aggregation can now belong to either actual joint

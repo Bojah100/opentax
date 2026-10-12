@@ -453,7 +453,6 @@ function advancedFormOutput(
     const owners = [input.taxpayer_ssn, ...(joint ? [input.spouse_ssn] : [])]
       .map((ssn) => ssn?.replaceAll("-", ""));
     if (
-      (input.filing_status !== FilingStatus.Single && !joint) ||
       owners.some((ssn) => !ssn) || new Set(owners).size !== owners.length ||
       !owners.includes(group.source.recipient_tin) ||
       taxableIncome <= (joint ? 394600 : 197300) ||
@@ -475,7 +474,7 @@ function advancedFormOutput(
       input.owned_s_corp_loss_sources
     ) {
       throw Error(
-        "RPE aggregation needs its actual Single or joint owner and positive current statement without other QBI/owner adjustment paths",
+        "RPE aggregation needs its actual filing owner and positive current statement without other QBI/owner adjustment paths",
       );
     }
     return output(form8995a, {
