@@ -1,5 +1,67 @@
 # TY2025 Form 8995-A coverage gap
 
+## October 12 legal, medical and consulting source checkpoint
+
+The existing one-business Schedule A path now accepts reviewed legal, medical
+and consulting services alongside its retained accounting source. The new
+classification record binds distinct invoice references and whole-dollar service
+receipts to gross Schedule C revenue, with engagement records, activity review,
+and field-specific exclusions. Both the public calculation and native/PDF source
+checks use that evidence; a business code alone cannot classify the activity.
+The legacy accounting review remains mutually exclusive with the new review.
+
+The [2025 SSTB definitions](https://www.irs.gov/instructions/i8995a) distinguish
+professional medical care, legal skills and separately paid consulting advice
+from excluded activities. The source contract records the applicable exclusion
+review and rejects incomplete receipts, duplicate invoice references, conflicting
+classification, activity mismatch, returns/allowances and other income.
+[Schedule C codes](https://www.irs.gov/instructions/i1040sc) corroborate law541100,
+consulting541600 and practitioner health621111/621112/621210/621310/621320/621330/
+621340/621391/621399 plus veterinary541940. These are reviewed all-service
+inventories; mixed activities and other SSTB fields remain outside this proof.
+
+Twelve complete packets cover each accepted new code, all five statuses, either
+joint proprietor, payroll/owner-only workforces, partial/capped owner wage bases,
+qualified dividends/capital distributions and the binding income cap. Independent
+Decimal source arithmetic reconciles all12 final taxes, owner SE, preferential
+tax, Additional Medicare, NIIT and zero AMT. Retained evidence is synthetic and
+does not authenticate professional status or customer documents.
+
+| Case | QBI deduction | Taxable income | Total tax | Refund or owed |
+| --- | ---: | ---: | ---: | ---: |
+| consulting-mfs | 1,934 | 226,866 | 51,108 | owed1,108 |
+| health-541940 | 1,934 | 226,866 | 50,433 | owed433 |
+| health-621111 | 1,934 | 226,866 | 50,433 | owed433 |
+| health-621112 | 2,474 | 211,698 | 30,644 | owed30,644 |
+| health-621210 | 1,934 | 226,866 | 51,108 | owed1,108 |
+| health-621310 | 1,561 | 219,364 | 46,293 | refund3,707 |
+| health-621320 | 3,711 | 209,339 | 36,739 | refund13,261 |
+| health-621330 | 3,811 | 417,611 | 93,231 | owed43,231 |
+| health-621340 | 2,830 | 418,592 | 93,544 | owed43,544 |
+| health-621391 | 2,872 | 420,178 | 90,796 | owed40,796 |
+| health-621399 | 3,890 | 419,160 | 90,470 | owed40,470 |
+| law-single | 1,934 | 226,866 | 50,433 | owed433 |
+
+The12 new packet tests,48 related SSTB regressions and104 Schedule C regressions
+pass (164 typed tests, zero failures); focused lint and diff checks pass.
+All12 native returns pass full local2025v5.4 XSD. Ten mirrored alterations per
+packet reject120 native and120 fresh-PDF exports. All120 corresponding public
+alterations report graph errors;48 also reject preparation, while72 still prepare
+through existing deferred161. The tests explicitly preserve those accepted-after-
+error outputs, rather than counting them as successful rejection checks. No
+preparation-after-error fix is included.
+
+All190 PDF pages received qualified observation:36 new unique images inspected
+in nine contact sheets and154 exact prior matches. Business names, activity
+codes, owners and amounts reconcile. Reopened outputs contain zero fields/widgets.
+Existing positive Schedule C choices3, headers68 and blank zeros76 repeat without
+repair. Broader source combinations and IRS acceptance remain open.
+
+Evidence: `.state/research/form8995a-sstb-services-2026-10-12/` retains source
+records, independent calculations, full native/PDF packets, schema provenance,
+mutation outcomes including the72 accepted-after-error XML files, rendered pages
+and review mappings. The frozen main checklist remains unchanged.
+
 ## October 12 SSTB zero deduction and inclusive endpoint checkpoint
 
 Retained Schedule C SSTBs now prepare a zero deduction at the inclusive upper

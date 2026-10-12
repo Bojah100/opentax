@@ -1,3 +1,4 @@
+import { assertSstbServiceClassification } from "../../../../../../nodes/inputs/income/business/schedule_c/sstb-classification.ts";
 import {
   assertMultiBusinessInvestmentSources,
   assertMultiBusinessInvestmentTax,
@@ -62,6 +63,7 @@ export function assertSstbScheduleCSource(
   const ownerKey = source.proprietor_recipient === "S"
     ? "spouse_ssn"
     : "taxpayer_ssn";
+  assertSstbServiceClassification(source);
   const profit = computeNetProfit(source);
   const seLines = se && scheduleSELines(se, CONFIG_BY_YEAR[2025].ssWageBase);
   const payroll = review?.employee_w2_records ?? [];
@@ -79,7 +81,6 @@ export function assertSstbScheduleCSource(
     (source.proprietor_recipient !== "T" &&
       !(joint && source.proprietor_recipient === "S")) ||
     source.qbi_specified_service !== true ||
-    source.line_b_business_code !== "541211" ||
     review.business_activity_description !== source.line_a_principal_business ||
     source.qbi_no_other_adjustments_confirmed !== true ||
     retained.business.qbi !== profit ||
@@ -122,7 +123,7 @@ export function assertSstbScheduleCSource(
       review.qualified_dividends_zero_confirmed
   ) {
     throw new Error(
-      "SSTB accounting source, payroll, owner and filed SE adjustment must match the retained return",
+      "SSTB service source, payroll, owner and filed SE adjustment must match the retained return",
     );
   }
   if (input.filing_status === FilingStatus.MFS) {
@@ -198,7 +199,7 @@ export function assertSstbScheduleCSource(
     f.line15_taxable_income !== input.taxable_income - lines.line39
   ) {
     throw new Error(
-      "SSTB accounting income and credit must match finalized Form1040",
+      "SSTB service income and credit must match finalized Form1040",
     );
   }
 }

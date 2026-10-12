@@ -1,3 +1,4 @@
+import { assertSstbServiceClassification } from "../../../../../inputs/income/business/schedule_c/sstb-classification.ts";
 import { passiveSCorpLossBundleSchema } from "../../../../../inputs/income/rental-passthrough/k1_s_corp_passive_loss_source.ts";
 import { passiveSCorpLossQbiLines } from "./passive-s-corp-loss.ts";
 import { ownedSepSourceSchema } from "../../../../../inputs/adjustments/retirement/sep_retirement/owned-source.ts";
@@ -824,8 +825,11 @@ function advancedFormOutput(
       (input.reit_loss_carryforward ?? 0) !== 0
     ) {
       throw new Error(
-        "SSTB Schedule C needs one identified taxpayer accounting business with only its filed half-SE adjustment",
+        "SSTB Schedule C needs one identified taxpayer service business with only its filed half-SE adjustment",
       );
+    }
+    if (review.service_classification_review) {
+      assertSstbServiceClassification(business.source_schedule_c);
     }
     const qbi = business.qbi - sumField(input.se_tax_deduction);
     sourcedBusiness = {
