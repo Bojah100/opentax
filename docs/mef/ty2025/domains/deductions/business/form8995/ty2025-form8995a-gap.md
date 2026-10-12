@@ -1,5 +1,17 @@
 # TY2025 Form 8995-A coverage gap
 
+## October 12 saved cooperative patron submission checkpoint
+
+[Saved-return and archive proof](../../../../testing/ty2025-patron-submission-replay.md)
+now covers all34 retained one-business patron cases: all five statuses and either
+joint proprietor, with farm/health, phase-in and income-cap sources. Complete
+native data matches earlier packets after only synthetic TIN remapping;34 return
+and34 manifest XSD checks pass. Both container orders preserve exact inner bytes.
+All341 reopened-source and245 archive/container alterations reject, and the full
+submission directory passes51 typed tests. This adds no new PDF/packet counts or
+runtime changes; prior qualifications, source authentication and IRS acceptance
+remain separate. See the linked checkpoint for case counts and evidence paths.
+
 ## October 12 cooperative patron HOH, QSS and MFS checkpoint
 
 Reviewed one-business cooperative patron sources now support HOH, QSS and MFS
