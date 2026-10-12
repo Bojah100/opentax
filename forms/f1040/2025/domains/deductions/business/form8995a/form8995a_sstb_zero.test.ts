@@ -6,103 +6,12 @@ import {
   sstbZeroCases,
   sstbZeroFixture,
 } from "./form8995a_sstb_zero_fixture.ts";
+import {
+  sstbZeroExpected as expected,
+  sstbZeroExpectedNiit as expectedNiit,
+} from "./form8995a_sstb_zero_expected.ts";
 // deno-lint-ignore no-explicit-any
 type Row = Record<string, any>;
-// Independent source arithmetic; the original MFS exact-half discrepancy is explicit below.
-const expected: Record<string, number[]> = {
-  "single-rounded-qbi": [0, 247299, 55638, 56420, 6420],
-  "hoh-upper": [
-    0,
-    247300,
-    53899,
-    55470,
-    5470,
-  ],
-  "joint-primary-upper": [
-    0,
-    494600,
-    111837,
-    118526,
-    68526,
-  ],
-  "joint-spouse-near-upper": [
-    0,
-    494599,
-    111837,
-    118526,
-    68526,
-  ],
-  "joint-spouse-upper": [
-    0,
-    494600,
-    111837,
-    115255,
-    65255,
-  ],
-  "joint-spouse-zero-income-cap": [
-    0,
-    412929,
-    47434,
-    54964,
-    54964,
-  ],
-  "mfs-upper-nonhalf": [
-    0,
-    247300,
-    55638,
-    57813,
-    7813,
-  ],
-  "mfs-upper": [
-    0,
-    247300,
-    55638,
-    57814,
-    7814,
-  ],
-  "qss-upper": [
-    0,
-    247300,
-    44749,
-    46391,
-    3609,
-  ],
-  "single-near-upper": [
-    0,
-    247299,
-    55638,
-    57138,
-    7138,
-  ],
-  "single-upper": [
-    0,
-    247300,
-    55638,
-    57139,
-    7139,
-  ],
-  "single-zero-income-cap": [
-    0,
-    208679,
-    24049,
-    25119,
-    25119,
-  ],
-};
-const expectedNiit: Record<string, number> = {
-  "single-rounded-qbi": 247,
-  "hoh-upper": 247,
-  "joint-primary-upper": 247,
-  "joint-spouse-near-upper": 247,
-  "joint-spouse-upper": 247,
-  "joint-spouse-zero-income-cap": 7388,
-  "mfs-upper-nonhalf": 247,
-  "mfs-upper": 247,
-  "qss-upper": 247,
-  "single-near-upper": 247,
-  "single-upper": 247,
-  "single-zero-income-cap": 928,
-};
 for (const c of sstbZeroCases) {
   const name = c.name;
   Deno.test(`SSTB zero ${name}: sourced zero deduction and complete packet`, async () => {

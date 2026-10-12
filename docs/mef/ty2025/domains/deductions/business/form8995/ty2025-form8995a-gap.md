@@ -1,5 +1,54 @@
 # TY2025 Form 8995-A coverage gap
 
+## October 12 service-classification zero-boundary audit
+
+All 39 previously reviewed service fixtures now run against all 12 existing
+zero-deduction endpoints: 468 native returns. This crosses legal, ten medical
+codes, consulting, financial advice/banking/loan arrangement, brokerage,
+investment management, actuarial, performing-arts/athletic roles and three
+personal-identity income kinds with all five filing statuses and either joint
+business owner. The 39 fixtures are source cases, not 39 distinct tax categories.
+
+Endpoints cover the exact phase-in ceiling, the adjacent dollar below it,
+rounded-zero applicable QBI and zero taxable-income cap. Each fixture
+retains the endpoint's payroll, ownership and investment records; two distinct
+synthetic invoices reconcile to its actual gross receipts. Personal-identity
+income is rebound to the endpoint's actual proprietor. Classification records
+survive in Schedule C and both Form8995-A/Schedule A retained source copies.
+
+All 468 full native returns pass local 2025v5.4 XSD. Independent Decimal arithmetic
+reconciles 429 final-tax results; 39 original MFS exact-half variants reproduce
+existing deferred 156, each one dollar below the independently calculated total
+and balance. Complete native ReturnData trees match the 12 previously reviewed
+accounting endpoints after exactly five intended activity/code/name text changes;
+all numerical fields, owner identities, documents and references remain equal.
+
+The audit rejects 2,208 native and 2,208 PDF export attempts with altered sources.
+These include missing classification, inconsistent receipts, excluded activities,
+mixed accounting claims and applicable financial-kind, professional-role and
+personal-identity owner/kind changes. Every retained business-source copy is
+changed together, so rejection cannot depend on comparing one unchanged copy.
+This tests saved/prepared source guards; the public diagnostic-to-preparation
+policy remains deferred 161.
+
+Twelve grouped tests cover the 468 combinations. Twelve original endpoint packet
+tests also pass after their unchanged independent expectations move to a shared
+fixture. All 190 regenerated baseline pages match their previously observed PNGs
+exactly; sources and complete native data also match. Reopened PDFs contain zero
+fields/widgets. Existing qualifications 3/68/76/156/163 carry forward.
+
+These are native-only service-boundary replays and repeated baseline packets:
+complete-packet and reviewed-PDF totals remain 108/1,795 for the ongoing PR,
+including 68 SSTB packets/1,066 pages. No runtime calculation or deferred issue is
+changed. This audit does not close the broader QBI parent or establish IRS
+business-rule acceptance or external source authenticity.
+
+Evidence: `.state/research/form8995a-sstb-service-zero-2026-10-12/` retains the
+four disjoint test-run logs, separate type check, 468 native/source/check sets,
+independent arithmetic and full-document comparison, 12 baseline PDF replays and
+190 exact render matches. `verify.py` requires all 468 successful case records;
+`review-baseline.py` requires all 12 baseline packets and 190 page matches.
+
 ## October 12 endorsement, identity licensing and appearance checkpoint
 
 The one-business SSTB route now accepts reviewed endorsement, personal-identity
