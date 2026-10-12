@@ -1,5 +1,15 @@
 # TY2025 Form 8995-A coverage gap
 
+## October 12 saved proprietor-wage submission checkpoint
+
+The [saved patron replay](../../../../testing/ty2025-patron-submission-replay.md#october-12-proprietor-wage-extension)
+now includes all12 proprietor-wage cases:46 saved patron returns total,92
+return/manifest XSD checks,559 saved-source and333 archive/container rejections.
+Complete native trees match prior packets after only identity remapping; both
+container orders preserve exact inner bytes. The linked checkpoint retains the
+source inventory and rejection breakdown. No PDF/complete-return count increases;
+existing presentation and external acceptance qualifications remain separate.
+
 ## October 12 cooperative proprietor wage checkpoint
 
 Reviewed cooperative proprietors can now retain their own W-2 job alongside the

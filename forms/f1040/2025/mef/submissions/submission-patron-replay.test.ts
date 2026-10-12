@@ -7,6 +7,10 @@ import {
   patronStatusCases,
   patronStatusFixture,
 } from "../../domains/deductions/business/form8995a/form8995a_patron_status_fixture.ts";
+import {
+  patronWageCases,
+  patronWageFixture,
+} from "../../domains/deductions/business/form8995a/form8995a_patron_wages_fixture.ts";
 import { pdfReviewFixtures } from "../../pdf/review-fixtures.ts";
 import { spouseOwnedPatronFixture } from "../../pdf/reviews/general/composed-returns/review-8995a-patron-joint.fixture.ts";
 import { sha256Hex } from "../../return-processing/prepared-source.ts";
@@ -33,7 +37,7 @@ function remap<T>(value: T, primary: string, spouse: string): T {
   });
 }
 
-Deno.test("Patron saved returns preserve all 34 source packets in mixed submission archives", async () => {
+Deno.test("Patron saved returns preserve all 46 source packets in mixed submission archives", async () => {
   const permission = await Deno.permissions.query({
     name: "env",
     variable: "PATRON_SUBMISSION_EVIDENCE",
@@ -76,7 +80,13 @@ Deno.test("Patron saved returns preserve all 34 source packets in mixed submissi
       ];
     }),
   ];
-  assertEquals(cases.length, 34);
+  cases.push(
+    ...patronWageCases.map((c) => ({
+      name: `wages-${c.name}`,
+      input: patronWageFixture(c),
+    })),
+  );
+  assertEquals(cases.length, 46);
   const archives: MefSubmissionArchive[] = [];
   const observations = [];
   let sourceRejected = 0, archiveRejected = 0;
@@ -174,6 +184,19 @@ Deno.test("Patron saved returns preserve all 34 source packets in mixed submissi
         "deduction",
         "tax",
         "companion",
+        ...(c.name.startsWith("wages-")
+          ? [
+            "wage-owner",
+            "wage-ss",
+            "wage-medicare",
+            "wage-income",
+            "wage-withholding",
+            "wage-employer",
+            "wage-reference",
+            "wage-missing",
+            ...(input.general.filing_status === "mfj" ? ["wage-swap"] : []),
+          ]
+          : []),
         ...(input.general.filing_status === "mfs"
           ? [
             "missing-mfs",
@@ -221,6 +244,31 @@ Deno.test("Patron saved returns preserve all 34 source packets in mixed submissi
       }
       if (kind === "mail-state") {
         changedReview.mfs_filing_review.mailing_address_state = "FL";
+      }
+      if (kind.startsWith("wage-")) {
+        const wageKey = business.proprietor_recipient === "S"
+          ? "spouse_w2_sources"
+          : "primary_w2_sources";
+        const wage = changedReview[wageKey][0];
+        if (kind === "wage-owner") wage.employee_ssn = "999001234";
+        if (kind === "wage-ss") wage.box3_ss_wages++;
+        if (kind === "wage-medicare") wage.box5_medicare_wages++;
+        if (kind === "wage-income") wage.box1_wages++;
+        if (kind === "wage-withholding") wage.box2_fed_withheld++;
+        if (kind === "wage-employer") wage.employer_name = "";
+        if (kind === "wage-reference") wage.source_document_reference = "";
+        if (kind === "wage-missing") delete changedReview[wageKey];
+        if (kind === "wage-swap") {
+          [changedReview.primary_w2_sources, changedReview.spouse_w2_sources] =
+            [changedReview.spouse_w2_sources, changedReview.primary_w2_sources];
+        }
+      }
+      if (changed.w2?.patron_filing_review) {
+        changed.w2.w2s = saved([
+          ...changedReview.primary_w2_sources ?? [],
+          ...changedReview.spouse_w2_sources ?? [],
+        ]);
+        changed.w2.patron_filing_review = saved(changedReview);
       }
       container.patron_filing_review = saved(changedReview);
       changed.f1099patr.f1099patrs[0] = saved(changedReview.source_1099patr);
@@ -372,8 +420,8 @@ Deno.test("Patron saved returns preserve all 34 source packets in mixed submissi
     }])
   );
   archiveRejected++;
-  assertEquals(sourceRejected, 341);
-  assertEquals(archiveRejected, 245);
+  assertEquals(sourceRejected, 559);
+  assertEquals(archiveRejected, 333);
   if (evidence) {
     await Deno.writeTextFile(
       `${evidence}/checks.json`,

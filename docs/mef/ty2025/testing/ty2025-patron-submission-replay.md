@@ -1,6 +1,39 @@
 # TY2025 cooperative patron saved-return and submission replay
 
-## October 12 checkpoint
+## October 12 proprietor-wage extension
+
+The saved-return replay now covers 46 patron returns: the original 34 plus all
+12 proprietor-wage cases from the [source-to-tax checkpoint](../domains/deductions/business/form8995/ty2025-form8995a-gap.md#october-12-cooperative-proprietor-wage-checkpoint).
+Each of Single, HOH, QSS, MFS and both joint proprietor positions retains its farm
+and Schedule C health-plan variant. Both spouses' issued W-2 collections survive
+JSON reopening and packaging; actual proprietor wages remain assigned to that
+owner's Schedule SE.
+
+All 46 native ReturnData trees match the previously retained complete packets
+after only synthetic taxpayer/spouse TIN remapping. All 46 returns and 46 manifests
+pass the cached 2025v5.4 schemas. Forward and reverse containers retain every
+inner ZIP, native XML, manifest, submission ID and electronic postmark unchanged.
+The source-backed independent tax and qualified PDF observations come from the
+linked checkpoint; this replay adds no new return/PDF counts.
+
+The expanded test rejects 559 saved-source alterations and 333 archive/container
+alterations, replacing the earlier 341/245 counts. The additional 218 source
+checks cover 108 cooperative/business/final-tax changes, ten MFS-review changes,
+96 proprietor W-2 owner/amount/employer/reference/missing-copy changes and four
+swapped spouse collections. Changed payroll is mirrored across public W-2 and
+all retained review copies before JSON reopening. The additional 88 archive
+checks cover the twelve new returns, including four joint spouse-residency checks.
+
+The focused replay passes, and the full submission directory passes51 typed tests
+with zero failures or ignored tests. Focused lint, formatting and diff checks pass.
+
+Evidence: `.state/research/submission-patron-wages-2026-10-12/` retains all46
+source/native/manifest/ZIP sets, two complete containers, 92 XSD logs, exact prior
+packet comparisons, rejection totals and focused/full regression logs. Existing
+presentation, authenticity, A2A-ledger41, replaced-statement148, local-rule162 and
+IRS acceptance qualifications remain unchanged; no deferred work is implemented.
+
+## October 12 initial checkpoint
 
 All 34 retained one-business patron cases now exercise JSON saving/reopening,
 complete native preparation, individual submission ZIPs and mixed containers.
