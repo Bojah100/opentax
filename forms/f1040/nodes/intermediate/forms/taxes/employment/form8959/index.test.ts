@@ -67,6 +67,45 @@ Deno.test("part1_single_above: Single $220k wages → 0.9% on $20k = $180", () =
   );
 });
 
+for (
+  const { name, excess, expected } of [
+    { name: "below half", excess: 103_499, expected: 931 },
+    { name: "exact half", excess: 103_500, expected: 932 },
+    { name: "above half", excess: 103_501, expected: 932 },
+  ]
+) {
+  Deno.test(`Additional Medicare Tax rounds ${name} for wages, SE, and RRTA`, () => {
+    const wages = findOutput(
+      compute({
+        filing_status: FilingStatus.MFS,
+        w2_medicare_wages: 125_000 + excess,
+      }),
+      "form8959",
+    )?.fields;
+    assertEquals(wages?.line7_wage_tax, expected);
+
+    const se = findOutput(
+      compute({
+        filing_status: FilingStatus.MFS,
+        se_income: 125_000 + excess,
+      }),
+      "form8959",
+    )?.fields;
+    assertEquals(se?.line13_se_tax, expected);
+
+    const rrta = findOutput(
+      compute({
+        filing_status: FilingStatus.MFS,
+        taxpayer_ssn: "123-45-6789",
+        ct2_taxpayer_ssn: "123-45-6789",
+        ct2_rrta_wages: 125_000 + excess,
+      }),
+      "form8959",
+    )?.fields;
+    assertEquals(rrta?.line17_rrta_tax, expected);
+  });
+}
+
 Deno.test("computed form lines use W-2 box 5 and expose the full Part I calculation", () => {
   const result = compute({
     filing_status: FilingStatus.Single,

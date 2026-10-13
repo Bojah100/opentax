@@ -26,17 +26,7 @@ for (const c of sstbZeroCases) {
       Math.round(f.line24_total_tax as number),
       f.line35a_refund ?? f.line37_amount_owed,
     ];
-    if (name === "mfs-upper") {
-      // Deferred156: the wage tax of 931.50 currently rounds down, lowering total tax by $1.
-      // Preserve and expose the original discrepancy rather than treating it as reconciled.
-      assertEquals(actual.map((v, i) => Number(v) - expected[name][i]), [
-        0,
-        0,
-        0,
-        -1,
-        -1,
-      ]);
-    } else assertEquals(actual, expected[name]);
+    assertEquals(actual, expected[name]);
     const capitalLimit = c.kind === "cap"
       ? name.startsWith("joint") ? 441800 : 221800
       : 3300;

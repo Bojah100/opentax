@@ -1,4 +1,4 @@
-// Independent source arithmetic; the original MFS exact-half discrepancy is explicit below.
+// Independent source arithmetic, including the exact-half MFS tax boundary.
 export const sstbZeroExpected: Record<string, number[]> = {
   "single-rounded-qbi": [0, 247299, 55638, 56420, 6420],
   "hoh-upper": [

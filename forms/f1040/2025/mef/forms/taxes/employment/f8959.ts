@@ -6,10 +6,14 @@ import {
   hasForm8959Print,
 } from "../../../../domains/taxes/employment/form8959/form8959-source.ts";
 import {
+  additionalMedicareTax,
   type Form8959PrintFields,
   printFieldsSchema,
 } from "../../../../../nodes/intermediate/forms/taxes/employment/form8959/index.ts";
-import type { MefBuildContext, MefFormDescriptor } from "../../../form-descriptor.ts";
+import type {
+  MefBuildContext,
+  MefFormDescriptor,
+} from "../../../form-descriptor.ts";
 
 // TY2025 IRS8959.xsd: every amount is a whole-dollar USAmountType or
 // USAmountNNType. The graph node owns all line 1-24 calculations; MeF only
@@ -112,7 +116,7 @@ function validatePrintLines(
   requireLine(
     fields,
     "line7_wage_tax",
-    Math.round(fields.line6_wage_excess * 0.009),
+    additionalMedicareTax(fields.line6_wage_excess),
   );
   requireLine(
     fields,
@@ -132,7 +136,7 @@ function validatePrintLines(
   requireLine(
     fields,
     "line13_se_tax",
-    Math.round(fields.line12_se_excess * 0.009),
+    additionalMedicareTax(fields.line12_se_excess),
   );
   requireLine(
     fields,
@@ -142,7 +146,7 @@ function validatePrintLines(
   requireLine(
     fields,
     "line17_rrta_tax",
-    Math.round(fields.line16_rrta_excess * 0.009),
+    additionalMedicareTax(fields.line16_rrta_excess),
   );
   requireLine(
     fields,

@@ -114,6 +114,7 @@ for (const c of cases) {
     assertEquals(pending.schedule1.line3_schedule_c, 300);
     assertEquals(pending.f1040.line11_agi, c.income + 300);
     assertEquals(pending.f1040.line13_qbi_deduction, 57);
+    assertEquals(pending.f1040.line24_total_tax, c.expectedTax);
     assertEquals(pending.schedule1.line15_se_deduction ?? 0, 0);
     assertEquals(pending.schedule2.line4_se_tax ?? 0, 0);
     const joint = c.id.startsWith("joint");
@@ -191,8 +192,7 @@ for (const c of cases) {
           filer,
           pending: prepared.bundle.pending,
           projection: parent,
-          // Final-tax audit is independent from these QBI assertions. Preserve the
-          // original half-dollar case and its known deferred Medicare discrepancy.
+          // Retain the independent final-tax audit with the QBI evidence.
           final_tax_audit: {
             expected: c.expectedTax,
             actual: pending.f1040.line24_total_tax,

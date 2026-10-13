@@ -47,13 +47,7 @@ for (const endpoint of sstbZeroCases) {
         const delta = actual.map((v, i) =>
           Number(v) - sstbZeroExpected[endpoint.name][i]
         );
-        // Retain the independent expected value and expose deferred156, not a
-        // changed expectation that would make this known $1 error disappear.
-        assertEquals(
-          delta,
-          endpoint.name === "mfs-upper" ? [0, 0, 0, -1, -1] : [0, 0, 0, 0, 0],
-          label,
-        );
+        assertEquals(delta, [0, 0, 0, 0, 0], label);
         assertEquals(
           Math.round(Number(result.pending.form8960?.line17_niit ?? 0)),
           sstbZeroExpectedNiit[endpoint.name],

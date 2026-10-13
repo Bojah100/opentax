@@ -3,18 +3,21 @@ import type {
   NodeOutput,
   NodeResult,
 } from "../../../../../../../../core/types/tax-node.ts";
-import { output, TaxNode } from "../../../../../../../../core/types/tax-node.ts";
+import {
+  output,
+  TaxNode,
+} from "../../../../../../../../core/types/tax-node.ts";
 import { OutputNodes } from "../../../../../../../../core/types/output-nodes.ts";
 import { schedule2 } from "../../../../aggregation/taxes/other/schedule2/index.ts";
 import { f1040 } from "../../../../../outputs/general/return-assembly/f1040/index.ts";
 import { FilingStatus } from "../../../../../types.ts";
 import type { NodeContext } from "../../../../../../../../core/types/node-context.ts";
-import { CONFIG_BY_YEAR, type F1040Config } from "../../../../../config/index.ts";
+import {
+  CONFIG_BY_YEAR,
+  type F1040Config,
+} from "../../../../../config/index.ts";
 
 // ─── TY2025 Constants ──────────────────────────────────────────────────────────
-// IRC §3101(b)(2); Form 8959 line 7 — Additional Medicare Tax rate
-const AMT_RATE = 0.009;
-
 // ─── Schema ───────────────────────────────────────────────────────────────────
 
 export const inputSchema = z.object({
@@ -143,8 +146,17 @@ function medicareWageExcess(line4: number, limit: number): number {
 
 // Part I, Line 7: Additional Medicare Tax on wages
 // Form 8959 line 7
+export function additionalMedicareTax(excess: number): number {
+  // The filed inputs are whole dollars. Compute the 9/1000 rate as an exact
+  // integer ratio so decimal half-dollars cannot drift below .5 in binary
+  // floating point (for example, 103,500 * 0.009).
+  const thousands = Math.floor(excess / 1_000);
+  const remainder = excess - thousands * 1_000;
+  return thousands * 9 + Math.floor((remainder * 9 + 500) / 1_000);
+}
+
 function partITax(line6: number): number {
-  return Math.round(line6 * AMT_RATE);
+  return additionalMedicareTax(line6);
 }
 
 // Part II, Line 10: reduced SE income threshold
@@ -165,7 +177,7 @@ function seIncomeExcess(seIncome: number, line10: number): number {
 // Part II, Line 13: Additional Medicare Tax on SE income
 // Form 8959 line 13
 function partIITax(seExcess: number): number {
-  return Math.round(seExcess * AMT_RATE);
+  return additionalMedicareTax(seExcess);
 }
 
 // Part III, Line 16: excess RRTA compensation above threshold
@@ -178,7 +190,7 @@ function rrtaExcess(rrtaWages: number, limit: number): number {
 // Part III, Line 17: Additional Medicare Tax on RRTA compensation
 // Form 8959 line 17
 function partIIITax(line16: number): number {
-  return Math.round(line16 * AMT_RATE);
+  return additionalMedicareTax(line16);
 }
 
 // The TY2025 IRS8959 XSD uses whole-dollar integer types. Keep cents while
