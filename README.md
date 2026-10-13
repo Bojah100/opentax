@@ -1,5 +1,8 @@
 # Filed Open Tax Engine
 
+> Fork addition: [local nonprofit ledger and screenshot intake prototype](nonprofit/README.md).
+> It produces reviewed bookkeeping worksheets, not completed nonprofit tax returns.
+
 <p align="center">
   <img src="icon.svg" width="128" height="128" alt="Filed Open Tax Engine">
 </p>
